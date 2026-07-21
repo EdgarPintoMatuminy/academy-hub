@@ -569,6 +569,30 @@
     ];
 
     let curriculum = JSON.parse(localStorage.getItem('curriculum')) || JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+    
+    // MIGRAÇÃO: Corrigir ECTS de 4 disciplinas específicas (de 192 a 180 ECTS oficiais)
+    const ECTS_CORRECTIONS = {
+        "21174": 4,  // Sistemas Computacionais
+        "21176": 2,  // Ética e Práticas de Engenharia
+        "21180": 4,  // Computação Numérica
+        "21181": 2   // Segurança em Redes e Computadores
+    };
+    let migrated = false;
+    curriculum.forEach(year => {
+        year.semesters.forEach(sem => {
+            sem.subjects.forEach(sub => {
+                if (ECTS_CORRECTIONS[sub.code] !== undefined && sub.ects !== ECTS_CORRECTIONS[sub.code]) {
+                    sub.ects = ECTS_CORRECTIONS[sub.code];
+                    migrated = true;
+                }
+            });
+        });
+    });
+    if (migrated) {
+        localStorage.setItem('curriculum', JSON.stringify(curriculum));
+        console.log('✅ ECTS migrados correctamente a 180 ECTS oficiales.');
+    }
+    
     let tasks = JSON.parse(localStorage.getItem('tasks')) || {};
     let events = JSON.parse(localStorage.getItem('events')) || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
     let currentEventFilter = 'all';
