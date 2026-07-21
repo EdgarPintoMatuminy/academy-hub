@@ -63,15 +63,15 @@
         </div>
         
         <nav class="space-y-1">
-            <button onclick="showView('dashboard', this); toggleMobileMenu()" class="nav-btn active w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📊 Dashboard</button>
-            <button onclick="showView('journey', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🛤️ A Minha Jornada</button>
-            <button onclick="showView('curriculum', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📚 Plano Curricular</button>
-            <button onclick="showView('planning', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🗺️ Planeamento</button>
-            <button onclick="showView('master-plan', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🎓 Plano Recomendado (Mest.)</button>
-            <button onclick="showView('calendar', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📅 Calendário</button>
-            <button onclick="showView('calculator', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧮 Calculadora</button>
-            <button onclick="showView('strategy', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚖️ Estratégia</button>
-            <button onclick="showView('stats', this); toggleMobileMenu()" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📈 Estatísticas</button>
+            <button onclick="showView('dashboard', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📊 Dashboard</button>
+            <button onclick="showView('journey', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🛤️ A Minha Jornada</button>
+            <button onclick="showView('curriculum', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📚 Plano Curricular</button>
+            <button onclick="showView('planning', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🗺️ Planeamento</button>
+            <button onclick="showView('master-plan', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🎓 Plano Recomendado (Mest.)</button>
+            <button onclick="showView('calendar', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📅 Calendário</button>
+            <button onclick="showView('calculator', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧮 Calculadora</button>
+            <button onclick="showView('strategy', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚖️ Estratégia</button>
+            <button onclick="showView('stats', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📈 Estatísticas</button>
         </nav>
 
         <div class="mt-8 space-y-2">
@@ -86,12 +86,9 @@
     <main class="flex-1 min-w-0 flex flex-col w-full">
         <!-- HEADER -->
         <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between md:justify-end">
-            <!-- Mobile Menu Button -->
             <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
             </button>
-            
-            <!-- Theme Toggle -->
             <button onclick="toggleDark()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Alternar tema" title="Alternar tema">
                 <span id="theme-icon-sun" class="hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
@@ -106,7 +103,7 @@
         <div class="flex-1 p-4 md:p-10 max-w-6xl mx-auto w-full overflow-x-hidden">
             
             <!-- DASHBOARD -->
-            <div id="view-dashboard" class="view active">
+            <div id="view-dashboard" class="view">
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">Dashboard</h1>
                 <p class="text-slate-500 mb-6 md:mb-8">Visão geral da tua jornada académica e profissional.</p>
                 <div id="dashboard-alerts" class="mb-6"></div>
@@ -162,7 +159,6 @@
             <div id="view-planning" class="view">
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">🗺️ Planeamento de Disciplinas</h1>
                 <p class="text-slate-500 mb-6">Define o teu ritmo. Marca o que já fizeste, equivalências, acreditações e o futuro.</p>
-                
                 <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 mb-6">
                     <h3 class="text-sm font-semibold mb-3">Legenda:</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
@@ -178,16 +174,131 @@
                 <div id="planning-content" class="space-y-8"></div>
             </div>
 
-            <!-- MASTER PLAN -->
+            <!-- MASTER PLAN (CONTEÚDO COMPLETO RESTAURADO) -->
             <div id="view-master-plan" class="view">
                 <div class="mb-6 md:mb-8">
-                    <h1 class="text-2xl md:text-3xl font-bold mb-2">Plano Recomendado (Mestrado)</h1>
-                    <p class="text-slate-500">MEITW • 120 ECTS</p>
-                    <a href="https://guiadoscursos.uab.pt/cursos/mestrado-em-engenharia-informatica-e-tecnologia-web/" target="_blank" class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">🔗 Link Oficial</a>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2">Plano Curricular Recomendado (Mestrado)</h1>
+                    <p class="text-slate-500">Mestrado em Engenharia Informática e Tecnologias Web (MEITW) • 120 ECTS</p>
+                    <a href="https://guiadoscursos.uab.pt/cursos/mestrado-em-engenharia-informatica-e-tecnologia-web/" target="_blank" class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">🔗 Link Oficial do Curso na UAb</a>
                 </div>
-                <div class="p-6 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 text-white">
-                    <h3 class="text-lg font-bold mb-2">🎯 Objetivo Profissional</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">Middleware Engineer Senior → Platform Engineer → Cloud/DevOps Engineer → SRE → Solutions Architect.</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                        <h3 class="font-semibold mb-2">Estrutura</h3>
+                        <ul class="text-sm text-slate-600 dark:text-slate-400 space-y-2">
+                            <li>• Duração: 2 anos (120 ECTS)</li>
+                            <li>• 1º Ano: Componente curricular (60 ECTS)</li>
+                            <li>• 2º Ano: Dissertação, Projeto ou Estágio (60 ECTS)</li>
+                            <li>• Cada semestre do 1º ano: 2 obrigatórias + 3 optativas = 30 ECTS</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 lg:col-span-2">
+                        <h3 class="font-semibold mb-2">Perfil Profissional Atual</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Middleware Engineer</span>
+                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Oracle WebLogic Server</span>
+                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Apache HTTP Server</span>
+                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Servidores de Aplicação</span>
+                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Deployments e Integração</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- 1º Semestre -->
+                    <div>
+                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">1º</span> 1º Semestre (30 ECTS)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22290 - Investigação Operacional</h4>
+                            </div>
+                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22304 - Arquitetura e Padrões de Software</h4>
+                            </div>
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22285 - Programação Web Avançada</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Melhor compreensão das aplicações executadas nos servidores.</p>
+                            </div>
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22295 - Integração de Sistemas</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Reforço de competências em middleware e APIs.</p>
+                            </div>
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10 md:col-span-2">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22125 - Computação de Alto Desempenho</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Processamento distribuído e otimização de infraestruturas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2º Semestre -->
+                    <div>
+                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">2º</span> 2º Semestre (30 ECTS)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22117 - Planeamento e Desenv. de Sistemas de Informação</h4>
+                            </div>
+                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22296 - Metodologias de Investigação e Planeamento de TFC</h4>
+                            </div>
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22118 - Segurança em Rede e Computadores</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Proteção de infraestruturas de servidores.</p>
+                            </div>
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22306 - Business Intelligence</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Análise e exploração de dados empresariais.</p>
+                            </div>
+                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10 md:col-span-2">
+                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
+                                <h4 class="font-semibold">22298 - Desenvolvimento de Aplicações Móveis</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Interação entre clientes móveis e serviços backend.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2º Ano -->
+                    <div>
+                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">3º</span> 2º Ano (60 ECTS)</h2>
+                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Escolher uma das seguintes modalidades para o Trabalho de Conclusão:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 text-center border-2 border-dashed border-slate-300 dark:border-slate-700">
+                                    <h4 class="font-semibold">22129 - Dissertação</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Investigação académica</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 text-center border-2 border-emerald-500 dark:border-emerald-700">
+                                    <h4 class="font-semibold text-emerald-700 dark:text-emerald-400">22302 - Projeto</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Desenvolvimento prático (Recomendado)</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 text-center border-2 border-dashed border-slate-300 dark:border-slate-700">
+                                    <h4 class="font-semibold">22303 - Estágio</h4>
+                                    <p class="text-xs text-slate-500 mt-1">Experiência em empresa</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Objetivo Profissional -->
+                    <div class="p-6 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 text-white">
+                        <h3 class="text-lg font-bold mb-2">🎯 Objetivo Profissional</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Consolidar competências em middleware e administração de servidores, preparando a evolução para funções como 
+                            <span class="text-white font-semibold">Middleware Engineer Senior</span>, 
+                            <span class="text-white font-semibold">Platform Engineer</span>, 
+                            <span class="text-white font-semibold">Cloud/DevOps Engineer</span>, 
+                            <span class="text-white font-semibold">SRE</span> e 
+                            <span class="text-white font-semibold">Solutions Architect</span>.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -238,20 +349,80 @@
                 </div>
             </div>
 
-            <!-- STRATEGY -->
+            <!-- STRATEGY (CONTEÚDO COMPLETO RESTAURADO) -->
             <div id="view-strategy" class="view">
-                <h1 class="text-2xl md:text-3xl font-bold mb-2">Estratégia & Reconhecimento</h1>
-                <p class="text-slate-500 mb-6 md:mb-8">Plano de reconhecimento académico em Espanha.</p>
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">Estratégia & Reconhecimento em Espanha</h1>
+                <p class="text-slate-500 mb-6 md:mb-8">Plano de reconhecimento académico e evolução profissional.</p>
+                
                 <div class="space-y-6">
                     <div class="p-6 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
-                        <h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-3">✅ Situação Favorável</h3>
-                        <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">O Ministério espanhol indica que um título oficial de 180 ECTS que dê acesso a mestrado pode solicitar <strong>equivalência ao nível académico de Grado</strong>.</p>
+                        <h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-3">✅ A Tua Situação é Favorável</h3>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                            O Ministério espanhol indica expressamente que um título universitário oficial de, pelo menos, 3 anos (180 ECTS) que dê acesso a um mestrado no país de origem, pode ser objeto de uma declaração de <strong>equivalência ao nível académico de Grado</strong>. A tua licenciatura da UAb cumpre estes requisitos.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                            <div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm"><div class="text-2xl mb-1">🇪🇸</div><div class="text-xs font-semibold">ASIR + Experiência</div><div class="text-[10px] text-slate-500">Middleware Engineer</div></div>
+                            <div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm"><div class="text-2xl mb-1">🇵🇹</div><div class="text-xs font-semibold">Licenciatura UAb</div><div class="text-[10px] text-slate-500">180 ECTS (Bolonha)</div></div>
+                            <div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm border-2 border-emerald-500"><div class="text-2xl mb-1">🎓</div><div class="text-xs font-semibold text-emerald-600">Mestrado</div><div class="text-[10px] text-slate-500">Total: 300 ECTS</div></div>
+                        </div>
                     </div>
+
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                        <h3 class="text-lg font-bold mb-4">⚖️ Enquadramento Legal (Real Decreto 889/2022)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
+                                <h4 class="font-semibold text-sm mb-2">1. Homologación</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400">Para profissões reguladas (ex: Medicina, Arquitetura). <span class="font-medium text-slate-800 dark:text-slate-200">Não é o teu caso.</span></p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                                <h4 class="font-semibold text-sm mb-2 text-blue-800 dark:text-blue-300">2. Equivalencia (O Teu Caso)</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400">Reconhecimento do nível académico (Grado ou Máster). Não atribui o título "Grado en Ingeniería", mas reconhece o nível para o setor privado e acesso a mestrado.</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
+                                <h4 class="font-semibold text-sm mb-2">3. Convalidación</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400">Para aproveitar disciplinas isoladas e continuar estudos numa universidade específica.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                        <h3 class="text-lg font-bold mb-4">🗺️ Plano de Ação Recomendado</h3>
+                        <div class="space-y-4">
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">1</div>
+                                <div><h4 class="font-semibold text-sm">Concluir a Licenciatura</h4><p class="text-xs text-slate-500">Foca-te em terminar os 180 ECTS com a melhor média possível.</p></div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">2</div>
+                                <div><h4 class="font-semibold text-sm">Pedir Equivalência Académica em Espanha</h4><p class="text-xs text-slate-500">Solicita a "Equivalencia de título extranjero de educación superior al nivel de Grado".</p></div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">3</div>
+                                <div><h4 class="font-semibold text-sm text-emerald-700 dark:text-emerald-400">Iniciar e Concluir o Mestrado (MEITW)</h4><p class="text-xs text-slate-500">Este é o passo mais estratégico. Com o mestrado, atinges os 300 ECTS, o percurso completo do Espaço Europeu de Ensino Superior, eliminando qualquer dúvida sobre a tua qualificação.</p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                        <h3 class="text-lg font-bold mb-4">🚀 Plano de Carreira (Roadmap)</h3>
+                        <div class="flex flex-wrap items-center gap-2 text-sm">
+                            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-medium">Middleware Engineer</span>
+                            <span class="text-slate-400">→</span>
+                            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-medium">Senior / Platform Engineer</span>
+                            <span class="text-slate-400">→</span>
+                            <span class="px-3 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">Cloud / DevOps Engineer</span>
+                            <span class="text-slate-400">→</span>
+                            <span class="px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">Solutions Architect / CTO</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4">Complementar com certificações: Linux (RHCE), Kubernetes (CKA), Cloud (AWS/Azure) e Automação (Terraform, Ansible).</p>
+                    </div>
+
                     <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <h3 class="text-lg font-bold mb-4">🔗 Ligações Oficiais</h3>
                         <div class="space-y-2">
-                            <a href="https://www.ciencia.gob.es/Universidades/validate/equivalencia.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">⚖️ Equivalencia de títulos extranjeros</a>
-                            <a href="https://universidades.sede.gob.es/procedimientos/portada/idp/1030" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">🏛️ Sede Electrónica del Ministerio</a>
+                            <a href="https://www.ciencia.gob.es/Universidades/validate/como_reconocer.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">📄 Cómo reconocer títulos universitarios extranjeros</a>
+                            <a href="https://www.ciencia.gob.es/Universidades/validate/equivalencia.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">⚖️ Equivalencia de títulos extranjeros de educación superior al nivel de Grado</a>
+                            <a href="https://universidades.sede.gob.es/procedimientos/portada/idp/1030" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">🏛️ Sede Electrónica del Ministerio de Universidades (Trámites)</a>
                         </div>
                     </div>
                 </div>
@@ -457,8 +628,20 @@
         } else {
             sidebar.classList.remove('-translate-x-full');
             overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            document.body.style.overflow = 'hidden';
         }
+    }
+
+    // ============ NAVEGAÇÃO COM PERSISTÊNCIA (F5 FIX) ============
+    function showView(viewId, btn) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('view-' + viewId).classList.add('active');
+        if (btn) btn.classList.add('active');
+        
+        // GUARDAR A VISTA ATUAL NO LOCALSTORAGE
+        localStorage.setItem('currentView', viewId);
+        window.scrollTo(0, 0);
     }
 
     // ============ PLANEAMENTO ============
@@ -754,14 +937,7 @@
         document.getElementById('grade-distribution').innerHTML = `<div class="space-y-3">${Object.entries(stats.gradeDistribution).map(([range, count]) => `<div><div class="flex justify-between text-sm mb-1"><span>${range}</span><span class="font-medium">${count}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width: ${maxGrade > 0 ? (count/maxGrade*100) : 0}%"></div></div></div>`).join('')}</div>`;
     }
 
-    // ============ NAVEGAÇÃO E UI ============
-    function showView(viewId, btn) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('view-' + viewId).classList.add('active');
-        if (btn) btn.classList.add('active');
-        window.scrollTo(0, 0);
-    }
+    // ============ UI & INICIALIZAÇÃO ============
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     
     function toggleDark() { 
@@ -773,7 +949,7 @@
     }
     
     function exportBackup() {
-        const data = { curriculum, tasks, events, exportDate: new Date().toISOString(), version: '6.0' };
+        const data = { curriculum, tasks, events, exportDate: new Date().toISOString(), version: '7.0' };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `academy-backup-${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(url);
     }
@@ -799,12 +975,19 @@
         renderCurriculum(); renderPlanning(); renderDashboard(); renderStats(); renderCalendar(); renderCalculator();
     }
 
-    // Inicialização
+    // INICIALIZAÇÃO COM PERSISTÊNCIA DE VISTA
+    const savedView = localStorage.getItem('currentView') || 'dashboard';
+    const savedBtn = document.querySelector(`button[onclick*="showView('${savedView}'"]`);
+    const btnToUse = savedBtn || document.querySelector(`button[onclick*="showView('dashboard'"]`);
+    
     if (localStorage.getItem('darkMode') === 'true') {
         document.documentElement.classList.add('dark');
         document.getElementById('theme-icon-sun').classList.remove('hidden');
         document.getElementById('theme-icon-moon').classList.add('hidden');
     }
+    
+    // Ativar a vista guardada
+    showView(savedView, btnToUse);
     renderAll();
 </script>
 </body>
