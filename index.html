@@ -28,17 +28,18 @@
         .alert-urgent { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         
-        .plan-concluida { border-left: 4px solid #10b981; background-color: rgba(16, 185, 129, 0.05); }
-        .plan-foco_atual { border-left: 4px solid #f59e0b; background-color: rgba(245, 158, 11, 0.05); }
-        .plan-proximo { border-left: 4px solid #3b82f6; background-color: rgba(59, 130, 246, 0.05); }
-        .plan-futuro { border-left: 4px solid #94a3b8; }
-        .plan-equivalencia { border-left: 4px solid #8b5cf6; background-color: rgba(139, 92, 246, 0.05); }
-        .plan-acreditacao { border-left: 4px solid #ec4899; background-color: rgba(236, 72, 153, 0.05); }
-        .dark .plan-concluida { background-color: rgba(16, 185, 129, 0.1); }
-        .dark .plan-foco_atual { background-color: rgba(245, 158, 11, 0.1); }
-        .dark .plan-proximo { background-color: rgba(59, 130, 246, 0.1); }
-        .dark .plan-equivalencia { background-color: rgba(139, 92, 246, 0.1); }
-        .dark .plan-acreditacao { background-color: rgba(236, 72, 153, 0.1); }
+        .plan-concluida { border: 2px solid #10b981; background-color: rgba(16, 185, 129, 0.08); }
+        .plan-foco_atual { border: 2px solid #f59e0b; background-color: rgba(245, 158, 11, 0.08); }
+        .plan-proximo { border: 2px solid #3b82f6; background-color: rgba(59, 130, 246, 0.08); }
+        .plan-futuro { border: 2px solid #94a3b8; background-color: rgba(148, 163, 184, 0.05); }
+        .plan-equivalencia { border: 2px solid #8b5cf6; background-color: rgba(139, 92, 246, 0.08); }
+        .plan-acreditacao { border: 2px solid #ec4899; background-color: rgba(236, 72, 153, 0.08); }
+        .dark .plan-concluida { background-color: rgba(16, 185, 129, 0.15); }
+        .dark .plan-foco_atual { background-color: rgba(245, 158, 11, 0.15); }
+        .dark .plan-proximo { background-color: rgba(59, 130, 246, 0.15); }
+        .dark .plan-futuro { background-color: rgba(148, 163, 184, 0.1); }
+        .dark .plan-equivalencia { background-color: rgba(139, 92, 246, 0.15); }
+        .dark .plan-acreditacao { background-color: rgba(236, 72, 153, 0.15); }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
@@ -488,6 +489,15 @@
     // ============ DADOS ============
     const UAB_BASE_URL = "https://guiadoscursos.uab.pt/cursos/licenciatura-em-engenharia-informatica/";
 
+    // ============ DOCUMENTACIÓN DE ESTADOS ============
+    // Los estados de asignaturas representan diferentes situaciones académicas:
+    // - 'Aprobada' (grade >= 10): Asignatura completada satisfactoriamente
+    // - 'Reprobada' (grade < 10): Asignatura no superada, requiere revisión
+    // - 'Creditada': Reconocimiento académico externo (ex: equivalencia en España)
+    // - 'Em Curso': Actualmente inscrita/en proceso
+    // - 'Pendiente': No inscrita aún, futura
+    // Los planes de color correspondientes: concluida (verde), foco_atual (naranja), equivalencia (púrpura), futuro (gris)
+    
     function getInitialPlan(sub) {
         if (sub.grade >= 10) return 'concluida';
         if (sub.manualStatus === 'Creditada') return 'equivalencia';
@@ -597,6 +607,59 @@
     let events = JSON.parse(localStorage.getItem('events')) || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
     let currentEventFilter = 'all';
     let calcSelections = {};
+    
+    // ============ SISTEMA DE CACHÉ PARA RENDIMIENTO ============
+    // Evita recalcular estadísticas innecesariamente
+    let statsCache = null;
+    let statsCacheTimestamp = 0;
+    const CACHE_INVALIDATION_TIME = 5000; // Invalidar caché después de 5 segundos
+    
+    function invalidateStatsCache() {
+        statsCache = null;
+        statsCacheTimestamp = 0;
+    }
+    
+    // ============ VALIDACIÓN DE ESTRUCTURA DE DATOS ============
+    function validateCurriculumStructure() {
+        try {
+            if (!Array.isArray(curriculum)) {
+                throw new Error('Curriculum debe ser un array');
+            }
+            if (curriculum.length === 0) {
+                throw new Error('Curriculum está vacío');
+            }
+            
+            curriculum.forEach((year, yIdx) => {
+                if (!year.year || !Array.isArray(year.semesters)) {
+                    throw new Error(`Año ${yIdx}: estructura inválida`);
+                }
+                year.semesters.forEach((sem, sIdx) => {
+                    if (!sem.semester || !Array.isArray(sem.subjects)) {
+                        throw new Error(`Año ${year.year}, Semestre ${sIdx}: estructura inválida`);
+                    }
+                    sem.subjects.forEach((sub, subIdx) => {
+                        if (!sub.code || !sub.name || !sub.ects) {
+                            throw new Error(`Año ${year.year}, Semestre ${sem.semester}, Asignatura ${subIdx}: datos esenciales faltantes`);
+                        }
+                        // Validar tipos de datos
+                        if (typeof sub.ects !== 'number') {
+                            console.warn(`⚠️ Asignatura ${sub.code}: ECTS debe ser número`);
+                            sub.ects = parseInt(sub.ects) || 0;
+                        }
+                        if (sub.grade !== null && typeof sub.grade !== 'number') {
+                            console.warn(`⚠️ Asignatura ${sub.code}: Calificación convertida a número`);
+                            sub.grade = parseFloat(sub.grade);
+                        }
+                    });
+                });
+            });
+            
+            return { valid: true, errors: [] };
+        } catch (err) {
+            console.error('❌ Error de validación:', err.message);
+            return { valid: false, errors: [err.message] };
+        }
+    }
 
     curriculum.forEach(year => {
         year.semesters.forEach(sem => {
@@ -611,6 +674,7 @@
         localStorage.setItem('curriculum', JSON.stringify(curriculum));
         localStorage.setItem('tasks', JSON.stringify(tasks));
         localStorage.setItem('events', JSON.stringify(events));
+        invalidateStatsCache(); // Invalidar caché cuando se guardan datos
     }
 
     function getStatus(subject) {
@@ -687,7 +751,7 @@
                     <div class="space-y-3">`;
                 sem.subjects.forEach((sub, subjIdx) => {
                     stats[sub.plan].count++; stats[sub.plan].ects += sub.ects;
-                    html += `<div class="p-3 rounded-lg border bg-white dark:bg-slate-900 plan-${sub.plan} transition-all duration-300">
+                    html += `<div class="p-3 rounded-lg bg-white dark:bg-slate-900 plan-${sub.plan} transition-all duration-300">
                         <div class="flex items-center justify-between gap-3 mb-2 flex-wrap">
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-2 mb-1">
@@ -731,12 +795,33 @@
         `).join('');
     }
 
+    // Estados válidos de asignaturas
+    const VALID_STATUS = ['Aprobada', 'Reprobada', 'Creditada', 'Em Curso', 'Pendente'];
+    const VALID_PLANS = ['concluida', 'foco_atual', 'proximo', 'futuro', 'equivalencia', 'acreditacao'];
+    
     function updatePlan(yearIdx, semIdx, subjIdx, newPlan) {
-        curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].plan = newPlan;
-        if (newPlan === 'concluida' && curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade === null) curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].manualStatus = "Aprovada";
-        else if (newPlan === 'equivalencia') curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].manualStatus = "Creditada";
-        else if (newPlan === 'foco_atual') curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].manualStatus = "Em Curso";
-        saveData(); renderAll();
+        // Validar que el plan es válido
+        if (!VALID_PLANS.includes(newPlan)) {
+            console.error(`❌ Plan inválido: ${newPlan}. Debe ser uno de: ${VALID_PLANS.join(', ')}`);
+            return;
+        }
+        
+        const subject = curriculum[yearIdx].semesters[semIdx].subjects[subjIdx];
+        subject.plan = newPlan;
+        
+        // Actualizar manualStatus según el plan (mapeo automático)
+        if (newPlan === 'concluida' && subject.grade === null) {
+            subject.manualStatus = "Aprobada";
+        } else if (newPlan === 'equivalencia') {
+            subject.manualStatus = "Creditada";
+        } else if (newPlan === 'foco_atual') {
+            subject.manualStatus = "Em Curso";
+        } else {
+            subject.manualStatus = null; // Limpiar status manual para otros planes
+        }
+        
+        saveData();
+        renderAll();
     }
 
     // ============ CURRÍCULO ============
@@ -760,7 +845,7 @@
                     const subjectTasks = tasks[sub.code] || [];
                     const pendingTasks = subjectTasks.filter(t => !t.completed).length;
                     
-                    html += `<div class="p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                    html += `<div class="p-3 rounded-lg bg-white dark:bg-slate-900 plan-${sub.plan}">
                         <div class="flex items-center justify-between gap-3 mb-2">
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-2 mb-1 flex-wrap">
@@ -789,12 +874,30 @@
     }
 
     function updateGrade(yearIdx, semIdx, subjIdx, value) {
-        const grade = value === '' ? null : parseInt(value);
-        if (grade !== null && (grade < 0 || grade > 20)) { alert('Nota deve ser entre 0 e 20'); renderAll(); return; }
-        curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade = grade;
+        // Validación estricta de calificación
+        const trimmedValue = value.trim();
+        if (trimmedValue === '') {
+            curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade = null;
+        } else {
+            const grade = parseFloat(trimmedValue);
+            // Validar que es un número válido
+            if (isNaN(grade)) {
+                alert('❌ Error: La calificación debe ser un número válido (0-20)');
+                return;
+            }
+            // Validar rango (0-20, como escala portuguesa)
+            if (grade < 0 || grade > 20) {
+                alert('❌ Error: La calificación debe estar entre 0 y 20');
+                return;
+            }
+            curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade = grade;
+        }
         curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].manualStatus = null;
-        if (grade >= 10) curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].plan = 'concluida';
-        saveData(); renderAll();
+        if (curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade >= 10) {
+            curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].plan = 'concluida';
+        }
+        saveData();
+        renderAll();
     }
 
     // ============ TAREFAS ============
@@ -909,20 +1012,73 @@
     }
 
     // ============ DASHBOARD & STATS ============
-    function calculateStats() {
+    function calculateStats(useCache = true) {
+        // Sistema de caché: evita recalcular si los datos no han cambiado
+        const now = Date.now();
+        if (useCache && statsCache && (now - statsCacheTimestamp) < CACHE_INVALIDATION_TIME) {
+            return statsCache;
+        }
+        
         let totalEcts = 0, completedEcts = 0, totalGradePoints = 0, gradedCount = 0;
         let approved = 0, failed = 0, inProgress = 0, credited = 0, pending = 0;
         let gradeDistribution = { '16-20': 0, '13-15': 0, '10-12': 0, '<10': 0 };
-        curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => {
-            totalEcts += sub.ects; const status = getStatus(sub);
-            if (status === "Aprovada") { approved++; completedEcts += sub.ects; totalGradePoints += sub.grade; gradedCount++; if (sub.grade >= 16) gradeDistribution['16-20']++; else if (sub.grade >= 13) gradeDistribution['13-15']++; else gradeDistribution['10-12']++; } 
-            else if (status === "Reprovada") { failed++; gradeDistribution['<10']++; }
-            else if (status === "Em Curso") { inProgress++; }
-            else if (status === "Creditada") { credited++; completedEcts += sub.ects; }
-            else { pending++; }
-        }); }); });
+        
+        // Iterar por todas las asignaturas
+        curriculum.forEach(year => {
+            year.semesters.forEach(sem => {
+                sem.subjects.forEach(sub => {
+                    totalEcts += sub.ects;
+                    const status = getStatus(sub);
+                    
+                    switch(status) {
+                        case "Aprovada":
+                            approved++;
+                            completedEcts += sub.ects;
+                            if (sub.grade !== null && sub.grade !== undefined) {
+                                totalGradePoints += sub.grade;
+                                gradedCount++;
+                                if (sub.grade >= 16) gradeDistribution['16-20']++;
+                                else if (sub.grade >= 13) gradeDistribution['13-15']++;
+                                else gradeDistribution['10-12']++;
+                            }
+                            break;
+                        case "Reprovada":
+                            failed++;
+                            gradeDistribution['<10']++;
+                            break;
+                        case "Em Curso":
+                            inProgress++;
+                            break;
+                        case "Creditada":
+                            credited++;
+                            completedEcts += sub.ects;
+                            break;
+                        default: // Pendente
+                            pending++;
+                    }
+                });
+            });
+        });
+        
         const average = gradedCount > 0 ? (totalGradePoints / gradedCount).toFixed(2) : 0;
-        return { totalEcts, completedEcts, average, approved, failed, inProgress, credited, pending, totalSubjects: approved + failed + inProgress + credited + pending, gradeDistribution };
+        const result = {
+            totalEcts,
+            completedEcts,
+            average,
+            approved,
+            failed,
+            inProgress,
+            credited,
+            pending,
+            totalSubjects: approved + failed + inProgress + credited + pending,
+            gradeDistribution
+        };
+        
+        // Guardar en caché
+        statsCache = result;
+        statsCacheTimestamp = now;
+        
+        return result;
     }
 
     function renderDashboard() {
@@ -937,10 +1093,10 @@
         }
         document.getElementById('dashboard-alerts').innerHTML = alertsHtml;
         document.getElementById('dashboard-stats').innerHTML = `
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Média</p><h3 class="text-3xl font-bold mt-2">${stats.average}</h3></div>
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">ECTS</p><h3 class="text-3xl font-bold mt-2">${stats.completedEcts} <span class="text-lg text-slate-400 font-normal">/ ${stats.totalEcts}</span></h3><div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width: ${percentage}%"></div></div></div>
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Aprovadas</p><h3 class="text-3xl font-bold mt-2">${stats.approved} <span class="text-lg text-slate-400 font-normal">/ ${stats.totalSubjects}</span></h3></div>
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Em Curso</p><h3 class="text-3xl font-bold mt-2">${stats.inProgress}</h3></div>
+            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Calificación promedio de las disciplinas aprobadas (≥10)"><p class="text-sm text-slate-500 flex items-center gap-1">Média <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.average}</h3></div>
+            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Créditos ECTS completados de los 180 totales de tu licenciatura"><p class="text-sm text-slate-500 flex items-center gap-1">ECTS <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.completedEcts} <span class="text-lg text-slate-400 font-normal">/ ${stats.totalEcts}</span></h3><div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width: ${percentage}%"></div></div></div>
+            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Disciplinas aprobadas (nota ≥ 10) de un total de todas las disciplinas"><p class="text-sm text-slate-500 flex items-center gap-1">Aprovadas <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.approved} <span class="text-lg text-slate-400 font-normal">/ ${stats.totalSubjects}</span></h3></div>
+            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Disciplinas en las que estás actualmente inscrito/inscrita"><p class="text-sm text-slate-500 flex items-center gap-1">Em Curso <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.inProgress}</h3></div>
         `;
         document.getElementById('degree-progress').innerHTML = `
             <div class="flex justify-between text-sm mb-2"><span class="font-medium">Licenciatura</span><span class="text-slate-500">${percentage}%</span></div>
@@ -978,16 +1134,64 @@
         const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `academy-backup-${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(url);
     }
     function importBackup(event) {
-        const file = event.target.files[0]; if (!file) return;
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Validar tipo de archivo
+        if (!file.name.endsWith('.json')) {
+            alert('❌ Error: Solo se aceptan archivos JSON (.json)');
+            event.target.value = '';
+            return;
+        }
+        
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
                 const data = JSON.parse(e.target.result);
-                if (data.curriculum) { curriculum = data.curriculum; tasks = data.tasks || {}; events = data.events || []; saveData(); renderAll(); alert('Backup importado!'); } 
-                else { alert('Ficheiro inválido'); }
-            } catch (err) { alert('Erro ao ler'); }
+                
+                // Validar estructura del backup
+                if (!data.curriculum || !Array.isArray(data.curriculum)) {
+                    throw new Error('Estructura inválida: "curriculum" debe ser un array');
+                }
+                
+                // Validar que curriculum no está vacío
+                if (data.curriculum.length === 0) {
+                    throw new Error('El curriculum está vacío');
+                }
+                
+                // Validar versión (recomendación)
+                if (data.version && data.version !== '7.0') {
+                    console.warn(`⚠️ Advertencia: Versión del backup (${data.version}) diferente de la actual (7.0). Algunos datos pueden no ser compatibles.`);
+                }
+                
+                // Validar fecha de exportación
+                if (!data.exportDate) {
+                    console.warn('⚠️ Advertencia: Backup sin fecha de exportación');
+                }
+                
+                // Importar datos
+                curriculum = data.curriculum;
+                tasks = data.tasks || {};
+                events = data.events || [];
+                
+                saveData();
+                renderAll();
+                
+                // Mostrar confirmación con detalles
+                const backupDate = data.exportDate ? new Date(data.exportDate).toLocaleDateString() : 'desconocida';
+                alert(`✅ Backup importado correctamente\n\n📅 Fecha: ${backupDate}\n📚 Asignaturas: ${data.curriculum.length}\n🗂️ Tareas: ${Object.keys(tasks).length}`);
+            } catch (err) {
+                alert(`❌ Error al importar:\n${err.message}`);
+                console.error('Import error details:', err);
+            }
         };
-        reader.readAsText(file); event.target.value = '';
+        
+        reader.onerror = () => {
+            alert('❌ Error: No se pudo leer el archivo');
+        };
+        
+        reader.readAsText(file);
+        event.target.value = '';
     }
     function resetData() {
         if (confirm('Tens a certeza?')) {
@@ -999,7 +1203,18 @@
         renderCurriculum(); renderPlanning(); renderDashboard(); renderStats(); renderCalendar(); renderCalculator();
     }
 
-    // INICIALIZAÇÃO COM PERSISTÊNCIA DE VISTA
+    // INICIALIZACIÓN CON VALIDACIÓN DE DATOS
+    // Validar estructura al iniciar
+    const validation = validateCurriculumStructure();
+    if (!validation.valid) {
+        console.warn('⚠️ Se detectaron problemas en los datos. Intentando recuperar...');
+        // Si hay problemas graves, cargar el curriculum por defecto
+        if (confirm('⚠️ Se detectaron problemas en los datos. ¿Deseas cargar los datos por defecto?\n\nEsto preservará tus cambios si exportaste un backup recientemente.')) {
+            curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+            saveData();
+        }
+    }
+    
     const savedView = localStorage.getItem('currentView') || 'dashboard';
     const savedBtn = document.querySelector(`button[onclick*="showView('${savedView}'"]`);
     const btnToUse = savedBtn || document.querySelector(`button[onclick*="showView('dashboard'"]`);
@@ -1010,9 +1225,14 @@
         document.getElementById('theme-icon-moon').classList.add('hidden');
     }
     
-    // Ativar a vista guardada
+    // Activar la vista guardada
     showView(savedView, btnToUse);
     renderAll();
+    
+    // Log de inicialización exitosa
+    console.log('✅ Academia Hub inicializada correctamente');
+    console.log(`📚 Total de asignaturas: ${curriculum.reduce((sum, y) => sum + y.semesters.reduce((s, sem) => s + sem.subjects.length, 0), 0)}`);
+    console.log(`📊 ECTS totales: ${curriculum.reduce((sum, y) => sum + y.semesters.reduce((s, sem) => s + sem.subjects.reduce((ss, sub) => ss + sub.ects, 0), 0), 0)}`);
 </script>
 </body>
 </html>
