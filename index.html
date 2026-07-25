@@ -32,18 +32,38 @@
         .alert-urgent { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         
-        /* BORDAS COMPLETAS POR ESTADO ATUAL (Visíveis e Coloridas) */
-        .status-aprovada { border: 2px solid #10b981 !important; background-color: rgba(16, 185, 129, 0.05); }
-        .status-reprovada { border: 2px solid #ef4444 !important; background-color: rgba(239, 68, 68, 0.05); }
-        .status-em_curso { border: 2px solid #f59e0b !important; background-color: rgba(245, 158, 11, 0.05); }
-        .status-creditada { border: 2px solid #3b82f6 !important; background-color: rgba(59, 130, 246, 0.05); }
-        .status-pendente { border: 2px solid #94a3b8 !important; background-color: rgba(148, 163, 184, 0.05); }
+        /* BORDAS COMPLETAS POR ESTADO DO PLANO (6 cores visíveis) */
+        .plan-concluida { 
+            border: 2px solid #10b981 !important; 
+            background-color: rgba(16, 185, 129, 0.08); 
+        }
+        .plan-foco_atual { 
+            border: 2px solid #f59e0b !important; 
+            background-color: rgba(245, 158, 11, 0.08); 
+        }
+        .plan-proximo { 
+            border: 2px solid #3b82f6 !important; 
+            background-color: rgba(59, 130, 246, 0.08); 
+        }
+        .plan-equivalencia { 
+            border: 2px solid #8b5cf6 !important; 
+            background-color: rgba(139, 92, 246, 0.08); 
+        }
+        .plan-acreditacao { 
+            border: 2px solid #ec4899 !important; 
+            background-color: rgba(236, 72, 153, 0.08); 
+        }
+        .plan-futuro { 
+            border: 2px solid #94a3b8 !important; 
+            background-color: rgba(148, 163, 184, 0.05); 
+        }
         
-        .dark .status-aprovada { background-color: rgba(16, 185, 129, 0.1); }
-        .dark .status-reprovada { background-color: rgba(239, 68, 68, 0.1); }
-        .dark .status-em_curso { background-color: rgba(245, 158, 11, 0.1); }
-        .dark .status-creditada { background-color: rgba(59, 130, 246, 0.1); }
-        .dark .status-pendente { background-color: rgba(148, 163, 184, 0.1); }
+        .dark .plan-concluida { background-color: rgba(16, 185, 129, 0.15); }
+        .dark .plan-foco_atual { background-color: rgba(245, 158, 11, 0.15); }
+        .dark .plan-proximo { background-color: rgba(59, 130, 246, 0.15); }
+        .dark .plan-equivalencia { background-color: rgba(139, 92, 246, 0.15); }
+        .dark .plan-acreditacao { background-color: rgba(236, 72, 153, 0.15); }
+        .dark .plan-futuro { background-color: rgba(148, 163, 184, 0.1); }
 
         .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 120px; }
         .bar-chart .bar { flex: 1; min-width: 20px; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; }
@@ -461,18 +481,16 @@ function getAllSubjects() {
     return all;
 }
 
-// RENDER PLANNING (COM BORDAS POR ESTADO ATUAL)
+// RENDER PLANNING (COM BORDAS POR ESTADO DO PLANO - 6 cores)
 function renderPlanning() {
     const container = document.getElementById('planning-content'), summaryContainer = document.getElementById('planning-summary');
     let html = '', stats = { concluida:{count:0,ects:0}, foco_atual:{count:0,ects:0}, proximo:{count:0,ects:0}, equivalencia:{count:0,ects:0}, acreditacao:{count:0,ects:0}, futuro:{count:0,ects:0} };
     curriculum.forEach((year,yearIdx)=>{html+=`<div class="mb-8"><h2 class="text-xl font-semibold mb-4 flex items-center gap-2"><span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold">${year.year}º</span> Ano</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
-    year.semesters.forEach((sem,semIdx)=>{html+=`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3><div class="space-y-3">`;
+    year.semesters.forEach((sem,semIdx)=>{html+=`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3><div class="space-y-3">`;
     sem.subjects.forEach((sub,subjIdx)=>{
         stats[sub.plan].count++;stats[sub.plan].ects+=sub.ects;
-        const st = getStatus(sub);
-        const statusClass = st === "Aprovada" ? "status-aprovada" : st === "Reprovada" ? "status-reprovada" : st === "Em Curso" ? "status-em_curso" : st === "Creditada" ? "status-creditada" : "status-pendente";
-        
-        html+=`<div class="p-3 rounded-lg ${statusClass}"><div class="flex items-center justify-between gap-3 mb-2 flex-wrap"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span></div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="text-xs font-semibold ${sub.grade!==null?'text-emerald-600 dark:text-emerald-400':'text-slate-400'}">${sub.grade!==null?'Nota: '+sub.grade:'Sem nota'}</span></div></div><select onchange="updatePlan(${yearIdx},${semIdx},${subjIdx},this.value)" class="text-xs font-medium rounded-lg px-2 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none cursor-pointer w-full md:w-auto mt-2 md:mt-0"><option value="concluida" ${sub.plan==='concluida'?'selected':''}>✅ Concluída</option><option value="foco_atual" ${sub.plan==='foco_atual'?'selected':''}>🔥 Foco Atual</option><option value="proximo" ${sub.plan==='proximo'?'selected':''}>📅 Próximo</option><option value="equivalencia" ${sub.plan==='equivalencia'?'selected':''}>🔄 Equivalência</option><option value="acreditacao" ${sub.plan==='acreditacao'?'selected':''}>🏅 Acreditação</option><option value="futuro" ${sub.plan==='futuro'?'selected':''}>🔮 Futuro</option></select></div></div>`;
+        // APLICA A CLASSE DO PLANO (6 cores visíveis)
+        html+=`<div class="p-3 rounded-lg plan-${sub.plan}"><div class="flex items-center justify-between gap-3 mb-2 flex-wrap"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span></div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="text-xs font-semibold ${sub.grade!==null?'text-emerald-600 dark:text-emerald-400':'text-slate-400'}">${sub.grade!==null?'Nota: '+sub.grade:'Sem nota'}</span></div></div><select onchange="updatePlan(${yearIdx},${semIdx},${subjIdx},this.value)" class="text-xs font-medium rounded-lg px-2 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none cursor-pointer w-full md:w-auto mt-2 md:mt-0"><option value="concluida" ${sub.plan==='concluida'?'selected':''}>✅ Concluída</option><option value="foco_atual" ${sub.plan==='foco_atual'?'selected':''}>🔥 Foco Atual</option><option value="proximo" ${sub.plan==='proximo'?'selected':''}>📅 Próximo</option><option value="equivalencia" ${sub.plan==='equivalencia'?'selected':''}>🔄 Equivalência</option><option value="acreditacao" ${sub.plan==='acreditacao'?'selected':''}>🏅 Acreditação</option><option value="futuro" ${sub.plan==='futuro'?'selected':''}>🔮 Futuro</option></select></div></div>`;
     });
     html+=`</div></div>`;});html+=`</div></div>`;});
     container.innerHTML = html;
@@ -482,7 +500,7 @@ function renderPlanning() {
 }
 function updatePlan(yi,si,su,v){curriculum[yi].semesters[si].subjects[su].plan=v;if(v==='concluida'&&curriculum[yi].semesters[si].subjects[su].grade===null)curriculum[yi].semesters[si].subjects[su].manualStatus="Aprovada";else if(v==='equivalencia')curriculum[yi].semesters[si].subjects[su].manualStatus="Creditada";else if(v==='foco_atual')curriculum[yi].semesters[si].subjects[su].manualStatus="Em Curso";saveData();renderAll();}
 
-// RENDER CURRICULUM (COM BORDAS POR ESTADO ATUAL)
+// RENDER CURRICULUM (COM BORDAS POR ESTADO DO PLANO - 6 cores)
 function renderCurriculum(){
     const c=document.getElementById('curriculum-content');
     let h='';
@@ -492,12 +510,12 @@ function renderCurriculum(){
             h+=`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3><div class="space-y-2">`;
             sem.subjects.forEach((sub,su)=>{
                 const st=getStatus(sub);
-                const statusClass = st === "Aprovada" ? "status-aprovada" : st === "Reprovada" ? "status-reprovada" : st === "Em Curso" ? "status-em_curso" : st === "Creditada" ? "status-creditada" : "status-pendente";
                 const sc={"Aprovada":"bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400","Reprovada":"bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400","Creditada":"bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400","Em Curso":"bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400","Pendente":"bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400"};
                 const si2={"Aprovada":"✅","Reprovada":"❌","Creditada":"🎓","Em Curso":"⏳","Pendente":"⏸️"};
                 const tk=tasks[sub.code]||[];
                 const pt=tk.filter(t=>!t.completed).length;
-                h+=`<div class="p-3 rounded-lg ${statusClass}"><div class="flex items-center justify-between gap-3 mb-2"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span>${sub.url?`<a href="${sub.url}" target="_blank" class="text-slate-400 hover:text-blue-500 flex-shrink-0">🔗</a>`:''}</div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${sc[st]}">${si2[st]} ${st}</span></div></div><input type="number" min="0" max="20" value="${sub.grade!==null?sub.grade:''}" onchange="updateGrade(${yi},${si},${su},this.value)" placeholder="—" class="grade-input text-sm font-semibold rounded px-2 py-1"></div><div class="flex gap-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-700"><button onclick="openTaskModal('${sub.code}')" class="flex-1 text-xs px-2 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-1">✅ Tarefas ${pt>0?`<span class="bg-amber-500 text-white px-1.5 rounded-full text-[10px]">${pt}</span>`:''}</button></div>${tk.length>0?`<div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 space-y-1">${tk.slice(0,3).map(t=>`<div class="flex items-center gap-2 text-xs"><input type="checkbox" ${t.completed?'checked':''} onchange="toggleTask('${sub.code}','${t.id}')" class="rounded"><span class="${t.completed?'line-through text-slate-400':''} flex-1 truncate">${t.title}</span>${t.dueDate?`<span class="text-slate-400 text-[10px]">${formatDate(t.dueDate)}</span>`:''}<button onclick="deleteTask('${sub.code}','${t.id}')" class="text-red-500 hover:text-red-700">×</button></div>`).join('')}</div>`:''}</div>`;
+                // APLICA A CLASSE DO PLANO (6 cores visíveis)
+                h+=`<div class="p-3 rounded-lg plan-${sub.plan}"><div class="flex items-center justify-between gap-3 mb-2"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span>${sub.url?`<a href="${sub.url}" target="_blank" class="text-slate-400 hover:text-blue-500 flex-shrink-0">🔗</a>`:''}</div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${sc[st]}">${si2[st]} ${st}</span></div></div><input type="number" min="0" max="20" value="${sub.grade!==null?sub.grade:''}" onchange="updateGrade(${yi},${si},${su},this.value)" placeholder="—" class="grade-input text-sm font-semibold rounded px-2 py-1"></div><div class="flex gap-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-700"><button onclick="openTaskModal('${sub.code}')" class="flex-1 text-xs px-2 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-1">✅ Tarefas ${pt>0?`<span class="bg-amber-500 text-white px-1.5 rounded-full text-[10px]">${pt}</span>`:''}</button></div>${tk.length>0?`<div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 space-y-1">${tk.slice(0,3).map(t=>`<div class="flex items-center gap-2 text-xs"><input type="checkbox" ${t.completed?'checked':''} onchange="toggleTask('${sub.code}','${t.id}')" class="rounded"><span class="${t.completed?'line-through text-slate-400':''} flex-1 truncate">${t.title}</span>${t.dueDate?`<span class="text-slate-400 text-[10px]">${formatDate(t.dueDate)}</span>`:''}<button onclick="deleteTask('${sub.code}','${t.id}')" class="text-red-500 hover:text-red-700">×</button></div>`).join('')}</div>`:''}</div>`;
             });
             h+=`</div></div>`;
         });
@@ -670,7 +688,7 @@ function renderDashboard(){
     const ne=events.filter(e=>e.status!=='done').sort((a,b)=>new Date(a.start)-new Date(b.start)).slice(0,5);
     document.getElementById('upcoming-events').innerHTML=ne.length?ne.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);return`<div class="flex items-start gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 last:border-0 last:pb-0"><div class="w-2 h-2 rounded-full bg-slate-900 dark:bg-white mt-2"></div><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${e.title}</p><p class="text-xs text-slate-500">${s?s.name:''}</p><p class="text-xs text-slate-400 mt-0.5">${d<=0?'🔥 Hoje!':`📅 Faltam ${d}d`}</p></div></div>`;}).join(''):'<p class="text-sm text-slate-500 text-center py-4">Sem eventos 🎉</p>';}
 
-// BUSQUEDA (COM BORDAS POR ESTADO ATUAL)
+// BUSQUEDA (COM BORDAS POR ESTADO DO PLANO - 6 cores)
 function renderBusqueda(){
     const q=(document.getElementById('search-input').value||'').toLowerCase();const fe=document.getElementById('filter-estado').value;const fp=document.getElementById('filter-plan').value;const fa=document.getElementById('filter-ano').value;const fs=document.getElementById('filter-semestre').value;const fects=document.getElementById('filter-ects').value;
     let results=getAllSubjects().filter(s=>{
@@ -680,12 +698,7 @@ function renderBusqueda(){
         if(fects&&s.ects!==parseInt(fects))return false;return true;
     });
     const sc={"Aprovada":"bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400","Reprovada":"bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400","Creditada":"bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400","Em Curso":"bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400","Pendente":"bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400"};
-    const st = getStatus(s); // Nota: 's' is not defined here, let's fix it
-    // Actually, let's map it inside the map function
-    document.getElementById('busqueda-results').innerHTML=results.length?`<p class="text-xs text-slate-500 mb-2">${results.length} resultado(s)</p>`+results.map(s=>{
-        const statusClass = getStatus(s) === "Aprovada" ? "status-aprovada" : getStatus(s) === "Reprovada" ? "status-reprovada" : getStatus(s) === "Em Curso" ? "status-em_curso" : getStatus(s) === "Creditada" ? "status-creditada" : "status-pendente";
-        return `<div class="search-result p-3 rounded-lg ${statusClass} flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2 flex-1 min-w-0"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${s.code}</span><span class="font-medium text-sm truncate">${s.name}</span><span class="text-[10px] text-slate-400">${s.year}ºA ${s.semester}ºS</span></div><div class="flex items-center gap-3"><span class="text-xs">${s.ects} ECTS</span><span class="text-xs font-semibold ${s.grade!==null?'text-emerald-600':'text-slate-400'}">${s.grade!==null?s.grade:'—'}</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${sc[getStatus(s)]}">${getStatus(s)}</span></div></div>`;
-    }).join(''):'<p class="text-center text-slate-500 py-8">Ingresa un término de búsqueda o usa los filtros para comenzar</p>';
+    document.getElementById('busqueda-results').innerHTML=results.length?`<p class="text-xs text-slate-500 mb-2">${results.length} resultado(s)</p>`+results.map(s=>`<div class="search-result p-3 rounded-lg plan-${s.plan} flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2 flex-1 min-w-0"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${s.code}</span><span class="font-medium text-sm truncate">${s.name}</span><span class="text-[10px] text-slate-400">${s.year}ºA ${s.semester}ºS</span></div><div class="flex items-center gap-3"><span class="text-xs">${s.ects} ECTS</span><span class="text-xs font-semibold ${s.grade!==null?'text-emerald-600':'text-slate-400'}">${s.grade!==null?s.grade:'—'}</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${sc[getStatus(s)]}">${getStatus(s)}</span></div></div>`).join(''):'<p class="text-center text-slate-500 py-8">Ingresa un término de búsqueda o usa los filtros para comenzar</p>';
 }
 
 // ALERTAS
@@ -717,7 +730,7 @@ function renderGraficos(){
 function renderStats(){const st=calculateStats();const t=st.totalSubjects;document.getElementById('subject-distribution').innerHTML=`<div class="space-y-3">${[{label:'Aprovadas',value:st.approved,color:'bg-emerald-500'},{label:'Reprovadas',value:st.failed,color:'bg-red-500'},{label:'Em Curso',value:st.inProgress,color:'bg-amber-500'},{label:'Creditadas',value:st.credited,color:'bg-blue-500'},{label:'Pendentes',value:st.pending,color:'bg-slate-400'}].map(i=>`<div><div class="flex justify-between text-sm mb-1"><span>${i.label}</span><span class="font-medium">${i.value}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full ${i.color} rounded-full" style="width:${t>0?(i.value/t*100):0}%"></div></div></div>`).join('')}</div>`;const mg=Math.max(...Object.values(st.gradeDistribution));document.getElementById('grade-distribution').innerHTML=`<div class="space-y-3">${Object.entries(st.gradeDistribution).map(([r,c])=>`<div><div class="flex justify-between text-sm mb-1"><span>${r}</span><span class="font-medium">${c}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${mg>0?(c/mg*100):0}%"></div></div></div>`).join('')}</div>`;}
 
 // UI
-function exportBackup(){const d={curriculum,tasks,events,efolioData,certifications,exportDate:new Date().toISOString(),version:'9.2'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`academy-backup-${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
+function exportBackup(){const d={curriculum,tasks,events,efolioData,certifications,exportDate:new Date().toISOString(),version:'9.3'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`academy-backup-${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
 function importBackup(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.curriculum){curriculum=d.curriculum;tasks=d.tasks||{};events=d.events||[];efolioData=d.efolioData||{};certifications=d.certifications||JSON.parse(JSON.stringify(DEFAULT_CERTS));saveData();renderAll();alert('Backup importado!');}else alert('Ficheiro inválido');}catch(err){alert('Erro ao ler');}};r.readAsText(f);ev.target.value='';}
 function resetData(){if(confirm('Tens a certeza?')){curriculum=JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));tasks={};events=JSON.parse(JSON.stringify(DEFAULT_EVENTS));efolioData={};certifications=JSON.parse(JSON.stringify(DEFAULT_CERTS));calcSelections={};saveData();renderAll();}}
 function renderAll(){renderCurriculum();renderPlanning();renderDashboard();renderStats();renderCalendar();renderCalculator();renderEfolios();renderCertifications();renderBusqueda();renderAlertas();renderGraficos();}
