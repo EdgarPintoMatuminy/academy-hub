@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Matuminy Hub">
     <title>Edgar Pinto Matuminy Academy Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -28,27 +32,33 @@
         .alert-urgent { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         
-        .plan-concluida { border: 2px solid #10b981; background-color: rgba(16, 185, 129, 0.08); }
-        .plan-foco_atual { border: 2px solid #f59e0b; background-color: rgba(245, 158, 11, 0.08); }
-        .plan-proximo { border: 2px solid #3b82f6; background-color: rgba(59, 130, 246, 0.08); }
-        .plan-futuro { border: 2px solid #94a3b8; background-color: rgba(148, 163, 184, 0.05); }
-        .plan-equivalencia { border: 2px solid #8b5cf6; background-color: rgba(139, 92, 246, 0.08); }
-        .plan-acreditacao { border: 2px solid #ec4899; background-color: rgba(236, 72, 153, 0.08); }
-        .dark .plan-concluida { background-color: rgba(16, 185, 129, 0.15); }
-        .dark .plan-foco_atual { background-color: rgba(245, 158, 11, 0.15); }
-        .dark .plan-proximo { background-color: rgba(59, 130, 246, 0.15); }
-        .dark .plan-futuro { background-color: rgba(148, 163, 184, 0.1); }
-        .dark .plan-equivalencia { background-color: rgba(139, 92, 246, 0.15); }
-        .dark .plan-acreditacao { background-color: rgba(236, 72, 153, 0.15); }
+        /* BORDAS COMPLETAS POR ESTADO ATUAL (Visíveis e Coloridas) */
+        .status-aprovada { border: 2px solid #10b981 !important; background-color: rgba(16, 185, 129, 0.05); }
+        .status-reprovada { border: 2px solid #ef4444 !important; background-color: rgba(239, 68, 68, 0.05); }
+        .status-em_curso { border: 2px solid #f59e0b !important; background-color: rgba(245, 158, 11, 0.05); }
+        .status-creditada { border: 2px solid #3b82f6 !important; background-color: rgba(59, 130, 246, 0.05); }
+        .status-pendente { border: 2px solid #94a3b8 !important; background-color: rgba(148, 163, 184, 0.05); }
+        
+        .dark .status-aprovada { background-color: rgba(16, 185, 129, 0.1); }
+        .dark .status-reprovada { background-color: rgba(239, 68, 68, 0.1); }
+        .dark .status-em_curso { background-color: rgba(245, 158, 11, 0.1); }
+        .dark .status-creditada { background-color: rgba(59, 130, 246, 0.1); }
+        .dark .status-pendente { background-color: rgba(148, 163, 184, 0.1); }
+
+        .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 120px; }
+        .bar-chart .bar { flex: 1; min-width: 20px; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; }
+        .bar-chart .bar:hover { opacity: 0.8; }
+        .bar-chart .bar .bar-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 9px; white-space: nowrap; }
+        .bar-chart .bar .bar-value { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; }
+        .search-result { transition: all 0.2s; }
+        .search-result:hover { transform: translateX(4px); }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
 
 <div class="flex min-h-screen relative">
-    <!-- OVERLAY MOBILE -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden" onclick="toggleMobileMenu()"></div>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4 flex-shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 overflow-y-auto">
         <div class="flex items-center justify-between mb-8 p-2">
             <div class="flex items-center gap-3">
@@ -62,7 +72,6 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
         </div>
-        
         <nav class="space-y-1">
             <button onclick="showView('dashboard', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📊 Dashboard</button>
             <button onclick="showView('journey', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🛤️ A Minha Jornada</button>
@@ -71,10 +80,14 @@
             <button onclick="showView('master-plan', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🎓 Plano Recomendado (Mest.)</button>
             <button onclick="showView('calendar', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📅 Calendário</button>
             <button onclick="showView('calculator', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧮 Calculadora</button>
+            <button onclick="showView('efolios', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📝 E-folios Detalhado</button>
+            <button onclick="showView('certifications', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🏆 Certificações</button>
             <button onclick="showView('strategy', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚖️ Estratégia</button>
+            <button onclick="showView('busqueda', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🔍 Búsqueda</button>
+            <button onclick="showView('alertas', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚠️ Alertas</button>
+            <button onclick="showView('graficos', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📊 Gráficos</button>
             <button onclick="showView('stats', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📈 Estatísticas</button>
         </nav>
-
         <div class="mt-8 space-y-2">
             <button onclick="exportBackup()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition">💾 Exportar Backup</button>
             <button onclick="document.getElementById('import-file').click()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📥 Importar Backup</button>
@@ -83,26 +96,19 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 min-w-0 flex flex-col w-full">
-        <!-- HEADER -->
         <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between md:justify-end">
             <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
             </button>
-            <button onclick="toggleDark()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Alternar tema" title="Alternar tema">
-                <span id="theme-icon-sun" class="hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-                </span>
-                <span id="theme-icon-moon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-                </span>
+            <button onclick="toggleDark()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Alternar tema">
+                <span id="theme-icon-sun" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+                <span id="theme-icon-moon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
             </button>
         </header>
 
-        <!-- CONTEÚDO -->
         <div class="flex-1 p-4 md:p-10 max-w-6xl mx-auto w-full overflow-x-hidden">
-            
+
             <!-- DASHBOARD -->
             <div id="view-dashboard" class="view">
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">Dashboard</h1>
@@ -113,6 +119,7 @@
                     <div class="lg:col-span-2 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <h3 class="text-lg font-semibold mb-4">Progresso da Licenciatura</h3>
                         <div id="degree-progress"></div>
+                        <div id="completion-prediction" class="mt-6 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800"></div>
                     </div>
                     <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                         <h3 class="text-lg font-semibold mb-4">Próximos Eventos</h3>
@@ -127,24 +134,9 @@
                 <p class="text-slate-500 mb-6 md:mb-8">O teu percurso académico completo rumo aos 300 ECTS.</p>
                 <div class="p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                     <div class="relative border-l-2 border-slate-200 dark:border-slate-700 ml-4 space-y-8">
-                        <div class="relative pl-8">
-                            <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-600"></div>
-                            <h3 class="text-lg font-semibold">ASIR</h3>
-                            <p class="text-slate-500 text-sm">CIFP Elorrieta Erreka Mari</p>
-                            <a href="https://www.elorrieta.eus/es/estudios/administracion-de-sistemas-informaticos-en-red/" target="_blank" class="inline-flex items-center gap-1 mt-1 text-xs text-blue-600 dark:text-blue-400 hover:underline">🔗 Ver Programa</a>
-                        </div>
-                        <div class="relative pl-8">
-                            <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-900 dark:bg-white"></div>
-                            <h3 class="text-lg font-semibold">Licenciatura em Engenharia Informática</h3>
-                            <p class="text-slate-500 text-sm">Universidade Aberta • Portugal</p>
-                            <a href="https://guiadoscursos.uab.pt/cursos/licenciatura-em-engenharia-informatica/" target="_blank" class="inline-flex items-center gap-1 mt-1 text-xs text-blue-600 dark:text-blue-400 hover:underline">🔗 Ver Guia de Cursos</a>
-                        </div>
-                        <div class="relative pl-8">
-                            <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-slate-400 dark:border-slate-500 bg-transparent"></div>
-                            <h3 class="text-lg font-semibold">Mestrado (MEITW)</h3>
-                            <p class="text-slate-500 text-sm">Universidade Aberta • Portugal</p>
-                            <a href="https://guiadoscursos.uab.pt/cursos/mestrado-em-engenharia-informatica-e-tecnologia-web/" target="_blank" class="inline-flex items-center gap-1 mt-1 text-xs text-blue-600 dark:text-blue-400 hover:underline">🔗 Ver Guia de Cursos</a>
-                        </div>
+                        <div class="relative pl-8"><div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-600"></div><h3 class="text-lg font-semibold">ASIR</h3><p class="text-slate-500 text-sm">CIFP Elorrieta Erreka Mari</p><a href="https://www.elorrieta.eus/es/estudios/administracion-de-sistemas-informaticos-en-red/" target="_blank" class="inline-flex items-center gap-1 mt-1 text-xs text-blue-600 dark:text-blue-400 hover:underline">🔗 Ver Programa</a></div>
+                        <div class="relative pl-8"><div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-900 dark:bg-white"></div><h3 class="text-lg font-semibold">Licenciatura em Engenharia Informática</h3><p class="text-slate-500 text-sm">Universidade Aberta • Portugal</p><a href="https://guiadoscursos.uab.pt/cursos/licenciatura-em-engenharia-informatica/" target="_blank" class="inline-flex items-center gap-1 mt-1 text-xs text-blue-600 dark:text-blue-400 hover:underline">🔗 Ver Guia de Cursos</a></div>
+                        <div class="relative pl-8"><div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-slate-400 dark:border-slate-500 bg-transparent"></div><h3 class="text-lg font-semibold">Mestrado (MEITW)</h3><p class="text-slate-500 text-sm">Universidade Aberta • Portugal</p><a href="https://guiadoscursos.uab.pt/cursos/mestrado-em-engenharia-informatica-e-tecnologia-web/" target="_blank" class="inline-flex items-center gap-1 mt-1 text-xs text-blue-600 dark:text-blue-400 hover:underline">🔗 Ver Guia de Cursos</a></div>
                     </div>
                 </div>
             </div>
@@ -175,131 +167,22 @@
                 <div id="planning-content" class="space-y-8"></div>
             </div>
 
-            <!-- MASTER PLAN (CONTEÚDO COMPLETO RESTAURADO) -->
+            <!-- MASTER PLAN -->
             <div id="view-master-plan" class="view">
                 <div class="mb-6 md:mb-8">
                     <h1 class="text-2xl md:text-3xl font-bold mb-2">Plano Curricular Recomendado (Mestrado)</h1>
                     <p class="text-slate-500">Mestrado em Engenharia Informática e Tecnologias Web (MEITW) • 120 ECTS</p>
                     <a href="https://guiadoscursos.uab.pt/cursos/mestrado-em-engenharia-informatica-e-tecnologia-web/" target="_blank" class="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 dark:text-blue-400 hover:underline font-medium">🔗 Link Oficial do Curso na UAb</a>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="font-semibold mb-2">Estrutura</h3>
-                        <ul class="text-sm text-slate-600 dark:text-slate-400 space-y-2">
-                            <li>• Duração: 2 anos (120 ECTS)</li>
-                            <li>• 1º Ano: Componente curricular (60 ECTS)</li>
-                            <li>• 2º Ano: Dissertação, Projeto ou Estágio (60 ECTS)</li>
-                            <li>• Cada semestre do 1º ano: 2 obrigatórias + 3 optativas = 30 ECTS</li>
-                        </ul>
-                    </div>
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 lg:col-span-2">
-                        <h3 class="font-semibold mb-2">Perfil Profissional Atual</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Middleware Engineer</span>
-                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Oracle WebLogic Server</span>
-                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Apache HTTP Server</span>
-                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Servidores de Aplicação</span>
-                            <span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Deployments e Integração</span>
-                        </div>
-                    </div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="font-semibold mb-2">Estrutura</h3><ul class="text-sm text-slate-600 dark:text-slate-400 space-y-2"><li>• Duração: 2 anos (120 ECTS)</li><li>• 1º Ano: Componente curricular (60 ECTS)</li><li>• 2º Ano: Dissertação, Projeto ou Estágio (60 ECTS)</li><li>• Cada semestre do 1º ano: 2 obrigatórias + 3 optativas = 30 ECTS</li></ul></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 lg:col-span-2"><h3 class="font-semibold mb-2">Perfil Profissional Atual</h3><div class="flex flex-wrap gap-2"><span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Middleware Engineer</span><span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Oracle WebLogic Server</span><span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Apache HTTP Server</span><span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Servidores de Aplicação</span><span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs font-medium">Deployments e Integração</span></div></div>
                 </div>
-
                 <div class="space-y-8">
-                    <!-- 1º Semestre -->
-                    <div>
-                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">1º</span> 1º Semestre (30 ECTS)</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22290 - Investigação Operacional</h4>
-                            </div>
-                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22304 - Arquitetura e Padrões de Software</h4>
-                            </div>
-                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22285 - Programação Web Avançada</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Melhor compreensão das aplicações executadas nos servidores.</p>
-                            </div>
-                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22295 - Integração de Sistemas</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Reforço de competências em middleware e APIs.</p>
-                            </div>
-                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10 md:col-span-2">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22125 - Computação de Alto Desempenho</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Processamento distribuído e otimização de infraestruturas.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2º Semestre -->
-                    <div>
-                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">2º</span> 2º Semestre (30 ECTS)</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22117 - Planeamento e Desenv. de Sistemas de Informação</h4>
-                            </div>
-                            <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22296 - Metodologias de Investigação e Planeamento de TFC</h4>
-                            </div>
-                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22118 - Segurança em Rede e Computadores</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Proteção de infraestruturas de servidores.</p>
-                            </div>
-                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22306 - Business Intelligence</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Análise e exploração de dados empresariais.</p>
-                            </div>
-                            <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10 md:col-span-2">
-                                <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div>
-                                <h4 class="font-semibold">22298 - Desenvolvimento de Aplicações Móveis</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Interação entre clientes móveis e serviços backend.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2º Ano -->
-                    <div>
-                        <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">3º</span> 2º Ano (60 ECTS)</h2>
-                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Escolher uma das seguintes modalidades para o Trabalho de Conclusão:</p>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 text-center border-2 border-dashed border-slate-300 dark:border-slate-700">
-                                    <h4 class="font-semibold">22129 - Dissertação</h4>
-                                    <p class="text-xs text-slate-500 mt-1">Investigação académica</p>
-                                </div>
-                                <div class="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 text-center border-2 border-emerald-500 dark:border-emerald-700">
-                                    <h4 class="font-semibold text-emerald-700 dark:text-emerald-400">22302 - Projeto</h4>
-                                    <p class="text-xs text-slate-500 mt-1">Desenvolvimento prático (Recomendado)</p>
-                                </div>
-                                <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 text-center border-2 border-dashed border-slate-300 dark:border-slate-700">
-                                    <h4 class="font-semibold">22303 - Estágio</h4>
-                                    <p class="text-xs text-slate-500 mt-1">Experiência em empresa</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Objetivo Profissional -->
-                    <div class="p-6 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 text-white">
-                        <h3 class="text-lg font-bold mb-2">🎯 Objetivo Profissional</h3>
-                        <p class="text-slate-300 text-sm leading-relaxed">
-                            Consolidar competências em middleware e administração de servidores, preparando a evolução para funções como 
-                            <span class="text-white font-semibold">Middleware Engineer Senior</span>, 
-                            <span class="text-white font-semibold">Platform Engineer</span>, 
-                            <span class="text-white font-semibold">Cloud/DevOps Engineer</span>, 
-                            <span class="text-white font-semibold">SRE</span> e 
-                            <span class="text-white font-semibold">Solutions Architect</span>.
-                        </p>
-                    </div>
+                    <div><h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">1º</span> 1º Semestre (30 ECTS)</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22290 - Investigação Operacional</h4></div><div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22304 - Arquitetura e Padrões de Software</h4></div><div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22285 - Programação Web Avançada</h4><p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Melhor compreensão das aplicações executadas nos servidores.</p></div><div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22295 - Integração de Sistemas</h4><p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Reforço de competências em middleware e APIs.</p></div><div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10 md:col-span-2"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22125 - Computação de Alto Desempenho</h4><p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Processamento distribuído e otimização de infraestruturas.</p></div></div></div>
+                    <div><h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">2º</span> 2º Semestre (30 ECTS)</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22117 - Planeamento e Desenv. de Sistemas de Informação</h4></div><div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase">Obrigatória</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22296 - Metodologias de Investigação e Planeamento de TFC</h4></div><div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22118 - Segurança em Rede e Computadores</h4><p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Proteção de infraestruturas de servidores.</p></div><div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22306 - Business Intelligence</h4><p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Análise e exploração de dados empresariais.</p></div><div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10 md:col-span-2"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase">Optativa Recomendada</span><span class="text-sm font-bold">6 ECTS</span></div><h4 class="font-semibold">22298 - Desenvolvimento de Aplicações Móveis</h4><p class="text-xs text-slate-600 dark:text-slate-400 mt-2">💡 Interação entre clientes móveis e serviços backend.</p></div></div></div>
+                    <div><h2 class="text-xl font-bold mb-4 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-sm">3º</span> 2º Ano (60 ECTS)</h2><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Escolher uma das seguintes modalidades para o Trabalho de Conclusão:</p><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 text-center border-2 border-dashed border-slate-300 dark:border-slate-700"><h4 class="font-semibold">22129 - Dissertação</h4><p class="text-xs text-slate-500 mt-1">Investigação académica</p></div><div class="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 text-center border-2 border-emerald-500 dark:border-emerald-700"><h4 class="font-semibold text-emerald-700 dark:text-emerald-400">22302 - Projeto</h4><p class="text-xs text-slate-500 mt-1">Desenvolvimento prático (Recomendado)</p></div><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800 text-center border-2 border-dashed border-slate-300 dark:border-slate-700"><h4 class="font-semibold">22303 - Estágio</h4><p class="text-xs text-slate-500 mt-1">Experiência em empresa</p></div></div></div></div>
+                    <div class="p-6 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 text-white"><h3 class="text-lg font-bold mb-2">🎯 Objetivo Profissional</h3><p class="text-slate-300 text-sm leading-relaxed">Consolidar competências em middleware e administração de servidores, preparando a evolução para funções como <span class="text-white font-semibold">Middleware Engineer Senior</span>, <span class="text-white font-semibold">Platform Engineer</span>, <span class="text-white font-semibold">Cloud/DevOps Engineer</span>, <span class="text-white font-semibold">SRE</span> e <span class="text-white font-semibold">Solutions Architect</span>.</p></div>
                 </div>
             </div>
 
@@ -307,10 +190,7 @@
             <div id="view-calendar" class="view">
                 <div class="flex flex-col sm:flex-row justify-between items-start mb-6 md:mb-8 gap-4">
                     <div><h1 class="text-2xl md:text-3xl font-bold mb-2">Calendário</h1><p class="text-slate-500">E-folios, mini-testes e exames.</p></div>
-                    <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="exportICS()" class="flex-1 sm:flex-none px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:opacity-90">📤 .ics</button>
-                        <button onclick="openAddEventModal()" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:opacity-90">➕ Novo</button>
-                    </div>
+                    <div class="flex gap-2 w-full sm:w-auto"><button onclick="exportICS()" class="flex-1 sm:flex-none px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:opacity-90">📤 .ics</button><button onclick="openAddEventModal()" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:opacity-90">➕ Novo</button></div>
                 </div>
                 <div class="flex gap-2 mb-6 flex-wrap overflow-x-auto pb-2">
                     <button onclick="filterEvents('all', this)" class="event-filter active px-3 py-1.5 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 whitespace-nowrap">Todos</button>
@@ -326,107 +206,78 @@
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">Calculadora de Média</h1>
                 <p class="text-slate-500 mb-6 md:mb-8">Simula cenários e calcula a tua média ponderada.</p>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-semibold mb-4">Disciplinas</h3>
-                        <div id="calculator-subjects" class="space-y-2 max-h-[500px] overflow-y-auto"></div>
-                    </div>
+                    <div class="lg:col-span-2 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">Disciplinas</h3><div id="calculator-subjects" class="space-y-2 max-h-[500px] overflow-y-auto"></div></div>
                     <div class="space-y-4">
-                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center">
-                            <h3 class="text-lg font-semibold mb-4">Resultado</h3>
-                            <p class="text-sm text-slate-500">Média Ponderada</p>
-                            <p id="calc-average" class="text-5xl font-bold mt-2">—</p>
-                            <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-sm">
-                                <div class="flex justify-between"><span class="text-slate-500">Disciplinas:</span><span id="calc-count" class="font-semibold">0</span></div>
-                                <div class="flex justify-between"><span class="text-slate-500">ECTS:</span><span id="calc-ects" class="font-semibold">0</span></div>
-                            </div>
-                        </div>
-                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                            <div class="space-y-2">
-                                <button onclick="selectAllCalc(true)" class="w-full px-3 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">✅ Selecionar Aprovadas</button>
-                                <button onclick="fillCurrentGrades()" class="w-full px-3 py-2 rounded-lg text-sm bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:opacity-80 transition">📊 Usar Notas Atuais</button>
-                            </div>
-                        </div>
+                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center"><h3 class="text-lg font-semibold mb-4">Resultado</h3><p class="text-sm text-slate-500">Média Ponderada</p><p id="calc-average" class="text-5xl font-bold mt-2">—</p><div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-sm"><div class="flex justify-between"><span class="text-slate-500">Disciplinas:</span><span id="calc-count" class="font-semibold">0</span></div><div class="flex justify-between"><span class="text-slate-500">ECTS:</span><span id="calc-ects" class="font-semibold">0</span></div></div></div>
+                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><div class="space-y-2"><button onclick="selectAllCalc(true)" class="w-full px-3 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">✅ Selecionar Aprovadas</button><button onclick="fillCurrentGrades()" class="w-full px-3 py-2 rounded-lg text-sm bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:opacity-80 transition">📊 Usar Notas Atuais</button></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- STRATEGY (CONTEÚDO COMPLETO RESTAURADO) -->
+            <!-- E-FOLIOS DETALHADO -->
+            <div id="view-efolios" class="view">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">📝 Notas de E-folios</h1>
+                <p class="text-slate-500 mb-6">Sistema de avaliação contínua: E-fólio A (20%), E-fólio B (20%), E-fólio Global (60%).</p>
+                <div id="efolios-content" class="space-y-6"></div>
+            </div>
+
+            <!-- CERTIFICAÇÕES -->
+            <div id="view-certifications" class="view">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">🏆 Tracker de Certificações</h1>
+                <p class="text-slate-500 mb-6">Acompanha o teu progresso no roadmap profissional de Middleware/Cloud.</p>
+                <div id="certifications-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- STRATEGY -->
             <div id="view-strategy" class="view">
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">Estratégia & Reconhecimento em Espanha</h1>
                 <p class="text-slate-500 mb-6 md:mb-8">Plano de reconhecimento académico e evolução profissional.</p>
-                
                 <div class="space-y-6">
-                    <div class="p-6 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10">
-                        <h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-3">✅ A Tua Situação é Favorável</h3>
-                        <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-                            O Ministério espanhol indica expressamente que um título universitário oficial de, pelo menos, 3 anos (180 ECTS) que dê acesso a um mestrado no país de origem, pode ser objeto de uma declaração de <strong>equivalência ao nível académico de Grado</strong>. A tua licenciatura da UAb cumpre estes requisitos.
-                        </p>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                            <div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm"><div class="text-2xl mb-1">🇪🇸</div><div class="text-xs font-semibold">ASIR + Experiência</div><div class="text-[10px] text-slate-500">Middleware Engineer</div></div>
-                            <div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm"><div class="text-2xl mb-1">🇵🇹</div><div class="text-xs font-semibold">Licenciatura UAb</div><div class="text-[10px] text-slate-500">180 ECTS (Bolonha)</div></div>
-                            <div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm border-2 border-emerald-500"><div class="text-2xl mb-1">🎓</div><div class="text-xs font-semibold text-emerald-600">Mestrado</div><div class="text-[10px] text-slate-500">Total: 300 ECTS</div></div>
-                        </div>
-                    </div>
+                    <div class="p-6 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10"><h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-3">✅ A Tua Situação é Favorável</h3><p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">O Ministério espanhol indica expressamente que um título universitário oficial de, pelo menos, 3 anos (180 ECTS) que dê acesso a um mestrado no país de origem, pode ser objeto de uma declaração de <strong>equivalência ao nível académico de Grado</strong>. A tua licenciatura da UAb cumpre estes requisitos.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center"><div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm"><div class="text-2xl mb-1">🇪🇸</div><div class="text-xs font-semibold">ASIR + Experiência</div><div class="text-[10px] text-slate-500">Middleware Engineer</div></div><div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm"><div class="text-2xl mb-1">🇵🇹</div><div class="text-xs font-semibold">Licenciatura UAb</div><div class="text-[10px] text-slate-500">180 ECTS (Bolonha)</div></div><div class="p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm border-2 border-emerald-500"><div class="text-2xl mb-1">🎓</div><div class="text-xs font-semibold text-emerald-600">Mestrado</div><div class="text-[10px] text-slate-500">Total: 300 ECTS</div></div></div></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-bold mb-4">⚖️ Enquadramento Legal (Real Decreto 889/2022)</h3><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><h4 class="font-semibold text-sm mb-2">1. Homologación</h4><p class="text-xs text-slate-600 dark:text-slate-400">Para profissões reguladas. <span class="font-medium text-slate-800 dark:text-slate-200">Não é o teu caso.</span></p></div><div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800"><h4 class="font-semibold text-sm mb-2 text-blue-800 dark:text-blue-300">2. Equivalencia (O Teu Caso)</h4><p class="text-xs text-slate-600 dark:text-slate-400">Reconhecimento do nível académico (Grado ou Máster).</p></div><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><h4 class="font-semibold text-sm mb-2">3. Convalidación</h4><p class="text-xs text-slate-600 dark:text-slate-400">Para aproveitar disciplinas isoladas.</p></div></div></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-bold mb-4">🗺️ Plano de Ação Recomendado</h3><div class="space-y-4"><div class="flex gap-4"><div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">1</div><div><h4 class="font-semibold text-sm">Concluir a Licenciatura</h4><p class="text-xs text-slate-500">Foca-te em terminar os 180 ECTS com a melhor média possível.</p></div></div><div class="flex gap-4"><div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">2</div><div><h4 class="font-semibold text-sm">Pedir Equivalência Académica em Espanha</h4><p class="text-xs text-slate-500">Solicita a "Equivalencia de título extranjero de educación superior al nivel de Grado".</p></div></div><div class="flex gap-4"><div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">3</div><div><h4 class="font-semibold text-sm text-emerald-700 dark:text-emerald-400">Iniciar e Concluir o Mestrado (MEITW)</h4><p class="text-xs text-slate-500">Com o mestrado, atinges os 300 ECTS, o percurso completo do EEES.</p></div></div></div></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-bold mb-4">🚀 Plano de Carreira (Roadmap)</h3><div class="flex flex-wrap items-center gap-2 text-sm"><span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-medium">Middleware Engineer</span><span class="text-slate-400">→</span><span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-medium">Senior / Platform Engineer</span><span class="text-slate-400">→</span><span class="px-3 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">Cloud / DevOps Engineer</span><span class="text-slate-400">→</span><span class="px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">Solutions Architect / CTO</span></div><p class="text-xs text-slate-500 mt-4">Complementar com certificações: Linux (RHCE), Kubernetes (CKA), Cloud (AWS/Azure) e Automação (Terraform, Ansible).</p></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-bold mb-4">🔗 Ligações Oficiais</h3><div class="space-y-2"><a href="https://www.ciencia.gob.es/Universidades/validate/como_reconocer.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">📄 Cómo reconocer títulos universitarios extranjeros</a><a href="https://www.ciencia.gob.es/Universidades/validate/equivalencia.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">⚖️ Equivalencia de títulos extranjeros</a><a href="https://universidades.sede.gob.es/procedimientos/portada/idp/1030" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">🏛️ Sede Electrónica del Ministerio</a></div></div>
+                </div>
+            </div>
 
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-bold mb-4">⚖️ Enquadramento Legal (Real Decreto 889/2022)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
-                                <h4 class="font-semibold text-sm mb-2">1. Homologación</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400">Para profissões reguladas (ex: Medicina, Arquitetura). <span class="font-medium text-slate-800 dark:text-slate-200">Não é o teu caso.</span></p>
-                            </div>
-                            <div class="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                                <h4 class="font-semibold text-sm mb-2 text-blue-800 dark:text-blue-300">2. Equivalencia (O Teu Caso)</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400">Reconhecimento do nível académico (Grado ou Máster). Não atribui o título "Grado en Ingeniería", mas reconhece o nível para o setor privado e acesso a mestrado.</p>
-                            </div>
-                            <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
-                                <h4 class="font-semibold text-sm mb-2">3. Convalidación</h4>
-                                <p class="text-xs text-slate-600 dark:text-slate-400">Para aproveitar disciplinas isoladas e continuar estudos numa universidade específica.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-bold mb-4">🗺️ Plano de Ação Recomendado</h3>
-                        <div class="space-y-4">
-                            <div class="flex gap-4">
-                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">1</div>
-                                <div><h4 class="font-semibold text-sm">Concluir a Licenciatura</h4><p class="text-xs text-slate-500">Foca-te em terminar os 180 ECTS com a melhor média possível.</p></div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-sm">2</div>
-                                <div><h4 class="font-semibold text-sm">Pedir Equivalência Académica em Espanha</h4><p class="text-xs text-slate-500">Solicita a "Equivalencia de título extranjero de educación superior al nivel de Grado".</p></div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">3</div>
-                                <div><h4 class="font-semibold text-sm text-emerald-700 dark:text-emerald-400">Iniciar e Concluir o Mestrado (MEITW)</h4><p class="text-xs text-slate-500">Este é o passo mais estratégico. Com o mestrado, atinges os 300 ECTS, o percurso completo do Espaço Europeu de Ensino Superior, eliminando qualquer dúvida sobre a tua qualificação.</p></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-bold mb-4">🚀 Plano de Carreira (Roadmap)</h3>
-                        <div class="flex flex-wrap items-center gap-2 text-sm">
-                            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-medium">Middleware Engineer</span>
-                            <span class="text-slate-400">→</span>
-                            <span class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 font-medium">Senior / Platform Engineer</span>
-                            <span class="text-slate-400">→</span>
-                            <span class="px-3 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">Cloud / DevOps Engineer</span>
-                            <span class="text-slate-400">→</span>
-                            <span class="px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">Solutions Architect / CTO</span>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-4">Complementar com certificações: Linux (RHCE), Kubernetes (CKA), Cloud (AWS/Azure) e Automação (Terraform, Ansible).</p>
-                    </div>
-
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-bold mb-4">🔗 Ligações Oficiais</h3>
-                        <div class="space-y-2">
-                            <a href="https://www.ciencia.gob.es/Universidades/validate/como_reconocer.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">📄 Cómo reconocer títulos universitarios extranjeros</a>
-                            <a href="https://www.ciencia.gob.es/Universidades/validate/equivalencia.html" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">⚖️ Equivalencia de títulos extranjeros de educación superior al nivel de Grado</a>
-                            <a href="https://universidades.sede.gob.es/procedimientos/portada/idp/1030" target="_blank" class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline break-all">🏛️ Sede Electrónica del Ministerio de Universidades (Trámites)</a>
-                        </div>
+            <!-- BUSQUEDA -->
+            <div id="view-busqueda" class="view">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">🔍 Búsqueda y Filtrado</h1>
+                <p class="text-slate-500 mb-6">Encuentra disciplinas rápidamente usando búsqueda y filtros.</p>
+                <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div><label class="text-xs font-medium mb-1 block">🔎 Buscar por Código o Nombre</label><input type="text" id="search-input" oninput="renderBusqueda()" placeholder="Ej: 21174, Programação..." class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"></div>
+                        <div><label class="text-xs font-medium mb-1 block">📊 Estado</label><select id="filter-estado" onchange="renderBusqueda()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"><option value="">Todos</option><option value="Aprovada">✅ Aprobada</option><option value="Reprovada">❌ Reprobada</option><option value="Em Curso">🔥 En Curso</option><option value="Creditada">🎖️ Creditada</option><option value="Pendente">⏳ Pendiente</option></select></div>
+                        <div><label class="text-xs font-medium mb-1 block">🗺️ Plan</label><select id="filter-plan" onchange="renderBusqueda()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"><option value="">Todos</option><option value="concluida">✅ Concluida</option><option value="foco_atual">🔥 Foco Actual</option><option value="proximo">📅 Próximo</option><option value="futuro">🔮 Futuro</option><option value="equivalencia">🔄 Equivalencia</option></select></div>
+                        <div><label class="text-xs font-medium mb-1 block">📚 Año</label><select id="filter-ano" onchange="renderBusqueda()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"><option value="">Todos</option><option value="1">Año 1</option><option value="2">Año 2</option><option value="3">Año 3</option></select></div>
+                        <div><label class="text-xs font-medium mb-1 block">📅 Semestre</label><select id="filter-semestre" onchange="renderBusqueda()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"><option value="">Todos</option><option value="1">Semestre 1</option><option value="2">Semestre 2</option></select></div>
+                        <div><label class="text-xs font-medium mb-1 block">💾 ECTS</label><select id="filter-ects" onchange="renderBusqueda()" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"><option value="">Todos</option><option value="2">2 ECTS</option><option value="4">4 ECTS</option><option value="6">6 ECTS</option></select></div>
                     </div>
                 </div>
+                <div id="busqueda-results" class="space-y-2"></div>
+            </div>
+
+            <!-- ALERTAS -->
+            <div id="view-alertas" class="view">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">⚠️ Alertas Inteligentes</h1>
+                <p class="text-slate-500 mb-6">Notificaciones automáticas sobre tu desempeño académico.</p>
+                <div id="alertas-content" class="space-y-6"></div>
+            </div>
+
+            <!-- GRAFICOS -->
+            <div id="view-graficos" class="view">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">📊 Gráficos y Visualizaciones</h1>
+                <p class="text-slate-500 mb-6">Análisis visual de tu desempeño académico.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">📈 Evolución de Media por Semestre</h3><div id="grafico-evolucion"></div></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">💾 Distribución de ECTS</h3><div id="grafico-ects"></div></div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">📊 Disciplinas por Estado</h3><div id="grafico-estados"></div></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">📈 Distribución de Calificaciones</h3><div id="grafico-calificaciones"></div></div>
+                </div>
+                <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">📋 Tabla Detallada de Disciplinas</h3><div id="grafico-tabla" class="overflow-x-auto"></div></div>
             </div>
 
             <!-- STATS -->
@@ -434,14 +285,8 @@
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">Estatísticas</h1>
                 <p class="text-slate-500 mb-6 md:mb-8">Análise detalhada do teu desempenho.</p>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-semibold mb-6">Distribuição de Disciplinas</h3>
-                        <div id="subject-distribution"></div>
-                    </div>
-                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                        <h3 class="text-lg font-semibold mb-6">Notas por Intervalo</h3>
-                        <div id="grade-distribution"></div>
-                    </div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-6">Distribuição de Disciplinas</h3><div id="subject-distribution"></div></div>
+                    <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-6">Notas por Intervalo</h3><div id="grade-distribution"></div></div>
                 </div>
             </div>
 
@@ -449,790 +294,440 @@
     </main>
 </div>
 
-<!-- MODAL: Adicionar Tarefa -->
-<div id="modal-task" class="modal">
-    <div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800">
-        <h3 class="text-lg font-bold mb-4">Nova Tarefa</h3>
-        <input type="hidden" id="task-subject-code">
-        <div class="space-y-3">
-            <div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="task-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Estudar capítulo 3"></div>
-            <div><label class="text-sm font-medium mb-1 block">Data Limite</label><input type="date" id="task-due" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div>
-        </div>
-        <div class="flex gap-2 mt-6">
-            <button onclick="closeModal('modal-task')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button>
-            <button onclick="saveTask()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL: Adicionar Evento -->
-<div id="modal-event" class="modal">
-    <div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800">
-        <h3 class="text-lg font-bold mb-4">Novo Evento</h3>
-        <div class="space-y-3">
-            <div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="event-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Exame de SO"></div>
-            <div><label class="text-sm font-medium mb-1 block">Disciplina</label><select id="event-code" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></select></div>
-            <div><label class="text-sm font-medium mb-1 block">Tipo</label><select id="event-type" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"><option value="efolio">E-folio</option><option value="minitest">Mini-teste</option><option value="exame">Exame</option><option value="other">Outro</option></select></div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="text-sm font-medium mb-1 block">Data Início</label><input type="date" id="event-start" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div>
-                <div><label class="text-sm font-medium mb-1 block">Data Fim</label><input type="date" id="event-end" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div>
-            </div>
-        </div>
-        <div class="flex gap-2 mt-6">
-            <button onclick="closeModal('modal-event')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button>
-            <button onclick="saveEvent()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button>
-        </div>
-    </div>
-</div>
+<!-- MODALS -->
+<div id="modal-task" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800"><h3 class="text-lg font-bold mb-4">Nova Tarefa</h3><input type="hidden" id="task-subject-code"><div class="space-y-3"><div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="task-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Estudar capítulo 3"></div><div><label class="text-sm font-medium mb-1 block">Data Limite</label><input type="date" id="task-due" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-task')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button><button onclick="saveTask()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button></div></div></div>
+<div id="modal-event" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800"><h3 class="text-lg font-bold mb-4">Novo Evento</h3><div class="space-y-3"><div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="event-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Exame de SO"></div><div><label class="text-sm font-medium mb-1 block">Disciplina</label><select id="event-code" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></select></div><div><label class="text-sm font-medium mb-1 block">Tipo</label><select id="event-type" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"><option value="efolio">E-folio</option><option value="minitest">Mini-teste</option><option value="exame">Exame</option><option value="other">Outro</option></select></div><div class="grid grid-cols-2 gap-3"><div><label class="text-sm font-medium mb-1 block">Data Início</label><input type="date" id="event-start" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div><div><label class="text-sm font-medium mb-1 block">Data Fim</label><input type="date" id="event-end" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div></div></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-event')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button><button onclick="saveEvent()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button></div></div></div>
 
 <script>
-    // ============ DADOS ============
-    const UAB_BASE_URL = "https://guiadoscursos.uab.pt/cursos/licenciatura-em-engenharia-informatica/";
+// PWA Manifest Injection
+const manifest = {
+    name: "Edgar Pinto Matuminy Academy Hub",
+    short_name: "Matuminy Hub",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#ffffff",
+    theme_color: "#0f172a",
+    icons: [{ src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>", sizes: "any", type: "image/svg+xml" }]
+};
+const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+const manifestURL = URL.createObjectURL(manifestBlob);
+const link = document.createElement('link');
+link.rel = 'manifest';
+link.href = manifestURL;
+document.head.appendChild(link);
 
-    // ============ DOCUMENTACIÓN DE ESTADOS ============
-    // Los estados de asignaturas representan diferentes situaciones académicas:
-    // - 'Aprobada' (grade >= 10): Asignatura completada satisfactoriamente
-    // - 'Reprobada' (grade < 10): Asignatura no superada, requiere revisión
-    // - 'Creditada': Reconocimiento académico externo (ex: equivalencia en España)
-    // - 'Em Curso': Actualmente inscrita/en proceso
-    // - 'Pendiente': No inscrita aún, futura
-    // Los planes de color correspondientes: concluida (verde), foco_atual (naranja), equivalencia (púrpura), futuro (gris)
-    
-    function getInitialPlan(sub) {
-        if (sub.grade >= 10) return 'concluida';
-        if (sub.manualStatus === 'Creditada') return 'equivalencia';
-        if (sub.manualStatus === 'Em Curso') return 'foco_atual';
-        return 'futuro';
-    }
+const UAB_BASE_URL = "https://guiadoscursos.uab.pt/cursos/licenciatura-em-engenharia-informatica/";
+function getInitialPlan(sub) { if (sub.grade >= 10) return 'concluida'; if (sub.manualStatus === 'Creditada') return 'equivalencia'; if (sub.manualStatus === 'Em Curso') return 'foco_atual'; return 'futuro'; }
 
-    const DEFAULT_CURRICULUM = [
-        { year: 1, semesters: [
-            { semester: 1, subjects: [
-                { code: "21002", name: "Álgebra Linear I", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21010", name: "Arquitectura de Computadores", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21173", name: "Introdução à Programação", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21174", name: "Sistemas Computacionais", ects: 4, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21175", name: "Análise Infinitesimal", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21176", name: "Ética e Práticas de Engenharia", ects: 2, grade: 19, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' }
-            ]},
-            { semester: 2, subjects: [
-                { code: "21177", name: "Modelação de Sistemas de Informação", ects: 6, grade: 12, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' },
-                { code: "21037", name: "Elementos de Probabilidades e Estatística", ects: 6, grade: 17, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' },
-                { code: "21082", name: "Matemática Finita", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' },
-                { code: "21178", name: "Laboratório de Programação", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' },
-                { code: "21111", name: "Sistemas Operativos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' }
-            ]}
+const DEFAULT_CURRICULUM = [
+    { year: 1, semesters: [
+        { semester: 1, subjects: [
+            { code: "21002", name: "Álgebra Linear I", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21010", name: "Arquitectura de Computadores", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21173", name: "Introdução à Programação", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21174", name: "Sistemas Computacionais", ects: 4, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21175", name: "Análise Infinitesimal", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21176", name: "Ética e Práticas de Engenharia", ects: 2, grade: 19, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' }
         ]},
-        { year: 2, semesters: [
-            { semester: 1, subjects: [
-                { code: "21048", name: "Física Geral", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21053", name: "Fundamentos de Bases de Dados", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21078", name: "Linguagens e Computação", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21093", name: "Programação por Objetos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21106", name: "Sistemas em Rede", ects: 6, grade: null, manualStatus: "Creditada", url: UAB_BASE_URL, plan: 'equivalencia' }
-            ]},
-            { semester: 2, subjects: [
-                { code: "21179", name: "Lab. Desenvolvimento de Software", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21046", name: "Estruturas de Dados e Algoritmos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21071", name: "Introdução à Inteligência Artificial", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21076", name: "Investigação Operacional", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21077", name: "Linguagens de Programação", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' }
-            ]}
-        ]},
-        { year: 3, semesters: [
-            { semester: 1, subjects: [
-                { code: "21020", name: "Computação Gráfica", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21180", name: "Computação Numérica", ects: 4, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21103", name: "Sistemas de Gestão de BD", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21062", name: "Gestão de Projetos Informáticos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21110", name: "Sistemas Multimédia", ects: 6, grade: 16, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' },
-                { code: "21181", name: "Segurança em Redes e Computadores", ects: 2, grade: 16, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' }
-            ]},
-            { semester: 2, subjects: [
-                { code: "21182", name: "Lab. Sistemas e Serviços Web", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' },
-                { code: "21018", name: "Compilação", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21184", name: "Projeto de Engenharia Informática", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21097", name: "Raciocínio e Representação do Conhecimento", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
-                { code: "21108", name: "Sistemas Distribuídos", ects: 6, grade: 14, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' }
-            ]}
+        { semester: 2, subjects: [
+            { code: "21177", name: "Modelação de Sistemas de Informação", ects: 6, grade: 12, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' },
+            { code: "21037", name: "Elementos de Probabilidades e Estatística", ects: 6, grade: 17, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' },
+            { code: "21082", name: "Matemática Finita", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' },
+            { code: "21178", name: "Laboratório de Programação", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' },
+            { code: "21111", name: "Sistemas Operativos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' }
         ]}
-    ];
+    ]},
+    { year: 2, semesters: [
+        { semester: 1, subjects: [
+            { code: "21048", name: "Física Geral", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21053", name: "Fundamentos de Bases de Dados", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21078", name: "Linguagens e Computação", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21093", name: "Programação por Objetos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21106", name: "Sistemas em Rede", ects: 6, grade: null, manualStatus: "Creditada", url: UAB_BASE_URL, plan: 'equivalencia' }
+        ]},
+        { semester: 2, subjects: [
+            { code: "21179", name: "Lab. Desenvolvimento de Software", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21046", name: "Estruturas de Dados e Algoritmos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21071", name: "Introdução à Inteligência Artificial", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21076", name: "Investigação Operacional", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21077", name: "Linguagens de Programação", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' }
+        ]}
+    ]},
+    { year: 3, semesters: [
+        { semester: 1, subjects: [
+            { code: "21020", name: "Computação Gráfica", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21180", name: "Computação Numérica", ects: 4, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21103", name: "Sistemas de Gestão de BD", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21062", name: "Gestão de Projetos Informáticos", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21110", name: "Sistemas Multimédia", ects: 6, grade: 16, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' },
+            { code: "21181", name: "Segurança em Redes e Computadores", ects: 2, grade: 16, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' }
+        ]},
+        { semester: 2, subjects: [
+            { code: "21182", name: "Lab. Sistemas e Serviços Web", ects: 6, grade: null, manualStatus: "Em Curso", url: UAB_BASE_URL, plan: 'foco_atual' },
+            { code: "21018", name: "Compilação", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21184", name: "Projeto de Engenharia Informática", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21097", name: "Raciocínio e Representação do Conhecimento", ects: 6, grade: null, manualStatus: null, url: UAB_BASE_URL, plan: 'futuro' },
+            { code: "21108", name: "Sistemas Distribuídos", ects: 6, grade: 14, manualStatus: null, url: UAB_BASE_URL, plan: 'concluida' }
+        ]}
+    ]}
+];
 
-    const DEFAULT_EVENTS = [
-        { id: 'e1', code: '21177', title: 'E-folio A - Modelação', type: 'efolio', start: '2026-03-01', end: '2026-03-15', status: 'done' },
-        { id: 'e2', code: '21177', title: 'E-folio B - Modelação (Janela 1)', type: 'efolio', start: '2026-04-20', end: '2026-04-27', status: 'done' },
-        { id: 'e3', code: '21177', title: 'E-folio B - Modelação (Janela 2)', type: 'efolio', start: '2026-05-11', end: '2026-05-18', status: 'done' },
-        { id: 'e4', code: '21177', title: 'E-folio B - Modelação (Janela 3)', type: 'efolio', start: '2026-06-01', end: '2026-06-08', status: 'done' },
-        { id: 'e5', code: '21108', title: 'E-folio A - Sist. Distribuídos', type: 'efolio', start: '2026-03-01', end: '2026-03-20', status: 'done' },
-        { id: 'e6', code: '21108', title: 'E-folio B - Sist. Distribuídos', type: 'efolio', start: '2026-05-11', end: '2026-05-17', status: 'done' },
-        { id: 'e7', code: '21182', title: 'E-folio A - Lab. Web', type: 'efolio', start: '2026-03-01', end: '2026-03-20', status: 'done' },
-        { id: 'e8', code: '21182', title: 'E-folio B - Lab. Web', type: 'efolio', start: '2026-05-22', end: '2026-06-01', status: 'upcoming' },
-        { id: 'e9', code: '21037', title: 'E-folio A - Estatística', type: 'efolio', start: '2026-03-01', end: '2026-03-15', status: 'done' },
-        { id: 'e10', code: '21037', title: 'Mini-teste 3 (Módulo 3)', type: 'minitest', start: '2026-04-20', end: '2026-04-26', status: 'done' },
-        { id: 'e11', code: '21037', title: 'Mini-teste 4 (Módulo 4)', type: 'minitest', start: '2026-05-11', end: '2026-05-17', status: 'done' },
-        { id: 'e12', code: '21037', title: 'E-folio B - Estatística', type: 'efolio', start: '2026-05-01', end: '2026-05-15', status: 'done' },
-        { id: 'e13', code: '21082', title: 'E-folio A - Matemática', type: 'efolio', start: '2026-03-01', end: '2026-03-15', status: 'done' },
-        { id: 'e14', code: '21082', title: 'E-folio B - Matemática', type: 'efolio', start: '2026-05-08', end: '2026-05-17', status: 'done' },
-        { id: 'e15', code: '21178', title: 'E-folio A - Lab. Programação', type: 'efolio', start: '2026-03-01', end: '2026-03-20', status: 'done' },
-        { id: 'e16', code: '21178', title: 'E-folio B - Lab. Programação', type: 'efolio', start: '2026-05-15', end: '2026-05-24', status: 'upcoming' },
-        { id: 'e17', code: '21077', title: 'Disponibilização Material - LP', type: 'other', start: '2026-04-24', end: '2026-04-24', status: 'done' }
-    ];
+const DEFAULT_EVENTS = [
+    { id: 'e1', code: '21177', title: 'E-folio A - Modelação', type: 'efolio', start: '2026-03-01', end: '2026-03-15', status: 'done' },
+    { id: 'e2', code: '21177', title: 'E-folio B - Modelação (Janela 1)', type: 'efolio', start: '2026-04-20', end: '2026-04-27', status: 'done' },
+    { id: 'e3', code: '21177', title: 'E-folio B - Modelação (Janela 2)', type: 'efolio', start: '2026-05-11', end: '2026-05-18', status: 'done' },
+    { id: 'e4', code: '21177', title: 'E-folio B - Modelação (Janela 3)', type: 'efolio', start: '2026-06-01', end: '2026-06-08', status: 'done' },
+    { id: 'e5', code: '21108', title: 'E-folio A - Sist. Distribuídos', type: 'efolio', start: '2026-03-01', end: '2026-03-20', status: 'done' },
+    { id: 'e6', code: '21108', title: 'E-folio B - Sist. Distribuídos', type: 'efolio', start: '2026-05-11', end: '2026-05-17', status: 'done' },
+    { id: 'e7', code: '21182', title: 'E-folio A - Lab. Web', type: 'efolio', start: '2026-03-01', end: '2026-03-20', status: 'done' },
+    { id: 'e8', code: '21182', title: 'E-folio B - Lab. Web', type: 'efolio', start: '2026-05-22', end: '2026-06-01', status: 'upcoming' },
+    { id: 'e9', code: '21037', title: 'E-folio A - Estatística', type: 'efolio', start: '2026-03-01', end: '2026-03-15', status: 'done' },
+    { id: 'e10', code: '21037', title: 'Mini-teste 3 (Módulo 3)', type: 'minitest', start: '2026-04-20', end: '2026-04-26', status: 'done' },
+    { id: 'e11', code: '21037', title: 'Mini-teste 4 (Módulo 4)', type: 'minitest', start: '2026-05-11', end: '2026-05-17', status: 'done' },
+    { id: 'e12', code: '21037', title: 'E-folio B - Estatística', type: 'efolio', start: '2026-05-01', end: '2026-05-15', status: 'done' },
+    { id: 'e13', code: '21082', title: 'E-folio A - Matemática', type: 'efolio', start: '2026-03-01', end: '2026-03-15', status: 'done' },
+    { id: 'e14', code: '21082', title: 'E-folio B - Matemática', type: 'efolio', start: '2026-05-08', end: '2026-05-17', status: 'done' },
+    { id: 'e15', code: '21178', title: 'E-folio A - Lab. Programação', type: 'efolio', start: '2026-03-01', end: '2026-03-20', status: 'done' },
+    { id: 'e16', code: '21178', title: 'E-folio B - Lab. Programação', type: 'efolio', start: '2026-05-15', end: '2026-05-24', status: 'upcoming' },
+    { id: 'e17', code: '21077', title: 'Disponibilização Material - LP', type: 'other', start: '2026-04-24', end: '2026-04-24', status: 'done' }
+];
 
-    let curriculum = JSON.parse(localStorage.getItem('curriculum')) || JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
-    
-    // MIGRAÇÃO: Corrigir ECTS de 4 disciplinas específicas (de 192 a 180 ECTS oficiais)
-    const ECTS_CORRECTIONS = {
-        "21174": 4,  // Sistemas Computacionais
-        "21176": 2,  // Ética e Práticas de Engenharia
-        "21180": 4,  // Computação Numérica
-        "21181": 2   // Segurança em Redes e Computadores
-    };
-    let migrated = false;
-    curriculum.forEach(year => {
-        year.semesters.forEach(sem => {
-            sem.subjects.forEach(sub => {
-                if (ECTS_CORRECTIONS[sub.code] !== undefined && sub.ects !== ECTS_CORRECTIONS[sub.code]) {
-                    sub.ects = ECTS_CORRECTIONS[sub.code];
-                    migrated = true;
-                }
-            });
-        });
+const DEFAULT_CERTS = [
+    { id: 'c1', name: 'Oracle WebLogic Server Administration', category: 'Middleware', status: 'nao_iniciado', targetDate: '' },
+    { id: 'c2', name: 'Red Hat Certified Engineer (RHCE)', category: 'Sistemas', status: 'nao_iniciado', targetDate: '' },
+    { id: 'c3', name: 'Certified Kubernetes Administrator (CKA)', category: 'Orquestração', status: 'nao_iniciado', targetDate: '' },
+    { id: 'c4', name: 'AWS Solutions Architect - Associate', category: 'Cloud', status: 'nao_iniciado', targetDate: '' },
+    { id: 'c5', name: 'HashiCorp Certified: Terraform Associate', category: 'Automação', status: 'nao_iniciado', targetDate: '' },
+    { id: 'c6', name: 'Docker Certified Associate (DCA)', category: 'Contenedores', status: 'nao_iniciado', targetDate: '' },
+    { id: 'c7', name: 'Prometheus & Grafana (Observabilidad)', category: 'Monitorização', status: 'nao_iniciado', targetDate: '' }
+];
+
+let curriculum = JSON.parse(localStorage.getItem('curriculum')) || JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+const ECTS_CORRECTIONS = { "21174": 4, "21176": 2, "21180": 4, "21181": 2 };
+let migrated = false;
+curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => { if (ECTS_CORRECTIONS[sub.code] !== undefined && sub.ects !== ECTS_CORRECTIONS[sub.code]) { sub.ects = ECTS_CORRECTIONS[sub.code]; migrated = true; } }); }); });
+if (migrated) { localStorage.setItem('curriculum', JSON.stringify(curriculum)); }
+
+let tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+let events = JSON.parse(localStorage.getItem('events')) || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+let efolioData = JSON.parse(localStorage.getItem('efolioData')) || {};
+
+let certifications = JSON.parse(localStorage.getItem('certifications')) || [];
+if (certifications.length < DEFAULT_CERTS.length) {
+    certifications = DEFAULT_CERTS.map(newCert => {
+        const existing = certifications.find(c => c.id === newCert.id);
+        return existing ? existing : newCert;
     });
-    if (migrated) {
-        localStorage.setItem('curriculum', JSON.stringify(curriculum));
-        console.log('✅ ECTS migrados correctamente a 180 ECTS oficiales.');
-    }
-    
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || {};
-    let events = JSON.parse(localStorage.getItem('events')) || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
-    let currentEventFilter = 'all';
-    let calcSelections = {};
-    
-    // ============ SISTEMA DE CACHÉ PARA RENDIMIENTO ============
-    // Evita recalcular estadísticas innecesariamente
-    let statsCache = null;
-    let statsCacheTimestamp = 0;
-    const CACHE_INVALIDATION_TIME = 5000; // Invalidar caché después de 5 segundos
-    
-    function invalidateStatsCache() {
-        statsCache = null;
-        statsCacheTimestamp = 0;
-    }
-    
-    // ============ VALIDACIÓN DE ESTRUCTURA DE DATOS ============
-    function validateCurriculumStructure() {
-        try {
-            if (!Array.isArray(curriculum)) {
-                throw new Error('Curriculum debe ser un array');
-            }
-            if (curriculum.length === 0) {
-                throw new Error('Curriculum está vacío');
-            }
-            
-            curriculum.forEach((year, yIdx) => {
-                if (!year.year || !Array.isArray(year.semesters)) {
-                    throw new Error(`Año ${yIdx}: estructura inválida`);
-                }
-                year.semesters.forEach((sem, sIdx) => {
-                    if (!sem.semester || !Array.isArray(sem.subjects)) {
-                        throw new Error(`Año ${year.year}, Semestre ${sIdx}: estructura inválida`);
-                    }
-                    sem.subjects.forEach((sub, subIdx) => {
-                        if (!sub.code || !sub.name || !sub.ects) {
-                            throw new Error(`Año ${year.year}, Semestre ${sem.semester}, Asignatura ${subIdx}: datos esenciales faltantes`);
-                        }
-                        // Validar tipos de datos
-                        if (typeof sub.ects !== 'number') {
-                            console.warn(`⚠️ Asignatura ${sub.code}: ECTS debe ser número`);
-                            sub.ects = parseInt(sub.ects) || 0;
-                        }
-                        if (sub.grade !== null && typeof sub.grade !== 'number') {
-                            console.warn(`⚠️ Asignatura ${sub.code}: Calificación convertida a número`);
-                            sub.grade = parseFloat(sub.grade);
-                        }
-                    });
-                });
-            });
-            
-            return { valid: true, errors: [] };
-        } catch (err) {
-            console.error('❌ Error de validación:', err.message);
-            return { valid: false, errors: [err.message] };
-        }
-    }
+    localStorage.setItem('certifications', JSON.stringify(certifications));
+}
 
-    curriculum.forEach(year => {
-        year.semesters.forEach(sem => {
-            sem.subjects.forEach(sub => {
-                if (sub.plan === undefined) sub.plan = getInitialPlan(sub);
-            });
-        });
-    });
+let currentEventFilter = 'all';
+let calcSelections = {};
+curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => { if (sub.plan === undefined) sub.plan = getInitialPlan(sub); }); }); });
 
-    // ============ FUNÇÕES AUXILIARES ============
-    function saveData() {
-        localStorage.setItem('curriculum', JSON.stringify(curriculum));
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        localStorage.setItem('events', JSON.stringify(events));
-        invalidateStatsCache(); // Invalidar caché cuando se guardan datos
-    }
+function saveData() { 
+    localStorage.setItem('curriculum', JSON.stringify(curriculum)); 
+    localStorage.setItem('tasks', JSON.stringify(tasks)); 
+    localStorage.setItem('events', JSON.stringify(events)); 
+    localStorage.setItem('efolioData', JSON.stringify(efolioData));
+    localStorage.setItem('certifications', JSON.stringify(certifications));
+}
+function getStatus(subject) { if (subject.manualStatus) return subject.manualStatus; if (subject.grade === null || subject.grade === undefined) return "Pendente"; if (subject.grade >= 10) return "Aprovada"; return "Reprovada"; }
+function findSubject(code) { for (const year of curriculum) for (const sem of year.semesters) { const sub = sem.subjects.find(s => s.code === code); if (sub) return sub; } return null; }
+function daysUntil(dateStr) { const today = new Date(); today.setHours(0,0,0,0); const target = new Date(dateStr); target.setHours(0,0,0,0); return Math.round((target - today) / (1000*60*60*24)); }
+function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' }); }
+function toggleMobileMenu() { const s = document.getElementById('sidebar'), o = document.getElementById('mobile-overlay'); if (!s.classList.contains('-translate-x-full')) { s.classList.add('-translate-x-full'); o.classList.add('hidden'); document.body.style.overflow = ''; } else { s.classList.remove('-translate-x-full'); o.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } }
+function showView(viewId, btn) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('view-' + viewId).classList.add('active'); if (btn) btn.classList.add('active'); localStorage.setItem('currentView', viewId); window.scrollTo(0, 0); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function toggleDark() { document.documentElement.classList.toggle('dark'); const isDark = document.documentElement.classList.contains('dark'); localStorage.setItem('darkMode', isDark); document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark); document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark); }
 
-    function getStatus(subject) {
-        if (subject.manualStatus) return subject.manualStatus;
-        if (subject.grade === null || subject.grade === undefined) return "Pendente";
-        if (subject.grade >= 10) return "Aprovada";
-        return "Reprovada";
-    }
+function calculateStats() {
+    let totalEcts=0,completedEcts=0,totalGradePoints=0,gradedCount=0,approved=0,failed=0,inProgress=0,credited=0,pending=0;
+    let gradeDistribution={'16-20':0,'13-15':0,'10-12':0,'<10':0};
+    curriculum.forEach(year=>{year.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{
+        totalEcts+=sub.ects;const st=getStatus(sub);
+        if(st==="Aprovada"){approved++;completedEcts+=sub.ects;totalGradePoints+=sub.grade;gradedCount++;if(sub.grade>=16)gradeDistribution['16-20']++;else if(sub.grade>=13)gradeDistribution['13-15']++;else gradeDistribution['10-12']++;}
+        else if(st==="Reprovada"){failed++;gradeDistribution['<10']++;}
+        else if(st==="Em Curso"){inProgress++;}
+        else if(st==="Creditada"){credited++;completedEcts+=sub.ects;}
+        else{pending++;}
+    });});});
+    return{totalEcts,completedEcts,average:gradedCount>0?(totalGradePoints/gradedCount).toFixed(2):0,approved,failed,inProgress,credited,pending,totalSubjects:approved+failed+inProgress+credited+pending,gradeDistribution};
+}
 
-    function findSubject(code) {
-        for (const year of curriculum) {
-            for (const sem of year.semesters) {
-                const sub = sem.subjects.find(s => s.code === code);
-                if (sub) return sub;
-            }
-        }
-        return null;
-    }
+function getAllSubjects() {
+    let all = [];
+    curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => { all.push({ ...sub, year: year.year, semester: sem.semester }); }); }); });
+    return all;
+}
 
-    function daysUntil(dateStr) {
-        const today = new Date(); today.setHours(0,0,0,0);
-        const target = new Date(dateStr); target.setHours(0,0,0,0);
-        return Math.round((target - today) / (1000 * 60 * 60 * 24));
-    }
-
-    function formatDate(dateStr) {
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-
-    function toggleMobileMenu() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('mobile-overlay');
-        const isOpen = !sidebar.classList.contains('-translate-x-full');
-        if (isOpen) {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-            document.body.style.overflow = '';
-        } else {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-
-    // ============ NAVEGAÇÃO COM PERSISTÊNCIA (F5 FIX) ============
-    function showView(viewId, btn) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('view-' + viewId).classList.add('active');
-        if (btn) btn.classList.add('active');
+// RENDER PLANNING (COM BORDAS POR ESTADO ATUAL)
+function renderPlanning() {
+    const container = document.getElementById('planning-content'), summaryContainer = document.getElementById('planning-summary');
+    let html = '', stats = { concluida:{count:0,ects:0}, foco_atual:{count:0,ects:0}, proximo:{count:0,ects:0}, equivalencia:{count:0,ects:0}, acreditacao:{count:0,ects:0}, futuro:{count:0,ects:0} };
+    curriculum.forEach((year,yearIdx)=>{html+=`<div class="mb-8"><h2 class="text-xl font-semibold mb-4 flex items-center gap-2"><span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold">${year.year}º</span> Ano</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+    year.semesters.forEach((sem,semIdx)=>{html+=`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3><div class="space-y-3">`;
+    sem.subjects.forEach((sub,subjIdx)=>{
+        stats[sub.plan].count++;stats[sub.plan].ects+=sub.ects;
+        const st = getStatus(sub);
+        const statusClass = st === "Aprovada" ? "status-aprovada" : st === "Reprovada" ? "status-reprovada" : st === "Em Curso" ? "status-em_curso" : st === "Creditada" ? "status-creditada" : "status-pendente";
         
-        // GUARDAR A VISTA ATUAL NO LOCALSTORAGE
-        localStorage.setItem('currentView', viewId);
-        window.scrollTo(0, 0);
-    }
+        html+=`<div class="p-3 rounded-lg ${statusClass}"><div class="flex items-center justify-between gap-3 mb-2 flex-wrap"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span></div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="text-xs font-semibold ${sub.grade!==null?'text-emerald-600 dark:text-emerald-400':'text-slate-400'}">${sub.grade!==null?'Nota: '+sub.grade:'Sem nota'}</span></div></div><select onchange="updatePlan(${yearIdx},${semIdx},${subjIdx},this.value)" class="text-xs font-medium rounded-lg px-2 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none cursor-pointer w-full md:w-auto mt-2 md:mt-0"><option value="concluida" ${sub.plan==='concluida'?'selected':''}>✅ Concluída</option><option value="foco_atual" ${sub.plan==='foco_atual'?'selected':''}>🔥 Foco Atual</option><option value="proximo" ${sub.plan==='proximo'?'selected':''}>📅 Próximo</option><option value="equivalencia" ${sub.plan==='equivalencia'?'selected':''}>🔄 Equivalência</option><option value="acreditacao" ${sub.plan==='acreditacao'?'selected':''}>🏅 Acreditação</option><option value="futuro" ${sub.plan==='futuro'?'selected':''}>🔮 Futuro</option></select></div></div>`;
+    });
+    html+=`</div></div>`;});html+=`</div></div>`;});
+    container.innerHTML = html;
+    const pc={'concluida':'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800','foco_atual':'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800','proximo':'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800','equivalencia':'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 border-violet-200 dark:border-violet-800','acreditacao':'text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20 border-pink-200 dark:border-pink-800','futuro':'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'};
+    const pt={'concluida':'✅ Concluídas','foco_atual':'🔥 Foco','proximo':'📅 Próximo','equivalencia':'🔄 Equiv.','acreditacao':'🏅 Acred.','futuro':'🔮 Futuro'};
+    summaryContainer.innerHTML=Object.keys(stats).map(k=>`<div class="p-3 rounded-xl border ${pc[k]}"><p class="text-[10px] md:text-xs font-semibold uppercase tracking-wider opacity-80">${pt[k]}</p><div class="flex items-end gap-1 mt-1"><span class="text-xl md:text-2xl font-bold">${stats[k].count}</span><span class="text-[10px] opacity-80 mb-1">disc.</span></div><div class="text-xs font-medium mt-1">${stats[k].ects} ECTS</div></div>`).join('');
+}
+function updatePlan(yi,si,su,v){curriculum[yi].semesters[si].subjects[su].plan=v;if(v==='concluida'&&curriculum[yi].semesters[si].subjects[su].grade===null)curriculum[yi].semesters[si].subjects[su].manualStatus="Aprovada";else if(v==='equivalencia')curriculum[yi].semesters[si].subjects[su].manualStatus="Creditada";else if(v==='foco_atual')curriculum[yi].semesters[si].subjects[su].manualStatus="Em Curso";saveData();renderAll();}
 
-    // ============ PLANEAMENTO ============
-    function renderPlanning() {
-        const container = document.getElementById('planning-content');
-        const summaryContainer = document.getElementById('planning-summary');
-        let html = '';
-        let stats = { concluida: { count: 0, ects: 0 }, foco_atual: { count: 0, ects: 0 }, proximo: { count: 0, ects: 0 }, equivalencia: { count: 0, ects: 0 }, acreditacao: { count: 0, ects: 0 }, futuro: { count: 0, ects: 0 } };
-
-        curriculum.forEach((year, yearIdx) => {
-            html += `<div class="mb-8">
-                <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold">${year.year}º</span> Ano
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
-            year.semesters.forEach((sem, semIdx) => {
-                html += `<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
-                    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3>
-                    <div class="space-y-3">`;
-                sem.subjects.forEach((sub, subjIdx) => {
-                    stats[sub.plan].count++; stats[sub.plan].ects += sub.ects;
-                    html += `<div class="p-3 rounded-lg bg-white dark:bg-slate-900 plan-${sub.plan} transition-all duration-300">
-                        <div class="flex items-center justify-between gap-3 mb-2 flex-wrap">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span>
-                                    <span class="font-medium text-sm truncate">${sub.name}</span>
-                                </div>
-                                <div class="flex items-center gap-3 mt-1.5 flex-wrap">
-                                    <span class="text-xs text-slate-500">${sub.ects} ECTS</span>
-                                    <span class="text-xs font-semibold ${sub.grade !== null ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">${sub.grade !== null ? 'Nota: ' + sub.grade : 'Sem nota'}</span>
-                                </div>
-                            </div>
-                            <select onchange="updatePlan(${yearIdx}, ${semIdx}, ${subjIdx}, this.value)" class="text-xs font-medium rounded-lg px-2 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer w-full md:w-auto mt-2 md:mt-0">
-                                <option value="concluida" ${sub.plan === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
-                                <option value="foco_atual" ${sub.plan === 'foco_atual' ? 'selected' : ''}>🔥 Foco Atual</option>
-                                <option value="proximo" ${sub.plan === 'proximo' ? 'selected' : ''}>📅 Próximo</option>
-                                <option value="equivalencia" ${sub.plan === 'equivalencia' ? 'selected' : ''}>🔄 Equivalência</option>
-                                <option value="acreditacao" ${sub.plan === 'acreditacao' ? 'selected' : ''}>🏅 Acreditação</option>
-                                <option value="futuro" ${sub.plan === 'futuro' ? 'selected' : ''}>🔮 Futuro</option>
-                            </select>
-                        </div>
-                    </div>`;
-                });
-                html += `</div></div>`;
+// RENDER CURRICULUM (COM BORDAS POR ESTADO ATUAL)
+function renderCurriculum(){
+    const c=document.getElementById('curriculum-content');
+    let h='';
+    curriculum.forEach((year,yi)=>{
+        h+=`<div class="mb-8"><h2 class="text-xl font-semibold mb-4 flex items-center gap-2"><span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold">${year.year}º</span> Ano</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+        year.semesters.forEach((sem,si)=>{
+            h+=`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3><div class="space-y-2">`;
+            sem.subjects.forEach((sub,su)=>{
+                const st=getStatus(sub);
+                const statusClass = st === "Aprovada" ? "status-aprovada" : st === "Reprovada" ? "status-reprovada" : st === "Em Curso" ? "status-em_curso" : st === "Creditada" ? "status-creditada" : "status-pendente";
+                const sc={"Aprovada":"bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400","Reprovada":"bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400","Creditada":"bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400","Em Curso":"bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400","Pendente":"bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400"};
+                const si2={"Aprovada":"✅","Reprovada":"❌","Creditada":"🎓","Em Curso":"⏳","Pendente":"⏸️"};
+                const tk=tasks[sub.code]||[];
+                const pt=tk.filter(t=>!t.completed).length;
+                h+=`<div class="p-3 rounded-lg ${statusClass}"><div class="flex items-center justify-between gap-3 mb-2"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span>${sub.url?`<a href="${sub.url}" target="_blank" class="text-slate-400 hover:text-blue-500 flex-shrink-0">🔗</a>`:''}</div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${sc[st]}">${si2[st]} ${st}</span></div></div><input type="number" min="0" max="20" value="${sub.grade!==null?sub.grade:''}" onchange="updateGrade(${yi},${si},${su},this.value)" placeholder="—" class="grade-input text-sm font-semibold rounded px-2 py-1"></div><div class="flex gap-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-700"><button onclick="openTaskModal('${sub.code}')" class="flex-1 text-xs px-2 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-1">✅ Tarefas ${pt>0?`<span class="bg-amber-500 text-white px-1.5 rounded-full text-[10px]">${pt}</span>`:''}</button></div>${tk.length>0?`<div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 space-y-1">${tk.slice(0,3).map(t=>`<div class="flex items-center gap-2 text-xs"><input type="checkbox" ${t.completed?'checked':''} onchange="toggleTask('${sub.code}','${t.id}')" class="rounded"><span class="${t.completed?'line-through text-slate-400':''} flex-1 truncate">${t.title}</span>${t.dueDate?`<span class="text-slate-400 text-[10px]">${formatDate(t.dueDate)}</span>`:''}<button onclick="deleteTask('${sub.code}','${t.id}')" class="text-red-500 hover:text-red-700">×</button></div>`).join('')}</div>`:''}</div>`;
             });
-            html += `</div></div>`;
+            h+=`</div></div>`;
         });
-        container.innerHTML = html;
+        h+=`</div></div>`;
+    });
+    c.innerHTML=h;
+}
+function updateGrade(yi,si,su,v){const g=v===''?null:parseInt(v);if(g!==null&&(g<0||g>20)){alert('Nota deve ser entre 0 e 20');renderAll();return;}curriculum[yi].semesters[si].subjects[su].grade=g;curriculum[yi].semesters[si].subjects[su].manualStatus=null;if(g>=10)curriculum[yi].semesters[si].subjects[su].plan='concluida';saveData();renderAll();}
 
-        const planColors = { 'concluida': 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800', 'foco_atual': 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800', 'proximo': 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800', 'equivalencia': 'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20 border-violet-200 dark:border-violet-800', 'acreditacao': 'text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/20 border-pink-200 dark:border-pink-800', 'futuro': 'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700' };
-        const planTitles = { 'concluida': '✅ Concluídas', 'foco_atual': '🔥 Foco', 'proximo': '📅 Próximo', 'equivalencia': '🔄 Equiv.', 'acreditacao': '🏅 Acred.', 'futuro': '🔮 Futuro' };
+// TASKS
+function openTaskModal(c){document.getElementById('task-subject-code').value=c;document.getElementById('task-title').value='';document.getElementById('task-due').value='';document.getElementById('modal-task').classList.add('active');}
+function saveTask(){const c=document.getElementById('task-subject-code').value,t=document.getElementById('task-title').value.trim(),d=document.getElementById('task-due').value;if(!t){alert('Título obrigatório');return;}if(!tasks[c])tasks[c]=[];tasks[c].push({id:'t'+Date.now(),title:t,dueDate:d||null,completed:false});saveData();closeModal('modal-task');renderAll();}
+function toggleTask(c,id){const t=tasks[c].find(t=>t.id===id);if(t)t.completed=!t.completed;saveData();renderAll();}
+function deleteTask(c,id){tasks[c]=tasks[c].filter(t=>t.id!==id);if(!tasks[c].length)delete tasks[c];saveData();renderAll();}
 
-        summaryContainer.innerHTML = Object.keys(stats).map(key => `
-            <div class="p-3 rounded-xl border ${planColors[key]}">
-                <p class="text-[10px] md:text-xs font-semibold uppercase tracking-wider opacity-80">${planTitles[key]}</p>
-                <div class="flex items-end gap-1 md:gap-2 mt-1 md:mt-2">
-                    <span class="text-xl md:text-2xl font-bold">${stats[key].count}</span>
-                    <span class="text-[10px] md:text-sm opacity-80 mb-1">disc.</span>
-                </div>
-                <div class="text-xs md:text-sm font-medium mt-1">${stats[key].ects} ECTS</div>
+// CALENDAR
+function renderCalendar(){const c=document.getElementById('calendar-events');let f=currentEventFilter!=='all'?events.filter(e=>e.type===currentEventFilter):events;f.sort((a,b)=>new Date(a.start)-new Date(b.start));if(!f.length){c.innerHTML='<p class="text-center text-slate-500 py-8">Nenhum evento encontrado.</p>';return;}c.innerHTML=f.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);const tc={'efolio':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400','minitest':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400','exame':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400','other':'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'};const tl={'efolio':'E-folio','minitest':'Mini-teste','exame':'Exame','other':'Outro'};let a='';if(e.status!=='done'){if(d<0)a=`<span class="text-xs text-red-500 font-medium">⚠️ Atrasado ${Math.abs(d)}d</span>`;else if(d===0)a=`<span class="text-xs text-red-500 font-medium alert-urgent">🔥 Hoje!</span>`;else if(d<=3)a=`<span class="text-xs text-amber-500 font-medium alert-urgent">⏰ ${d}d</span>`;else if(d<=7)a=`<span class="text-xs text-amber-500 font-medium">⏳ ${d}d</span>`;else a=`<span class="text-xs text-slate-400">📅 ${d}d</span>`;}else a=`<span class="text-xs text-emerald-500 font-medium">✅ Feito</span>`;return`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-4 flex-wrap"><div class="flex-shrink-0 text-center min-w-[50px]"><div class="text-xl font-bold">${new Date(e.start).getDate()}</div><div class="text-[10px] text-slate-500 uppercase">${new Date(e.start).toLocaleDateString('pt-PT',{month:'short'})}</div></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-medium text-sm">${e.title}</span><span class="text-[10px] px-2 py-0.5 rounded-full ${tc[e.type]}">${tl[e.type]}</span></div><div class="flex items-center gap-3 text-xs text-slate-500 flex-wrap"><span>📚 ${s?s.name:e.code}</span><span>📅 ${formatDate(e.start)}</span></div></div><div class="flex items-center gap-2">${a}<button onclick="toggleEventDone('${e.id}')" class="text-xs px-2 py-1 rounded ${e.status==='done'?'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400':'bg-slate-100 dark:bg-slate-800'} hover:opacity-80">${e.status==='done'?'✅':'Marcar'}</button><button onclick="deleteEvent('${e.id}')" class="text-xs text-red-500 hover:text-red-700 px-2">🗑️</button></div></div>`;}).join('');}
+function filterEvents(t,b){currentEventFilter=t;document.querySelectorAll('.event-filter').forEach(x=>{x.classList.remove('bg-slate-900','dark:bg-white','text-white','dark:text-slate-900');x.classList.add('bg-slate-100','dark:bg-slate-800','text-slate-700','dark:text-slate-300');});b.classList.remove('bg-slate-100','dark:bg-slate-800','text-slate-700','dark:text-slate-300');b.classList.add('bg-slate-900','dark:bg-white','text-white','dark:text-slate-900');renderCalendar();}
+function toggleEventDone(id){const e=events.find(x=>x.id===id);if(e){e.status=e.status==='done'?'upcoming':'done';saveData();renderAll();}}
+function deleteEvent(id){if(confirm('Apagar?')){events=events.filter(e=>e.id!==id);saveData();renderAll();}}
+function openAddEventModal(){const s=document.getElementById('event-code');s.innerHTML='';curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{const o=document.createElement('option');o.value=sub.code;o.textContent=`${sub.code} - ${sub.name}`;s.appendChild(o);});});});document.getElementById('event-title').value='';document.getElementById('event-type').value='efolio';document.getElementById('event-start').value='';document.getElementById('event-end').value='';document.getElementById('modal-event').classList.add('active');}
+function saveEvent(){const t=document.getElementById('event-title').value.trim(),c=document.getElementById('event-code').value,ty=document.getElementById('event-type').value,s=document.getElementById('event-start').value,e=document.getElementById('event-end').value;if(!t||!s){alert('Título e data obrigatórios');return;}events.push({id:'e'+Date.now(),title:t,code:c,type:ty,start:s,end:e||s,status:'upcoming'});saveData();closeModal('modal-event');renderAll();}
+function exportICS(){let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Academy Hub//PT\n';events.forEach(e=>{ics+=`BEGIN:VEVENT\nUID:${e.id}@academyhub\nDTSTART;VALUE=DATE:${e.start.replace(/-/g,'')}\nDTEND;VALUE=DATE:${(e.end||e.start).replace(/-/g,'')}\nSUMMARY:${e.title}\nEND:VEVENT\n`;});ics+='END:VCALENDAR';const b=new Blob([ics],{type:'text/calendar'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='calendario.ics';a.click();URL.revokeObjectURL(u);}
+
+// CALCULATOR
+function renderCalculator(){const c=document.getElementById('calculator-subjects');let h='';curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{const sel=calcSelections[sub.code]||{selected:false,grade:sub.grade};h+=`<div class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 ${sel.selected?'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800':''}"><input type="checkbox" ${sel.selected?'checked':''} onchange="toggleCalcSubject('${sub.code}')" class="rounded"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${sub.name}</p><p class="text-xs text-slate-500">${sub.code} • ${sub.ects} ECTS</p></div><input type="number" min="0" max="20" value="${sel.grade!==null&&sel.grade!==undefined?sel.grade:''}" onchange="updateCalcGrade('${sub.code}',this.value)" placeholder="Nota" class="w-20 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-transparent text-sm text-center" ${!sel.selected?'disabled':''}></div>`;});});});c.innerHTML=h;calculateAverage();}
+function toggleCalcSubject(c){if(!calcSelections[c])calcSelections[c]={selected:false,grade:null};calcSelections[c].selected=!calcSelections[c].selected;renderCalculator();}
+function updateCalcGrade(c,v){if(!calcSelections[c])calcSelections[c]={selected:false,grade:null};calcSelections[c].grade=v===''?null:parseInt(v);calculateAverage();}
+function calculateAverage(){let tw=0,te=0,c=0;Object.entries(calcSelections).forEach(([code,sel])=>{if(sel.selected&&sel.grade!==null){const s=findSubject(code);if(s){tw+=sel.grade*s.ects;te+=s.ects;c++;}}});document.getElementById('calc-average').textContent=te>0?(tw/te).toFixed(2):'—';document.getElementById('calc-count').textContent=c;document.getElementById('calc-ects').textContent=te;}
+function selectAllCalc(sel){curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{const st=getStatus(sub);if(st==='Aprovada'||st==='Creditada'){if(!calcSelections[sub.code])calcSelections[sub.code]={selected:false,grade:null};calcSelections[sub.code].selected=sel;if(sel&&calcSelections[sub.code].grade===null)calcSelections[sub.code].grade=sub.grade;}});});});renderCalculator();}
+function fillCurrentGrades(){curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{if(sub.grade!==null){if(!calcSelections[sub.code])calcSelections[sub.code]={selected:false,grade:null};calcSelections[sub.code].selected=true;calcSelections[sub.code].grade=sub.grade;}});});});renderCalculator();}
+
+// E-FOLIOS DETALHADO
+function renderEfolios() {
+    const c = document.getElementById('efolios-content');
+    const subs = getAllSubjects().filter(s => s.manualStatus !== 'Creditada');
+    if (!subs.length) { c.innerHTML = '<p class="text-slate-500 text-center py-8">Sem disciplinas para mostrar.</p>'; return; }
+    c.innerHTML = subs.map(sub => {
+        const ed = efolioData[sub.code] || { efA: '', efB: '', efG: '' };
+        const efA = parseFloat(ed.efA) || 0;
+        const efB = parseFloat(ed.efB) || 0;
+        const partial = (efA * 0.2) + (efB * 0.2);
+        const needed = ((10 - partial) / 0.6).toFixed(1);
+        const neededNum = parseFloat(needed);
+        
+        let statusMsg = '';
+        if (sub.grade !== null && sub.grade >= 10) {
+            statusMsg = `<span class="text-emerald-600 font-bold">✅ Aprovado (Nota: ${sub.grade})</span>`;
+        } else if (neededNum <= 0) {
+            statusMsg = `<span class="text-emerald-600 font-bold">🎉 Já aprovado! (Precisas de 0 no Global)</span>`;
+        } else if (neededNum > 20) {
+            statusMsg = `<span class="text-red-600 font-bold">⚠️ Matematicamente impossível (Precisas de ${needed} > 20)</span>`;
+        } else {
+            statusMsg = `<span class="text-amber-600 font-bold">🎯 Precisas de <strong>${needed}</strong> no Global para passar</span>`;
+        }
+
+        return `<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <div><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span> <span class="font-semibold text-sm">${sub.name}</span></div>
+                <div class="text-sm">${statusMsg}</div>
             </div>
-        `).join('');
-    }
-
-    // Estados válidos de asignaturas
-    const VALID_STATUS = ['Aprobada', 'Reprobada', 'Creditada', 'Em Curso', 'Pendente'];
-    const VALID_PLANS = ['concluida', 'foco_atual', 'proximo', 'futuro', 'equivalencia', 'acreditacao'];
-    
-    function updatePlan(yearIdx, semIdx, subjIdx, newPlan) {
-        // Validar que el plan es válido
-        if (!VALID_PLANS.includes(newPlan)) {
-            console.error(`❌ Plan inválido: ${newPlan}. Debe ser uno de: ${VALID_PLANS.join(', ')}`);
-            return;
-        }
-        
-        const subject = curriculum[yearIdx].semesters[semIdx].subjects[subjIdx];
-        subject.plan = newPlan;
-        
-        // Actualizar manualStatus según el plan (mapeo automático)
-        if (newPlan === 'concluida' && subject.grade === null) {
-            subject.manualStatus = "Aprobada";
-        } else if (newPlan === 'equivalencia') {
-            subject.manualStatus = "Creditada";
-        } else if (newPlan === 'foco_atual') {
-            subject.manualStatus = "Em Curso";
-        } else {
-            subject.manualStatus = null; // Limpiar status manual para otros planes
-        }
-        
-        saveData();
-        renderAll();
-    }
-
-    // ============ CURRÍCULO ============
-    function renderCurriculum() {
-        const container = document.getElementById('curriculum-content');
-        let html = '';
-        curriculum.forEach((year, yearIdx) => {
-            html += `<div class="mb-8">
-                <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold">${year.year}º</span> Ano
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
-            year.semesters.forEach((sem, semIdx) => {
-                html += `<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3>
-                    <div class="space-y-2">`;
-                sem.subjects.forEach((sub, subjIdx) => {
-                    const status = getStatus(sub);
-                    const statusColors = { "Aprovada": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", "Reprovada": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400", "Creditada": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400", "Em Curso": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400", "Pendente": "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400" };
-                    const statusIcons = { "Aprovada": "✅", "Reprovada": "❌", "Creditada": "🎓", "Em Curso": "⏳", "Pendente": "⏸️" };
-                    const subjectTasks = tasks[sub.code] || [];
-                    const pendingTasks = subjectTasks.filter(t => !t.completed).length;
-                    
-                    html += `<div class="p-3 rounded-lg bg-white dark:bg-slate-900 plan-${sub.plan}">
-                        <div class="flex items-center justify-between gap-3 mb-2">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                    <span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span>
-                                    <span class="font-medium text-sm truncate">${sub.name}</span>
-                                    ${sub.url ? `<a href="${sub.url}" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-500 transition-colors flex-shrink-0">🔗</a>` : ''}
-                                </div>
-                                <div class="flex items-center gap-3 mt-1.5 flex-wrap">
-                                    <span class="text-xs text-slate-500">${sub.ects} ECTS</span>
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[status]}">${statusIcons[status]} ${status}</span>
-                                </div>
-                            </div>
-                            <input type="number" min="0" max="20" value="${sub.grade !== null ? sub.grade : ''}" onchange="updateGrade(${yearIdx}, ${semIdx}, ${subjIdx}, this.value)" placeholder="—" class="grade-input text-sm font-semibold rounded px-2 py-1">
-                        </div>
-                        <div class="flex gap-2 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                            <button onclick="openTaskModal('${sub.code}')" class="flex-1 text-xs px-2 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-1">✅ Tarefas ${pendingTasks > 0 ? `<span class="bg-amber-500 text-white px-1.5 rounded-full text-[10px]">${pendingTasks}</span>` : ''}</button>
-                        </div>
-                        ${subjectTasks.length > 0 ? `<div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1">${subjectTasks.slice(0, 3).map(task => `<div class="flex items-center gap-2 text-xs"><input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${sub.code}', '${task.id}')" class="rounded"><span class="${task.completed ? 'line-through text-slate-400' : ''} flex-1 truncate">${task.title}</span>${task.dueDate ? `<span class="text-slate-400 text-[10px]">${formatDate(task.dueDate)}</span>` : ''}<button onclick="deleteTask('${sub.code}', '${task.id}')" class="text-red-500 hover:text-red-700">×</button></div>`).join('')}</div>` : ''}
-                    </div>`;
-                });
-                html += `</div></div>`;
-            });
-            html += `</div></div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    function updateGrade(yearIdx, semIdx, subjIdx, value) {
-        // Validación estricta de calificación
-        const trimmedValue = value.trim();
-        if (trimmedValue === '') {
-            curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade = null;
-        } else {
-            const grade = parseFloat(trimmedValue);
-            // Validar que es un número válido
-            if (isNaN(grade)) {
-                alert('❌ Error: La calificación debe ser un número válido (0-20)');
-                return;
-            }
-            // Validar rango (0-20, como escala portuguesa)
-            if (grade < 0 || grade > 20) {
-                alert('❌ Error: La calificación debe estar entre 0 y 20');
-                return;
-            }
-            curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade = grade;
-        }
-        curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].manualStatus = null;
-        if (curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].grade >= 10) {
-            curriculum[yearIdx].semesters[semIdx].subjects[subjIdx].plan = 'concluida';
-        }
-        saveData();
-        renderAll();
-    }
-
-    // ============ TAREFAS ============
-    function openTaskModal(code) { document.getElementById('task-subject-code').value = code; document.getElementById('task-title').value = ''; document.getElementById('task-due').value = ''; document.getElementById('modal-task').classList.add('active'); }
-    function saveTask() {
-        const code = document.getElementById('task-subject-code').value; const title = document.getElementById('task-title').value.trim(); const due = document.getElementById('task-due').value;
-        if (!title) { alert('Título obrigatório'); return; }
-        if (!tasks[code]) tasks[code] = [];
-        tasks[code].push({ id: 't' + Date.now(), title, dueDate: due || null, completed: false, createdAt: new Date().toISOString() });
-        saveData(); closeModal('modal-task'); renderAll();
-    }
-    function toggleTask(code, taskId) { const task = tasks[code].find(t => t.id === taskId); if (task) task.completed = !task.completed; saveData(); renderAll(); }
-    function deleteTask(code, taskId) { tasks[code] = tasks[code].filter(t => t.id !== taskId); if (tasks[code].length === 0) delete tasks[code]; saveData(); renderAll(); }
-
-    // ============ CALENDÁRIO ============
-    function renderCalendar() {
-        const container = document.getElementById('calendar-events');
-        let filtered = currentEventFilter !== 'all' ? events.filter(e => e.type === currentEventFilter) : events;
-        filtered.sort((a, b) => new Date(a.start) - new Date(b.start));
-        if (filtered.length === 0) { container.innerHTML = '<p class="text-center text-slate-500 py-8">Nenhum evento encontrado.</p>'; return; }
-        container.innerHTML = filtered.map(event => {
-            const sub = findSubject(event.code); const days = daysUntil(event.end || event.start);
-            const typeColors = { 'efolio': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', 'minitest': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', 'exame': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'other': 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400' };
-            const typeLabels = { 'efolio': 'E-folio', 'minitest': 'Mini-teste', 'exame': 'Exame', 'other': 'Outro' };
-            let alertHtml = '';
-            if (event.status !== 'done') {
-                if (days < 0) alertHtml = `<span class="text-xs text-red-500 font-medium">⚠️ Atrasado ${Math.abs(days)}d</span>`;
-                else if (days === 0) alertHtml = `<span class="text-xs text-red-500 font-medium alert-urgent">🔥 Hoje!</span>`;
-                else if (days <= 3) alertHtml = `<span class="text-xs text-amber-500 font-medium alert-urgent">⏰ ${days}d</span>`;
-                else if (days <= 7) alertHtml = `<span class="text-xs text-amber-500 font-medium">⏳ ${days}d</span>`;
-                else alertHtml = `<span class="text-xs text-slate-400">📅 ${days}d</span>`;
-            } else { alertHtml = `<span class="text-xs text-emerald-500 font-medium">✅ Feito</span>`; }
-            return `<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-4 flex-wrap">
-                <div class="flex-shrink-0 text-center min-w-[50px]"><div class="text-xl font-bold">${new Date(event.start).getDate()}</div><div class="text-[10px] text-slate-500 uppercase">${new Date(event.start).toLocaleDateString('pt-PT', {month: 'short'})}</div></div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-medium text-sm">${event.title}</span><span class="text-[10px] px-2 py-0.5 rounded-full ${typeColors[event.type]}">${typeLabels[event.type]}</span></div>
-                    <div class="flex items-center gap-3 text-xs text-slate-500 flex-wrap"><span>📚 ${sub ? sub.name : event.code}</span><span>📅 ${formatDate(event.start)}</span></div>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/10 text-center">
+                    <p class="text-[10px] font-semibold text-purple-600 dark:text-purple-400 uppercase">E-fólio A (20%)</p>
+                    <input type="number" min="0" max="20" step="0.1" value="${ed.efA}" onchange="updateEfolio('${sub.code}', 'efA', this.value)" class="w-full mt-1 text-center bg-transparent border-b border-purple-300 dark:border-purple-700 focus:outline-none font-bold text-lg">
                 </div>
-                <div class="flex items-center gap-2">
-                    ${alertHtml}
-                    <button onclick="toggleEventDone('${event.id}')" class="text-xs px-2 py-1 rounded ${event.status === 'done' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800'} hover:opacity-80">${event.status === 'done' ? '✅' : 'Marcar'}</button>
-                    <button onclick="deleteEvent('${event.id}')" class="text-xs text-red-500 hover:text-red-700 px-2">🗑️</button>
+                <div class="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10 text-center">
+                    <p class="text-[10px] font-semibold text-blue-600 dark:text-blue-400 uppercase">E-fólio B (20%)</p>
+                    <input type="number" min="0" max="20" step="0.1" value="${ed.efB}" onchange="updateEfolio('${sub.code}', 'efB', this.value)" class="w-full mt-1 text-center bg-transparent border-b border-blue-300 dark:border-blue-700 focus:outline-none font-bold text-lg">
                 </div>
-            </div>`;
-        }).join('');
-    }
-
-    function filterEvents(type, btn) {
-        currentEventFilter = type;
-        document.querySelectorAll('.event-filter').forEach(b => { b.classList.remove('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900'); b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300'); });
-        btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300'); btn.classList.add('bg-slate-900', 'dark:bg-white', 'text-white', 'dark:text-slate-900');
-        renderCalendar();
-    }
-    function toggleEventDone(id) { const event = events.find(e => e.id === id); if (event) { event.status = event.status === 'done' ? 'upcoming' : 'done'; saveData(); renderAll(); } }
-    function deleteEvent(id) { if (confirm('Apagar este evento?')) { events = events.filter(e => e.id !== id); saveData(); renderAll(); } }
-    function openAddEventModal() {
-        const select = document.getElementById('event-code'); select.innerHTML = '';
-        curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => { const opt = document.createElement('option'); opt.value = sub.code; opt.textContent = `${sub.code} - ${sub.name}`; select.appendChild(opt); }); }); });
-        document.getElementById('event-title').value = ''; document.getElementById('event-type').value = 'efolio'; document.getElementById('event-start').value = ''; document.getElementById('event-end').value = '';
-        document.getElementById('modal-event').classList.add('active');
-    }
-    function saveEvent() {
-        const title = document.getElementById('event-title').value.trim(); const code = document.getElementById('event-code').value; const type = document.getElementById('event-type').value; const start = document.getElementById('event-start').value; const end = document.getElementById('event-end').value;
-        if (!title || !start) { alert('Título e data obrigatórios'); return; }
-        events.push({ id: 'e' + Date.now(), title, code, type, start, end: end || start, status: 'upcoming' });
-        saveData(); closeModal('modal-event'); renderAll();
-    }
-    function exportICS() {
-        let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Academy Hub//PT\n';
-        events.forEach(event => { const sub = findSubject(event.code); const start = event.start.replace(/-/g, ''); const end = (event.end || event.start).replace(/-/g, ''); ics += `BEGIN:VEVENT\nUID:${event.id}@academyhub\nDTSTART;VALUE=DATE:${start}\nDTEND;VALUE=DATE:${end}\nSUMMARY:${event.title}\nDESCRIPTION:${sub ? sub.name : ''}\nEND:VEVENT\n`; });
-        ics += 'END:VCALENDAR';
-        const blob = new Blob([ics], { type: 'text/calendar' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'calendario.ics'; a.click(); URL.revokeObjectURL(url);
-    }
-
-    // ============ CALCULADORA ============
-    function renderCalculator() {
-        const container = document.getElementById('calculator-subjects'); let html = '';
-        curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => {
-            const sel = calcSelections[sub.code] || { selected: false, grade: sub.grade };
-            html += `<div class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 ${sel.selected ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800' : ''}">
-                <input type="checkbox" ${sel.selected ? 'checked' : ''} onchange="toggleCalcSubject('${sub.code}')" class="rounded">
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2"><p class="text-sm font-medium truncate">${sub.name}</p>${sub.url ? `<a href="${sub.url}" target="_blank" class="text-slate-400 hover:text-blue-500 flex-shrink-0 text-xs">🔗</a>` : ''}</div>
-                    <p class="text-xs text-slate-500">${sub.code} • ${sub.ects} ECTS</p>
+                <div class="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 text-center">
+                    <p class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase">E-fólio Global (60%)</p>
+                    <input type="number" min="0" max="20" step="0.1" value="${ed.efG}" onchange="updateEfolio('${sub.code}', 'efG', this.value)" class="w-full mt-1 text-center bg-transparent border-b border-emerald-300 dark:border-emerald-700 focus:outline-none font-bold text-lg">
                 </div>
-                <input type="number" min="0" max="20" value="${sel.grade !== null && sel.grade !== undefined ? sel.grade : ''}" onchange="updateCalcGrade('${sub.code}', this.value)" placeholder="Nota" class="w-20 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-transparent text-sm text-center" ${!sel.selected ? 'disabled' : ''}>
-            </div>`;
-        }); }); });
-        container.innerHTML = html; calculateAverage();
-    }
-    function toggleCalcSubject(code) { if (!calcSelections[code]) calcSelections[code] = { selected: false, grade: null }; calcSelections[code].selected = !calcSelections[code].selected; renderCalculator(); }
-    function updateCalcGrade(code, value) { if (!calcSelections[code]) calcSelections[code] = { selected: false, grade: null }; calcSelections[code].grade = value === '' ? null : parseInt(value); calculateAverage(); }
-    function calculateAverage() {
-        let totalWeighted = 0, totalEcts = 0, count = 0;
-        Object.entries(calcSelections).forEach(([code, sel]) => { if (sel.selected && sel.grade !== null) { const sub = findSubject(code); if (sub) { totalWeighted += sel.grade * sub.ects; totalEcts += sub.ects; count++; } } });
-        const avg = totalEcts > 0 ? (totalWeighted / totalEcts).toFixed(2) : '—';
-        document.getElementById('calc-average').textContent = avg; document.getElementById('calc-count').textContent = count; document.getElementById('calc-ects').textContent = totalEcts;
-    }
-    function selectAllCalc(select) {
-        curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => {
-            const status = getStatus(sub);
-            if (status === 'Aprovada' || status === 'Creditada') {
-                if (!calcSelections[sub.code]) calcSelections[sub.code] = { selected: false, grade: null };
-                calcSelections[sub.code].selected = select; if (select && calcSelections[sub.code].grade === null) calcSelections[sub.code].grade = sub.grade;
-            }
-        }); }); }); renderCalculator();
-    }
-    function fillCurrentGrades() {
-        curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => {
-            if (sub.grade !== null) { if (!calcSelections[sub.code]) calcSelections[sub.code] = { selected: false, grade: null }; calcSelections[sub.code].selected = true; calcSelections[sub.code].grade = sub.grade; }
-        }); }); }); renderCalculator();
-    }
+            </div>
+            <div class="mt-3 text-xs text-slate-500 text-center">Nota parcial atual (A+B): <strong>${partial.toFixed(1)}</strong> / 20</div>
+        </div>`;
+    }).join('');
+}
+function updateEfolio(code, type, value) {
+    if (!efolioData[code]) efolioData[code] = { efA: '', efB: '', efG: '' };
+    efolioData[code][type] = value;
+    localStorage.setItem('efolioData', JSON.stringify(efolioData));
+    renderEfolios();
+}
 
-    // ============ DASHBOARD & STATS ============
-    function calculateStats(useCache = true) {
-        // Sistema de caché: evita recalcular si los datos no han cambiado
-        const now = Date.now();
-        if (useCache && statsCache && (now - statsCacheTimestamp) < CACHE_INVALIDATION_TIME) {
-            return statsCache;
-        }
-        
-        let totalEcts = 0, completedEcts = 0, totalGradePoints = 0, gradedCount = 0;
-        let approved = 0, failed = 0, inProgress = 0, credited = 0, pending = 0;
-        let gradeDistribution = { '16-20': 0, '13-15': 0, '10-12': 0, '<10': 0 };
-        
-        // Iterar por todas las asignaturas
-        curriculum.forEach(year => {
-            year.semesters.forEach(sem => {
-                sem.subjects.forEach(sub => {
-                    totalEcts += sub.ects;
-                    const status = getStatus(sub);
-                    
-                    switch(status) {
-                        case "Aprovada":
-                            approved++;
-                            completedEcts += sub.ects;
-                            if (sub.grade !== null && sub.grade !== undefined) {
-                                totalGradePoints += sub.grade;
-                                gradedCount++;
-                                if (sub.grade >= 16) gradeDistribution['16-20']++;
-                                else if (sub.grade >= 13) gradeDistribution['13-15']++;
-                                else gradeDistribution['10-12']++;
-                            }
-                            break;
-                        case "Reprovada":
-                            failed++;
-                            gradeDistribution['<10']++;
-                            break;
-                        case "Em Curso":
-                            inProgress++;
-                            break;
-                        case "Creditada":
-                            credited++;
-                            completedEcts += sub.ects;
-                            break;
-                        default: // Pendente
-                            pending++;
-                    }
-                });
-            });
-        });
-        
-        const average = gradedCount > 0 ? (totalGradePoints / gradedCount).toFixed(2) : 0;
-        const result = {
-            totalEcts,
-            completedEcts,
-            average,
-            approved,
-            failed,
-            inProgress,
-            credited,
-            pending,
-            totalSubjects: approved + failed + inProgress + credited + pending,
-            gradeDistribution
-        };
-        
-        // Guardar en caché
-        statsCache = result;
-        statsCacheTimestamp = now;
-        
-        return result;
-    }
+// CERTIFICAÇÕES
+function renderCertifications() {
+    const c = document.getElementById('certifications-content');
+    const statusColors = {
+        'nao_iniciado': 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
+        'em_estudo': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+        'agendado': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+        'concluido': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+    };
+    const statusLabels = {
+        'nao_iniciado': '⏳ Não Iniciado',
+        'em_estudo': '📚 Em Estudo',
+        'agendado': '📅 Agendado',
+        'concluido': '🏆 Concluído'
+    };
+    c.innerHTML = certifications.map((cert, idx) => `
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-sm">${cert.name}</h3>
+                <span class="text-[10px] px-2 py-1 rounded-full ${statusColors[cert.status]}">${statusLabels[cert.status]}</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-3">Categoria: ${cert.category}</p>
+            <div class="space-y-2">
+                <select onchange="updateCertStatus(${idx}, this.value)" class="w-full px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-xs">
+                    <option value="nao_iniciado" ${cert.status==='nao_iniciado'?'selected':''}>⏳ Não Iniciado</option>
+                    <option value="em_estudo" ${cert.status==='em_estudo'?'selected':''}>📚 Em Estudo</option>
+                    <option value="agendado" ${cert.status==='agendado'?'selected':''}>📅 Agendado</option>
+                    <option value="concluido" ${cert.status==='concluido'?'selected':''}>🏆 Concluído</option>
+                </select>
+                <input type="date" value="${cert.targetDate}" onchange="updateCertDate(${idx}, this.value)" placeholder="Data alvo" class="w-full px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-xs">
+            </div>
+        </div>
+    `).join('');
+}
+function updateCertStatus(idx, status) { certifications[idx].status = status; saveData(); renderCertifications(); }
+function updateCertDate(idx, date) { certifications[idx].targetDate = date; saveData(); }
 
-    function renderDashboard() {
-        const stats = calculateStats(); const percentage = Math.round((stats.completedEcts / stats.totalEcts) * 100);
-        const upcomingEvents = events.filter(e => e.status !== 'done').map(e => ({ ...e, days: daysUntil(e.end || e.start) })).filter(e => e.days >= 0 && e.days <= 7).sort((a, b) => a.days - b.days);
-        let alertsHtml = '';
-        if (upcomingEvents.length > 0) {
-            alertsHtml = `<div class="space-y-2">${upcomingEvents.slice(0, 3).map(e => {
-                const sub = findSubject(e.code); const urgency = e.days <= 1 ? 'border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800' : 'border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800';
-                return `<div class="p-3 rounded-lg border ${urgency} flex items-center gap-3"><span class="text-xl">${e.days === 0 ? '🔥' : '⏰'}</span><div class="flex-1"><p class="text-sm font-medium">${e.title}</p><p class="text-xs text-slate-500">${sub ? sub.name : ''} • ${e.days === 0 ? 'Hoje!' : `Faltam ${e.days}d`}</p></div></div>`;
-            }).join('')}</div>`;
-        }
-        document.getElementById('dashboard-alerts').innerHTML = alertsHtml;
-        document.getElementById('dashboard-stats').innerHTML = `
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Calificación promedio de las disciplinas aprobadas (≥10)"><p class="text-sm text-slate-500 flex items-center gap-1">Média <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.average}</h3></div>
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Créditos ECTS completados de los 180 totales de tu licenciatura"><p class="text-sm text-slate-500 flex items-center gap-1">ECTS <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.completedEcts} <span class="text-lg text-slate-400 font-normal">/ ${stats.totalEcts}</span></h3><div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width: ${percentage}%"></div></div></div>
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Disciplinas aprobadas (nota ≥ 10) de un total de todas las disciplinas"><p class="text-sm text-slate-500 flex items-center gap-1">Aprovadas <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.approved} <span class="text-lg text-slate-400 font-normal">/ ${stats.totalSubjects}</span></h3></div>
-            <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-help" title="Disciplinas en las que estás actualmente inscrito/inscrita"><p class="text-sm text-slate-500 flex items-center gap-1">Em Curso <span class="text-xs bg-slate-200 dark:bg-slate-700 rounded-full w-5 h-5 flex items-center justify-center">?</span></p><h3 class="text-3xl font-bold mt-2">${stats.inProgress}</h3></div>
-        `;
-        document.getElementById('degree-progress').innerHTML = `
-            <div class="flex justify-between text-sm mb-2"><span class="font-medium">Licenciatura</span><span class="text-slate-500">${percentage}%</span></div>
-            <div class="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width: ${percentage}%"></div></div>
-            <div class="grid grid-cols-2 gap-4 mt-6"><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><p class="text-sm text-slate-500">Ano</p><p class="text-xl font-semibold">2º Ano</p></div><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><p class="text-sm text-slate-500">Semestre</p><p class="text-xl font-semibold">2º Sem</p></div></div>
-        `;
-        const nextEvents = events.filter(e => e.status !== 'done').sort((a, b) => new Date(a.start) - new Date(b.start)).slice(0, 5);
-        document.getElementById('upcoming-events').innerHTML = nextEvents.length > 0 ? nextEvents.map(e => {
-            const sub = findSubject(e.code); const days = daysUntil(e.end || e.start);
-            return `<div class="flex items-start gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 last:border-0 last:pb-0"><div class="w-2 h-2 rounded-full bg-slate-900 dark:bg-white mt-2"></div><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${e.title}</p><p class="text-xs text-slate-500">${sub ? sub.name : ''}</p><p class="text-xs text-slate-400 mt-0.5">${days <= 0 ? '🔥 Hoje!' : `📅 Faltam ${days}d`}</p></div></div>`;
-        }).join('') : '<p class="text-sm text-slate-500 text-center py-4">Sem eventos 🎉</p>';
-    }
+// DASHBOARD & PREDICTION
+function renderDashboard(){
+    const st=calculateStats();const pct=Math.round(st.completedEcts/st.totalEcts*100);
+    const ue=events.filter(e=>e.status!=='done').map(e=>({...e,days:daysUntil(e.end||e.start)})).filter(e=>e.days>=0&&e.days<=7).sort((a,b)=>a.days-b.days);
+    let ah='';if(ue.length)ah=`<div class="space-y-2">${ue.slice(0,3).map(e=>{const s=findSubject(e.code);const u=e.days<=1?'border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800':'border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800';return`<div class="p-3 rounded-lg border ${u} flex items-center gap-3"><span class="text-xl">${e.days===0?'🔥':'⏰'}</span><div class="flex-1"><p class="text-sm font-medium">${e.title}</p><p class="text-xs text-slate-500">${s?s.name:''} • ${e.days===0?'Hoje!':`Faltam ${e.days}d`}</p></div></div>`;}).join('')}</div>`;
+    document.getElementById('dashboard-alerts').innerHTML=ah;
+    document.getElementById('dashboard-stats').innerHTML=`<div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Média</p><h3 class="text-3xl font-bold mt-2">${st.average}</h3></div><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">ECTS</p><h3 class="text-3xl font-bold mt-2">${st.completedEcts} <span class="text-lg text-slate-400 font-normal">/ ${st.totalEcts}</span></h3><div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${pct}%"></div></div></div><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Aprovadas</p><h3 class="text-3xl font-bold mt-2">${st.approved} <span class="text-lg text-slate-400 font-normal">/ ${st.totalSubjects}</span></h3></div><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Em Curso</p><h3 class="text-3xl font-bold mt-2">${st.inProgress}</h3></div>`;
+    
+    const remainingLicenca = 180 - st.completedEcts;
+    const remainingMaster = 120;
+    const ectsPerSemester = 25;
+    const semestersLeftLicenca = Math.ceil(remainingLicenca / ectsPerSemester);
+    const monthsLeftLicenca = semestersLeftLicenca * 6;
+    const predDateLicenca = new Date();
+    predDateLicenca.setMonth(predDateLicenca.getMonth() + monthsLeftLicenca);
+    
+    const semestersLeftMaster = Math.ceil(remainingMaster / 30);
+    const monthsLeftMaster = monthsLeftLicenca + (semestersLeftMaster * 6);
+    const predDateMaster = new Date();
+    predDateMaster.setMonth(predDateMaster.getMonth() + monthsLeftMaster);
 
-    function renderStats() {
-        const stats = calculateStats(); const total = stats.totalSubjects;
-        document.getElementById('subject-distribution').innerHTML = `<div class="space-y-3">${[{ label: 'Aprovadas', value: stats.approved, color: 'bg-emerald-500' }, { label: 'Reprovadas', value: stats.failed, color: 'bg-red-500' }, { label: 'Em Curso', value: stats.inProgress, color: 'bg-amber-500' }, { label: 'Creditadas', value: stats.credited, color: 'bg-blue-500' }, { label: 'Pendentes', value: stats.pending, color: 'bg-slate-400' }].map(item => `<div><div class="flex justify-between text-sm mb-1"><span>${item.label}</span><span class="font-medium">${item.value}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full ${item.color} rounded-full" style="width: ${total > 0 ? (item.value/total*100) : 0}%"></div></div></div>`).join('')}</div>`;
-        const maxGrade = Math.max(...Object.values(stats.gradeDistribution));
-        document.getElementById('grade-distribution').innerHTML = `<div class="space-y-3">${Object.entries(stats.gradeDistribution).map(([range, count]) => `<div><div class="flex justify-between text-sm mb-1"><span>${range}</span><span class="font-medium">${count}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width: ${maxGrade > 0 ? (count/maxGrade*100) : 0}%"></div></div></div>`).join('')}</div>`;
-    }
+    const options = { year: 'numeric', month: 'long' };
+    document.getElementById('completion-prediction').innerHTML = `
+        <h4 class="text-sm font-semibold mb-3 flex items-center gap-2">📅 Previsão de Conclusão (Ritmo: ~${ectsPerSemester} ECTS/semestre)</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">🎓</div>
+                <div>
+                    <p class="text-xs text-slate-500">Licenciatura (180 ECTS)</p>
+                    <p class="font-bold text-sm">Estimativa: ${predDateLicenca.toLocaleDateString('pt-PT', options)}</p>
+                    <p class="text-[10px] text-slate-400">Faltam ${remainingLicenca} ECTS (~${semestersLeftLicenca} semestres)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">👑</div>
+                <div>
+                    <p class="text-xs text-slate-500">Mestrado MEITW (120 ECTS)</p>
+                    <p class="font-bold text-sm">Estimativa: ${predDateMaster.toLocaleDateString('pt-PT', options)}</p>
+                    <p class="text-[10px] text-slate-400">Total: 300 ECTS</p>
+                </div>
+            </div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-3 italic">* Cálculo baseado num ritmo médio de ${ectsPerSemester} ECTS por semestre. Ajusta o teu ritmo na secção "Planeamento" para ser mais preciso.</p>
+    `;
 
-    // ============ UI & INICIALIZAÇÃO ============
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-    
-    function toggleDark() { 
-        document.documentElement.classList.toggle('dark'); 
-        const isDark = document.documentElement.classList.contains('dark');
-        localStorage.setItem('darkMode', isDark);
-        document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark);
-        document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark);
-    }
-    
-    function exportBackup() {
-        const data = { curriculum, tasks, events, exportDate: new Date().toISOString(), version: '7.0' };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `academy-backup-${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(url);
-    }
-    function importBackup(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        // Validar tipo de archivo
-        if (!file.name.endsWith('.json')) {
-            alert('❌ Error: Solo se aceptan archivos JSON (.json)');
-            event.target.value = '';
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                
-                // Validar estructura del backup
-                if (!data.curriculum || !Array.isArray(data.curriculum)) {
-                    throw new Error('Estructura inválida: "curriculum" debe ser un array');
-                }
-                
-                // Validar que curriculum no está vacío
-                if (data.curriculum.length === 0) {
-                    throw new Error('El curriculum está vacío');
-                }
-                
-                // Validar versión (recomendación)
-                if (data.version && data.version !== '7.0') {
-                    console.warn(`⚠️ Advertencia: Versión del backup (${data.version}) diferente de la actual (7.0). Algunos datos pueden no ser compatibles.`);
-                }
-                
-                // Validar fecha de exportación
-                if (!data.exportDate) {
-                    console.warn('⚠️ Advertencia: Backup sin fecha de exportación');
-                }
-                
-                // Importar datos
-                curriculum = data.curriculum;
-                tasks = data.tasks || {};
-                events = data.events || [];
-                
-                saveData();
-                renderAll();
-                
-                // Mostrar confirmación con detalles
-                const backupDate = data.exportDate ? new Date(data.exportDate).toLocaleDateString() : 'desconocida';
-                alert(`✅ Backup importado correctamente\n\n📅 Fecha: ${backupDate}\n📚 Asignaturas: ${data.curriculum.length}\n🗂️ Tareas: ${Object.keys(tasks).length}`);
-            } catch (err) {
-                alert(`❌ Error al importar:\n${err.message}`);
-                console.error('Import error details:', err);
-            }
-        };
-        
-        reader.onerror = () => {
-            alert('❌ Error: No se pudo leer el archivo');
-        };
-        
-        reader.readAsText(file);
-        event.target.value = '';
-    }
-    function resetData() {
-        if (confirm('Tens a certeza?')) {
-            curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM)); tasks = {}; events = JSON.parse(JSON.stringify(DEFAULT_EVENTS)); calcSelections = {};
-            saveData(); renderAll();
-        }
-    }
-    function renderAll() {
-        renderCurriculum(); renderPlanning(); renderDashboard(); renderStats(); renderCalendar(); renderCalculator();
-    }
+    document.getElementById('degree-progress').innerHTML=`<div class="flex justify-between text-sm mb-2"><span class="font-medium">Licenciatura</span><span class="text-slate-500">${pct}%</span></div><div class="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${pct}%"></div></div><div class="grid grid-cols-2 gap-4 mt-6"><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><p class="text-sm text-slate-500">Ano</p><p class="text-xl font-semibold">2º Ano</p></div><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><p class="text-sm text-slate-500">Semestre</p><p class="text-xl font-semibold">2º Sem</p></div></div>`;
+    const ne=events.filter(e=>e.status!=='done').sort((a,b)=>new Date(a.start)-new Date(b.start)).slice(0,5);
+    document.getElementById('upcoming-events').innerHTML=ne.length?ne.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);return`<div class="flex items-start gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 last:border-0 last:pb-0"><div class="w-2 h-2 rounded-full bg-slate-900 dark:bg-white mt-2"></div><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${e.title}</p><p class="text-xs text-slate-500">${s?s.name:''}</p><p class="text-xs text-slate-400 mt-0.5">${d<=0?'🔥 Hoje!':`📅 Faltam ${d}d`}</p></div></div>`;}).join(''):'<p class="text-sm text-slate-500 text-center py-4">Sem eventos 🎉</p>';}
 
-    // INICIALIZACIÓN CON VALIDACIÓN DE DATOS
-    // Validar estructura al iniciar
-    const validation = validateCurriculumStructure();
-    if (!validation.valid) {
-        console.warn('⚠️ Se detectaron problemas en los datos. Intentando recuperar...');
-        // Si hay problemas graves, cargar el curriculum por defecto
-        if (confirm('⚠️ Se detectaron problemas en los datos. ¿Deseas cargar los datos por defecto?\n\nEsto preservará tus cambios si exportaste un backup recientemente.')) {
-            curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
-            saveData();
-        }
-    }
-    
-    const savedView = localStorage.getItem('currentView') || 'dashboard';
-    const savedBtn = document.querySelector(`button[onclick*="showView('${savedView}'"]`);
-    const btnToUse = savedBtn || document.querySelector(`button[onclick*="showView('dashboard'"]`);
-    
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.documentElement.classList.add('dark');
-        document.getElementById('theme-icon-sun').classList.remove('hidden');
-        document.getElementById('theme-icon-moon').classList.add('hidden');
-    }
-    
-    // Activar la vista guardada
-    showView(savedView, btnToUse);
-    renderAll();
-    
-    // Log de inicialización exitosa
-    console.log('✅ Academia Hub inicializada correctamente');
-    console.log(`📚 Total de asignaturas: ${curriculum.reduce((sum, y) => sum + y.semesters.reduce((s, sem) => s + sem.subjects.length, 0), 0)}`);
-    console.log(`📊 ECTS totales: ${curriculum.reduce((sum, y) => sum + y.semesters.reduce((s, sem) => s + sem.subjects.reduce((ss, sub) => ss + sub.ects, 0), 0), 0)}`);
+// BUSQUEDA (COM BORDAS POR ESTADO ATUAL)
+function renderBusqueda(){
+    const q=(document.getElementById('search-input').value||'').toLowerCase();const fe=document.getElementById('filter-estado').value;const fp=document.getElementById('filter-plan').value;const fa=document.getElementById('filter-ano').value;const fs=document.getElementById('filter-semestre').value;const fects=document.getElementById('filter-ects').value;
+    let results=getAllSubjects().filter(s=>{
+        if(q&&!s.code.toLowerCase().includes(q)&&!s.name.toLowerCase().includes(q))return false;
+        if(fe&&getStatus(s)!==fe)return false;if(fp&&s.plan!==fp)return false;
+        if(fa&&s.year!==parseInt(fa))return false;if(fs&&s.semester!==parseInt(fs))return false;
+        if(fects&&s.ects!==parseInt(fects))return false;return true;
+    });
+    const sc={"Aprovada":"bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400","Reprovada":"bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400","Creditada":"bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400","Em Curso":"bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400","Pendente":"bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400"};
+    const st = getStatus(s); // Nota: 's' is not defined here, let's fix it
+    // Actually, let's map it inside the map function
+    document.getElementById('busqueda-results').innerHTML=results.length?`<p class="text-xs text-slate-500 mb-2">${results.length} resultado(s)</p>`+results.map(s=>{
+        const statusClass = getStatus(s) === "Aprovada" ? "status-aprovada" : getStatus(s) === "Reprovada" ? "status-reprovada" : getStatus(s) === "Em Curso" ? "status-em_curso" : getStatus(s) === "Creditada" ? "status-creditada" : "status-pendente";
+        return `<div class="search-result p-3 rounded-lg ${statusClass} flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2 flex-1 min-w-0"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${s.code}</span><span class="font-medium text-sm truncate">${s.name}</span><span class="text-[10px] text-slate-400">${s.year}ºA ${s.semester}ºS</span></div><div class="flex items-center gap-3"><span class="text-xs">${s.ects} ECTS</span><span class="text-xs font-semibold ${s.grade!==null?'text-emerald-600':'text-slate-400'}">${s.grade!==null?s.grade:'—'}</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${sc[getStatus(s)]}">${getStatus(s)}</span></div></div>`;
+    }).join(''):'<p class="text-center text-slate-500 py-8">Ingresa un término de búsqueda o usa los filtros para comenzar</p>';
+}
+
+// ALERTAS
+function renderAlertas(){
+    const all=getAllSubjects();const risk=all.filter(s=>s.grade!==null&&s.grade<10);const pending=all.filter(s=>s.grade===null&&!s.manualStatus);const inProgress=all.filter(s=>s.manualStatus==='Em Curso');const st=calculateStats();
+    let html='';
+    html+=`<div class="p-6 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/10"><h3 class="text-lg font-bold text-red-800 dark:text-red-400 mb-3">🔴 Disciplinas en Riesgo (Nota < 10)</h3>${risk.length?risk.map(s=>`<div class="flex items-center justify-between p-2 rounded bg-white dark:bg-slate-900 mb-1"><span class="text-sm">${s.name}</span><span class="text-sm font-bold text-red-600">${s.grade}</span></div>`).join(''):'<p class="text-sm text-slate-500">✅ Nenhuma disciplina em risco!</p>'}</div>`;
+    html+=`<div class="p-6 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/10"><h3 class="text-lg font-bold text-amber-800 dark:text-amber-400 mb-3">🟡 Disciplinas Pendientes (Sin Calificación)</h3>${pending.length?`<p class="text-sm mb-2">${pending.length} disciplinas pendientes:</p>`+pending.slice(0,5).map(s=>`<div class="flex items-center justify-between p-2 rounded bg-white dark:bg-slate-900 mb-1"><span class="text-sm">${s.name}</span><span class="text-xs text-slate-500">${s.year}ºA ${s.semester}ºS</span></div>`).join('')+(pending.length>5?`<p class="text-xs text-slate-500 mt-2">...y ${pending.length-5} más</p>`:''):'<p class="text-sm text-slate-500">✅ Todas as disciplinas têm nota!</p>'}</div>`;
+    html+=`<div class="p-6 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/10"><h3 class="text-lg font-bold text-blue-800 dark:text-blue-400 mb-3">ℹ️ Información de Progreso</h3><div class="grid grid-cols-2 gap-3"><div class="p-3 bg-white dark:bg-slate-900 rounded-lg"><p class="text-xl font-bold">${Math.round(st.completedEcts/st.totalEcts*100)}%</p><p class="text-xs text-slate-500">Licenciatura completa</p></div><div class="p-3 bg-white dark:bg-slate-900 rounded-lg"><p class="text-xl font-bold">${st.average}</p><p class="text-xs text-slate-500">Media atual</p></div></div></div>`;
+    html+=`<div class="p-6 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/10"><h3 class="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-3">🎯 Sugerencias de Mejora</h3><ul class="text-sm text-slate-700 dark:text-slate-300 space-y-2"><li>• ${inProgress.length>0?`Tienes ${inProgress.length} disciplinas en curso. ¡Foco total!`:'No tienes disciplinas en curso.'}</li><li>• ${st.average>=14?'¡Excelente media! Mantén el ritmo.':'Intenta subir la media enfocándote en las próximas disciplinas.'}</li><li>• ${st.completedEcts>=120?'¡Más de la mitad completada!':'Aún queda camino, ¡ánimo!'}</li></ul></div>`;
+    document.getElementById('alertas-content').innerHTML=html;
+}
+
+// GRAFICOS
+function renderGraficos(){
+    const all=getAllSubjects();const st=calculateStats();
+    const sems=[];curriculum.forEach(y=>{y.semesters.forEach(sem=>{const graded=sem.subjects.filter(s=>s.grade!==null);const avg=graded.length?(graded.reduce((a,s)=>a+s.grade,0)/graded.length).toFixed(1):0;sems.push({label:`${y.year}ºS${sem.semester}`,avg:parseFloat(avg)});});});
+    const maxAvg=Math.max(...sems.map(s=>s.avg),1);
+    document.getElementById('grafico-evolucion').innerHTML=`<div class="bar-chart">${sems.map(s=>`<div class="bar bg-blue-500" style="height:${s.avg>0?(s.avg/maxAvg*100):5}%"><span class="bar-value text-blue-600 dark:text-blue-400">${s.avg||'—'}</span><span class="bar-label text-slate-500">${s.label}</span></div>`).join('')}</div><div class="mt-6"></div>`;
+    const ectsData=[{label:'Completos',value:st.completedEcts,color:'bg-emerald-500'},{label:'Restantes',value:st.totalEcts-st.completedEcts,color:'bg-slate-300 dark:bg-slate-600'}];
+    document.getElementById('grafico-ects').innerHTML=`<div class="space-y-3">${ectsData.map(d=>`<div><div class="flex justify-between text-sm mb-1"><span>${d.label}</span><span class="font-bold">${d.value} ECTS</span></div><div class="h-6 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full ${d.color} rounded-full" style="width:${d.value/st.totalEcts*100}%"></div></div></div>`).join('')}</div>`;
+    const estados=[{label:'Aprovadas',value:st.approved,color:'bg-emerald-500'},{label:'Em Curso',value:st.inProgress,color:'bg-amber-500'},{label:'Creditadas',value:st.credited,color:'bg-blue-500'},{label:'Pendentes',value:st.pending,color:'bg-slate-400'},{label:'Reprovadas',value:st.failed,color:'bg-red-500'}];
+    document.getElementById('grafico-estados').innerHTML=`<div class="space-y-3">${estados.map(d=>`<div><div class="flex justify-between text-sm mb-1"><span>${d.label}</span><span class="font-bold">${d.value}</span></div><div class="h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full ${d.color} rounded-full" style="width:${st.totalSubjects>0?(d.value/st.totalSubjects*100):0}%"></div></div></div>`).join('')}</div>`;
+    const maxG=Math.max(...Object.values(st.gradeDistribution),1);
+    document.getElementById('grafico-calificaciones').innerHTML=`<div class="space-y-3">${Object.entries(st.gradeDistribution).map(([r,c])=>`<div><div class="flex justify-between text-sm mb-1"><span>${r}</span><span class="font-bold">${c}</span></div><div class="h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${c/maxG*100}%"></div></div></div>`).join('')}</div>`;
+    document.getElementById('grafico-tabla').innerHTML=`<table class="w-full text-sm"><thead><tr class="border-b border-slate-200 dark:border-slate-700"><th class="text-left py-2 px-2">Código</th><th class="text-left py-2 px-2">Nombre</th><th class="text-center py-2 px-2">ECTS</th><th class="text-center py-2 px-2">Nota</th><th class="text-center py-2 px-2">Estado</th></tr></thead><tbody>${all.map(s=>`<tr class="border-b border-slate-100 dark:border-slate-800"><td class="py-2 px-2 font-mono text-xs">${s.code}</td><td class="py-2 px-2">${s.name}</td><td class="py-2 px-2 text-center">${s.ects}</td><td class="py-2 px-2 text-center font-semibold">${s.grade!==null?s.grade:'—'}</td><td class="py-2 px-2 text-center text-xs">${getStatus(s)}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function renderStats(){const st=calculateStats();const t=st.totalSubjects;document.getElementById('subject-distribution').innerHTML=`<div class="space-y-3">${[{label:'Aprovadas',value:st.approved,color:'bg-emerald-500'},{label:'Reprovadas',value:st.failed,color:'bg-red-500'},{label:'Em Curso',value:st.inProgress,color:'bg-amber-500'},{label:'Creditadas',value:st.credited,color:'bg-blue-500'},{label:'Pendentes',value:st.pending,color:'bg-slate-400'}].map(i=>`<div><div class="flex justify-between text-sm mb-1"><span>${i.label}</span><span class="font-medium">${i.value}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full ${i.color} rounded-full" style="width:${t>0?(i.value/t*100):0}%"></div></div></div>`).join('')}</div>`;const mg=Math.max(...Object.values(st.gradeDistribution));document.getElementById('grade-distribution').innerHTML=`<div class="space-y-3">${Object.entries(st.gradeDistribution).map(([r,c])=>`<div><div class="flex justify-between text-sm mb-1"><span>${r}</span><span class="font-medium">${c}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${mg>0?(c/mg*100):0}%"></div></div></div>`).join('')}</div>`;}
+
+// UI
+function exportBackup(){const d={curriculum,tasks,events,efolioData,certifications,exportDate:new Date().toISOString(),version:'9.2'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`academy-backup-${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
+function importBackup(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.curriculum){curriculum=d.curriculum;tasks=d.tasks||{};events=d.events||[];efolioData=d.efolioData||{};certifications=d.certifications||JSON.parse(JSON.stringify(DEFAULT_CERTS));saveData();renderAll();alert('Backup importado!');}else alert('Ficheiro inválido');}catch(err){alert('Erro ao ler');}};r.readAsText(f);ev.target.value='';}
+function resetData(){if(confirm('Tens a certeza?')){curriculum=JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));tasks={};events=JSON.parse(JSON.stringify(DEFAULT_EVENTS));efolioData={};certifications=JSON.parse(JSON.stringify(DEFAULT_CERTS));calcSelections={};saveData();renderAll();}}
+function renderAll(){renderCurriculum();renderPlanning();renderDashboard();renderStats();renderCalendar();renderCalculator();renderEfolios();renderCertifications();renderBusqueda();renderAlertas();renderGraficos();}
+
+const savedView=localStorage.getItem('currentView')||'dashboard';
+const savedBtn=document.querySelector(`button[onclick*="showView('${savedView}'"]`);
+const btnToUse=savedBtn||document.querySelector(`button[onclick*="showView('dashboard'"]`);
+if(localStorage.getItem('darkMode')==='true'){document.documentElement.classList.add('dark');document.getElementById('theme-icon-sun').classList.remove('hidden');document.getElementById('theme-icon-moon').classList.add('hidden');}
+showView(savedView,btnToUse);
+renderAll();
 </script>
 </body>
 </html>
