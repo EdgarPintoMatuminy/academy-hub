@@ -32,32 +32,12 @@
         .alert-urgent { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         
-        /* BORDAS COMPLETAS POR ESTADO DO PLANO (6 cores visíveis) */
-        .plan-concluida { 
-            border: 2px solid #10b981 !important; 
-            background-color: rgba(16, 185, 129, 0.08); 
-        }
-        .plan-foco_atual { 
-            border: 2px solid #f59e0b !important; 
-            background-color: rgba(245, 158, 11, 0.08); 
-        }
-        .plan-proximo { 
-            border: 2px solid #3b82f6 !important; 
-            background-color: rgba(59, 130, 246, 0.08); 
-        }
-        .plan-equivalencia { 
-            border: 2px solid #8b5cf6 !important; 
-            background-color: rgba(139, 92, 246, 0.08); 
-        }
-        .plan-acreditacao { 
-            border: 2px solid #ec4899 !important; 
-            background-color: rgba(236, 72, 153, 0.08); 
-        }
-        .plan-futuro { 
-            border: 2px solid #94a3b8 !important; 
-            background-color: rgba(148, 163, 184, 0.05); 
-        }
-        
+        .plan-concluida { border: 2px solid #10b981 !important; background-color: rgba(16, 185, 129, 0.08); }
+        .plan-foco_atual { border: 2px solid #f59e0b !important; background-color: rgba(245, 158, 11, 0.08); }
+        .plan-proximo { border: 2px solid #3b82f6 !important; background-color: rgba(59, 130, 246, 0.08); }
+        .plan-equivalencia { border: 2px solid #8b5cf6 !important; background-color: rgba(139, 92, 246, 0.08); }
+        .plan-acreditacao { border: 2px solid #ec4899 !important; background-color: rgba(236, 72, 153, 0.08); }
+        .plan-futuro { border: 2px solid #94a3b8 !important; background-color: rgba(148, 163, 184, 0.05); }
         .dark .plan-concluida { background-color: rgba(16, 185, 129, 0.15); }
         .dark .plan-foco_atual { background-color: rgba(245, 158, 11, 0.15); }
         .dark .plan-proximo { background-color: rgba(59, 130, 246, 0.15); }
@@ -72,6 +52,9 @@
         .bar-chart .bar .bar-value { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; }
         .search-result { transition: all 0.2s; }
         .search-result:hover { transform: translateX(4px); }
+        
+        .calendar-day { min-height: 50px; }
+        .mindmap-arrow { display: flex; justify-content: center; color: #94a3b8; font-size: 1.5rem; margin: 0.25rem 0; }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
@@ -102,6 +85,8 @@
             <button onclick="showView('calculator', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧮 Calculadora</button>
             <button onclick="showView('efolios', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📝 E-folios Detalhado</button>
             <button onclick="showView('certifications', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🏆 Certificações</button>
+            <button onclick="showView('mindmap', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧩 Mapa Mental</button>
+            <button onclick="showView('resources', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📚 Recursos</button>
             <button onclick="showView('strategy', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚖️ Estratégia</button>
             <button onclick="showView('busqueda', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🔍 Búsqueda</button>
             <button onclick="showView('alertas', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚠️ Alertas</button>
@@ -110,6 +95,7 @@
         </nav>
         <div class="mt-8 space-y-2">
             <button onclick="exportBackup()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition">💾 Exportar Backup</button>
+            <button onclick="openBackupHistory()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📜 Histórico Backups</button>
             <button onclick="document.getElementById('import-file').click()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📥 Importar Backup</button>
             <input type="file" id="import-file" accept=".json" style="display:none" onchange="importBackup(event)">
             <button onclick="resetData()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition">🗑️ Resetar Dados</button>
@@ -121,10 +107,14 @@
             <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
             </button>
-            <button onclick="toggleDark()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Alternar tema">
-                <span id="theme-icon-sun" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
-                <span id="theme-icon-moon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
-            </button>
+            <div class="flex items-center gap-2">
+                <div id="live-clock" class="hidden sm:block text-sm font-mono font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">--:--:--</div>
+                <button onclick="toggleTimezone()" id="timezone-btn" class="hidden sm:block text-xs font-medium px-2 py-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:opacity-80 transition">🇵🇹 PT</button>
+                <button onclick="toggleDark()" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Alternar tema">
+                    <span id="theme-icon-sun" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+                    <span id="theme-icon-moon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+                </button>
+            </div>
         </header>
 
         <div class="flex-1 p-4 md:p-10 max-w-6xl mx-auto w-full overflow-x-hidden">
@@ -218,6 +208,9 @@
                     <button onclick="filterEvents('minitest', this)" class="event-filter px-3 py-1.5 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap">Mini-testes</button>
                     <button onclick="filterEvents('exame', this)" class="event-filter px-3 py-1.5 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap">Exames</button>
                 </div>
+                <!-- CALENDÁRIO MENSAL COMPACTO COM NAVEGAÇÃO -->
+                <div id="full-month-calendar" class="mb-8 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"></div>
+                <h3 class="text-lg font-semibold mb-3">Lista de Eventos</h3>
                 <div id="calendar-events" class="space-y-3"></div>
             </div>
 
@@ -246,6 +239,22 @@
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">🏆 Tracker de Certificações</h1>
                 <p class="text-slate-500 mb-6">Acompanha o teu progresso no roadmap profissional de Middleware/Cloud.</p>
                 <div id="certifications-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- MAPA MENTAL (COM MESTRADO) -->
+            <div id="view-mindmap" class="view">
+                <h1 class="text-2xl md:text-3xl font-bold mb-2">🧩 Mapa Mental de Conhecimentos</h1>
+                <p class="text-slate-500 mb-6">Diagrama de progressão lógica das disciplinas da Licenciatura e Mestrado.</p>
+                <div id="mindmap-content" class="space-y-2 overflow-x-auto pb-4"></div>
+            </div>
+
+            <!-- RECURSOS -->
+            <div id="view-resources" class="view">
+                <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+                    <div><h1 class="text-2xl md:text-3xl font-bold mb-2">📚 Lista de Leitura & Recursos</h1><p class="text-slate-500">Gere livros, cursos, artigos e vídeos.</p></div>
+                    <button onclick="openResourceModal()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:opacity-90">➕ Novo Recurso</button>
+                </div>
+                <div id="resources-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
 
             <!-- STRATEGY -->
@@ -316,7 +325,12 @@
 
 <!-- MODALS -->
 <div id="modal-task" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800"><h3 class="text-lg font-bold mb-4">Nova Tarefa</h3><input type="hidden" id="task-subject-code"><div class="space-y-3"><div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="task-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Estudar capítulo 3"></div><div><label class="text-sm font-medium mb-1 block">Data Limite</label><input type="date" id="task-due" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-task')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button><button onclick="saveTask()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button></div></div></div>
+
 <div id="modal-event" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800"><h3 class="text-lg font-bold mb-4">Novo Evento</h3><div class="space-y-3"><div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="event-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Exame de SO"></div><div><label class="text-sm font-medium mb-1 block">Disciplina</label><select id="event-code" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></select></div><div><label class="text-sm font-medium mb-1 block">Tipo</label><select id="event-type" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"><option value="efolio">E-folio</option><option value="minitest">Mini-teste</option><option value="exame">Exame</option><option value="other">Outro</option></select></div><div class="grid grid-cols-2 gap-3"><div><label class="text-sm font-medium mb-1 block">Data Início</label><input type="date" id="event-start" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div><div><label class="text-sm font-medium mb-1 block">Data Fim</label><input type="date" id="event-end" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"></div></div></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-event')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button><button onclick="saveEvent()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button></div></div></div>
+
+<div id="modal-resource" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-md w-full mx-4 border border-slate-200 dark:border-slate-800"><h3 class="text-lg font-bold mb-4">Novo Recurso</h3><div class="space-y-3"><div><label class="text-sm font-medium mb-1 block">Título</label><input type="text" id="res-title" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Ex: Curso Udemy, Livro Clean Code"></div><div class="grid grid-cols-2 gap-3"><div><label class="text-sm font-medium mb-1 block">Tipo</label><select id="res-type" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"><option value="Curso">Curso</option><option value="Livro">Livro</option><option value="Artigo">Artigo</option><option value="Vídeo">Vídeo</option></select></div><div><label class="text-sm font-medium mb-1 block">Estado</label><select id="res-status" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm"><option value="por_ler">Por ler</option><option value="a_ler">A ler</option><option value="concluido">Concluído</option></select></div></div><div><label class="text-sm font-medium mb-1 block">URL (opcional)</label><input type="url" id="res-url" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="https://..."></div><div><label class="text-sm font-medium mb-1 block">Notas</label><textarea id="res-notes" rows="2" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-transparent text-sm" placeholder="Notas pessoais..."></textarea></div></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-resource')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Cancelar</button><button onclick="saveResource()" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90">Guardar</button></div></div></div>
+
+<div id="modal-backup-history" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-lg w-full mx-4 border border-slate-200 dark:border-slate-800 max-h-[80vh] overflow-y-auto"><h3 class="text-lg font-bold mb-4">📜 Histórico de Backups</h3><div id="backup-history-list" class="space-y-3"></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-backup-history')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Fechar</button></div></div></div>
 
 <script>
 // PWA Manifest Injection
@@ -422,6 +436,32 @@ const DEFAULT_CERTS = [
     { id: 'c7', name: 'Prometheus & Grafana (Observabilidad)', category: 'Monitorização', status: 'nao_iniciado', targetDate: '' }
 ];
 
+const UDEMY_COURSES = [
+    { title: "Kubernetes al completo", instructor: "Apasoft Training", progress: 1, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Programación en C de Cero a Experto con Estructuras de Datos", instructor: "Jorge Salgado Miranda", progress: 2, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Administración de Aplicaciones JBoss I", instructor: "Fidel DominguezValero", progress: 26, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Creación/configuración de granjas Web/IIS, DFS y Powershell", instructor: "Alejandro Romer", progress: 15, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "IBM Websphere Network Deployment 8.5.5 Administration", instructor: "Manish Pandey", progress: 9, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Administración practica de Apache Web Server", instructor: "Hugo Calvillo", progress: 100, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Aprende Docker de cero a experto: con Compose y Swarm", instructor: "Apasoft Training", progress: 28, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Oracle Weblogic desde Cero", instructor: "Apasoft Training", progress: 98, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Helm 3: Despliega aplicaciones en Kubernetes", instructor: "Apasoft Training", progress: 0, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Openshift 4 desde cero", instructor: "Apasoft Training", progress: 0, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Tomcat 11 para Administradores y desarrolladores", instructor: "Apasoft Training", progress: 48, url: "https://www.udemy.com/home/my-courses/learning/" },
+    { title: "Vmware vSphere 8: ESXi y vCenter desde cero a avanzado", instructor: "Apasoft Training", progress: 21, url: "https://www.udemy.com/home/my-courses/learning/" }
+];
+
+const DEFAULT_RESOURCES = [
+    ...UDEMY_COURSES.map((c, i) => ({
+        id: `udemy_${i}`,
+        title: c.title,
+        type: "Curso Udemy",
+        status: c.progress === 100 ? "concluido" : (c.progress > 0 ? "a_ler" : "por_ler"),
+        url: c.url,
+        notes: `Instrutor: ${c.instructor} | Progresso: ${c.progress}%`
+    }))
+];
+
 let curriculum = JSON.parse(localStorage.getItem('curriculum')) || JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
 const ECTS_CORRECTIONS = { "21174": 4, "21176": 2, "21180": 4, "21181": 2 };
 let migrated = false;
@@ -431,6 +471,8 @@ if (migrated) { localStorage.setItem('curriculum', JSON.stringify(curriculum)); 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || {};
 let events = JSON.parse(localStorage.getItem('events')) || JSON.parse(JSON.stringify(DEFAULT_EVENTS));
 let efolioData = JSON.parse(localStorage.getItem('efolioData')) || {};
+let resources = JSON.parse(localStorage.getItem('resources')) || JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
+let backupHistory = JSON.parse(localStorage.getItem('backupHistory')) || [];
 
 let certifications = JSON.parse(localStorage.getItem('certifications')) || [];
 if (certifications.length < DEFAULT_CERTS.length) {
@@ -438,11 +480,13 @@ if (certifications.length < DEFAULT_CERTS.length) {
         const existing = certifications.find(c => c.id === newCert.id);
         return existing ? existing : newCert;
     });
-    localStorage.setItem('certifications', JSON.stringify(certifications));
 }
 
 let currentEventFilter = 'all';
 let calcSelections = {};
+let currentTimezone = 'Europe/Lisbon'; // PT por padrão
+let calendarDate = new Date(); // Para navegação do calendário
+
 curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => { if (sub.plan === undefined) sub.plan = getInitialPlan(sub); }); }); });
 
 function saveData() { 
@@ -451,6 +495,8 @@ function saveData() {
     localStorage.setItem('events', JSON.stringify(events)); 
     localStorage.setItem('efolioData', JSON.stringify(efolioData));
     localStorage.setItem('certifications', JSON.stringify(certifications));
+    localStorage.setItem('resources', JSON.stringify(resources));
+    localStorage.setItem('backupHistory', JSON.stringify(backupHistory));
 }
 function getStatus(subject) { if (subject.manualStatus) return subject.manualStatus; if (subject.grade === null || subject.grade === undefined) return "Pendente"; if (subject.grade >= 10) return "Aprovada"; return "Reprovada"; }
 function findSubject(code) { for (const year of curriculum) for (const sem of year.semesters) { const sub = sem.subjects.find(s => s.code === code); if (sub) return sub; } return null; }
@@ -460,6 +506,30 @@ function toggleMobileMenu() { const s = document.getElementById('sidebar'), o = 
 function showView(viewId, btn) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('view-' + viewId).classList.add('active'); if (btn) btn.classList.add('active'); localStorage.setItem('currentView', viewId); window.scrollTo(0, 0); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleDark() { document.documentElement.classList.toggle('dark'); const isDark = document.documentElement.classList.contains('dark'); localStorage.setItem('darkMode', isDark); document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark); document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark); }
+
+// RELÓGIO COM ALTERNÂNCIA PT/ES
+function toggleTimezone() {
+    currentTimezone = currentTimezone === 'Europe/Lisbon' ? 'Europe/Madrid' : 'Europe/Lisbon';
+    const btn = document.getElementById('timezone-btn');
+    if (currentTimezone === 'Europe/Lisbon') {
+        btn.textContent = '🇵🇹 PT';
+    } else {
+        btn.textContent = '🇪🇸 ES';
+    }
+    updateClock();
+}
+
+function updateClock() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('pt-PT', { timeZone: currentTimezone, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const clockEl = document.getElementById('live-clock');
+    if (clockEl) {
+        const flag = currentTimezone === 'Europe/Lisbon' ? '🇵🇹' : '🇪🇸';
+        clockEl.textContent = `${flag} ${timeString}`;
+    }
+}
+setInterval(updateClock, 1000);
+updateClock();
 
 function calculateStats() {
     let totalEcts=0,completedEcts=0,totalGradePoints=0,gradedCount=0,approved=0,failed=0,inProgress=0,credited=0,pending=0;
@@ -481,7 +551,7 @@ function getAllSubjects() {
     return all;
 }
 
-// RENDER PLANNING (COM BORDAS POR ESTADO DO PLANO - 6 cores)
+// RENDER PLANNING
 function renderPlanning() {
     const container = document.getElementById('planning-content'), summaryContainer = document.getElementById('planning-summary');
     let html = '', stats = { concluida:{count:0,ects:0}, foco_atual:{count:0,ects:0}, proximo:{count:0,ects:0}, equivalencia:{count:0,ects:0}, acreditacao:{count:0,ects:0}, futuro:{count:0,ects:0} };
@@ -489,7 +559,6 @@ function renderPlanning() {
     year.semesters.forEach((sem,semIdx)=>{html+=`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">${sem.semester}º Semestre</h3><div class="space-y-3">`;
     sem.subjects.forEach((sub,subjIdx)=>{
         stats[sub.plan].count++;stats[sub.plan].ects+=sub.ects;
-        // APLICA A CLASSE DO PLANO (6 cores visíveis)
         html+=`<div class="p-3 rounded-lg plan-${sub.plan}"><div class="flex items-center justify-between gap-3 mb-2 flex-wrap"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span></div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="text-xs font-semibold ${sub.grade!==null?'text-emerald-600 dark:text-emerald-400':'text-slate-400'}">${sub.grade!==null?'Nota: '+sub.grade:'Sem nota'}</span></div></div><select onchange="updatePlan(${yearIdx},${semIdx},${subjIdx},this.value)" class="text-xs font-medium rounded-lg px-2 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none cursor-pointer w-full md:w-auto mt-2 md:mt-0"><option value="concluida" ${sub.plan==='concluida'?'selected':''}>✅ Concluída</option><option value="foco_atual" ${sub.plan==='foco_atual'?'selected':''}>🔥 Foco Atual</option><option value="proximo" ${sub.plan==='proximo'?'selected':''}>📅 Próximo</option><option value="equivalencia" ${sub.plan==='equivalencia'?'selected':''}>🔄 Equivalência</option><option value="acreditacao" ${sub.plan==='acreditacao'?'selected':''}>🏅 Acreditação</option><option value="futuro" ${sub.plan==='futuro'?'selected':''}>🔮 Futuro</option></select></div></div>`;
     });
     html+=`</div></div>`;});html+=`</div></div>`;});
@@ -500,7 +569,7 @@ function renderPlanning() {
 }
 function updatePlan(yi,si,su,v){curriculum[yi].semesters[si].subjects[su].plan=v;if(v==='concluida'&&curriculum[yi].semesters[si].subjects[su].grade===null)curriculum[yi].semesters[si].subjects[su].manualStatus="Aprovada";else if(v==='equivalencia')curriculum[yi].semesters[si].subjects[su].manualStatus="Creditada";else if(v==='foco_atual')curriculum[yi].semesters[si].subjects[su].manualStatus="Em Curso";saveData();renderAll();}
 
-// RENDER CURRICULUM (COM BORDAS POR ESTADO DO PLANO - 6 cores)
+// RENDER CURRICULUM
 function renderCurriculum(){
     const c=document.getElementById('curriculum-content');
     let h='';
@@ -514,7 +583,6 @@ function renderCurriculum(){
                 const si2={"Aprovada":"✅","Reprovada":"❌","Creditada":"🎓","Em Curso":"⏳","Pendente":"⏸️"};
                 const tk=tasks[sub.code]||[];
                 const pt=tk.filter(t=>!t.completed).length;
-                // APLICA A CLASSE DO PLANO (6 cores visíveis)
                 h+=`<div class="p-3 rounded-lg plan-${sub.plan}"><div class="flex items-center justify-between gap-3 mb-2"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${sub.code}</span><span class="font-medium text-sm truncate">${sub.name}</span>${sub.url?`<a href="${sub.url}" target="_blank" class="text-slate-400 hover:text-blue-500 flex-shrink-0">🔗</a>`:''}</div><div class="flex items-center gap-3 mt-1.5 flex-wrap"><span class="text-xs text-slate-500">${sub.ects} ECTS</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${sc[st]}">${si2[st]} ${st}</span></div></div><input type="number" min="0" max="20" value="${sub.grade!==null?sub.grade:''}" onchange="updateGrade(${yi},${si},${su},this.value)" placeholder="—" class="grade-input text-sm font-semibold rounded px-2 py-1"></div><div class="flex gap-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-700"><button onclick="openTaskModal('${sub.code}')" class="flex-1 text-xs px-2 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center gap-1">✅ Tarefas ${pt>0?`<span class="bg-amber-500 text-white px-1.5 rounded-full text-[10px]">${pt}</span>`:''}</button></div>${tk.length>0?`<div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 space-y-1">${tk.slice(0,3).map(t=>`<div class="flex items-center gap-2 text-xs"><input type="checkbox" ${t.completed?'checked':''} onchange="toggleTask('${sub.code}','${t.id}')" class="rounded"><span class="${t.completed?'line-through text-slate-400':''} flex-1 truncate">${t.title}</span>${t.dueDate?`<span class="text-slate-400 text-[10px]">${formatDate(t.dueDate)}</span>`:''}<button onclick="deleteTask('${sub.code}','${t.id}')" class="text-red-500 hover:text-red-700">×</button></div>`).join('')}</div>`:''}</div>`;
             });
             h+=`</div></div>`;
@@ -531,8 +599,68 @@ function saveTask(){const c=document.getElementById('task-subject-code').value,t
 function toggleTask(c,id){const t=tasks[c].find(t=>t.id===id);if(t)t.completed=!t.completed;saveData();renderAll();}
 function deleteTask(c,id){tasks[c]=tasks[c].filter(t=>t.id!==id);if(!tasks[c].length)delete tasks[c];saveData();renderAll();}
 
-// CALENDAR
-function renderCalendar(){const c=document.getElementById('calendar-events');let f=currentEventFilter!=='all'?events.filter(e=>e.type===currentEventFilter):events;f.sort((a,b)=>new Date(a.start)-new Date(b.start));if(!f.length){c.innerHTML='<p class="text-center text-slate-500 py-8">Nenhum evento encontrado.</p>';return;}c.innerHTML=f.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);const tc={'efolio':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400','minitest':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400','exame':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400','other':'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'};const tl={'efolio':'E-folio','minitest':'Mini-teste','exame':'Exame','other':'Outro'};let a='';if(e.status!=='done'){if(d<0)a=`<span class="text-xs text-red-500 font-medium">⚠️ Atrasado ${Math.abs(d)}d</span>`;else if(d===0)a=`<span class="text-xs text-red-500 font-medium alert-urgent">🔥 Hoje!</span>`;else if(d<=3)a=`<span class="text-xs text-amber-500 font-medium alert-urgent">⏰ ${d}d</span>`;else if(d<=7)a=`<span class="text-xs text-amber-500 font-medium">⏳ ${d}d</span>`;else a=`<span class="text-xs text-slate-400">📅 ${d}d</span>`;}else a=`<span class="text-xs text-emerald-500 font-medium">✅ Feito</span>`;return`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-4 flex-wrap"><div class="flex-shrink-0 text-center min-w-[50px]"><div class="text-xl font-bold">${new Date(e.start).getDate()}</div><div class="text-[10px] text-slate-500 uppercase">${new Date(e.start).toLocaleDateString('pt-PT',{month:'short'})}</div></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-medium text-sm">${e.title}</span><span class="text-[10px] px-2 py-0.5 rounded-full ${tc[e.type]}">${tl[e.type]}</span></div><div class="flex items-center gap-3 text-xs text-slate-500 flex-wrap"><span>📚 ${s?s.name:e.code}</span><span>📅 ${formatDate(e.start)}</span></div></div><div class="flex items-center gap-2">${a}<button onclick="toggleEventDone('${e.id}')" class="text-xs px-2 py-1 rounded ${e.status==='done'?'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400':'bg-slate-100 dark:bg-slate-800'} hover:opacity-80">${e.status==='done'?'✅':'Marcar'}</button><button onclick="deleteEvent('${e.id}')" class="text-xs text-red-500 hover:text-red-700 px-2">🗑️</button></div></div>`;}).join('');}
+// CALENDAR COM NAVEGAÇÃO
+function navigateCalendar(direction) {
+    calendarDate.setMonth(calendarDate.getMonth() + direction);
+    renderCalendar();
+}
+
+function renderFullMonthCalendar() {
+    const container = document.getElementById('full-month-calendar');
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    const monthName = calendarDate.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const startDay = firstDay === 0 ? 6 : firstDay - 1;
+    const today = new Date();
+
+    let html = `<div class="flex items-center justify-between mb-4">
+        <button onclick="navigateCalendar(-1)" class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium">◀</button>
+        <h3 class="text-lg font-bold capitalize">${monthName}</h3>
+        <button onclick="navigateCalendar(1)" class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium">▶</button>
+    </div>`;
+    html += `<div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-slate-500 mb-2">
+        <div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div>
+    </div>`;
+    html += `<div class="grid grid-cols-7 gap-1">`;
+    
+    for (let i = 0; i < startDay; i++) {
+        html += `<div class="calendar-day rounded-lg bg-slate-50 dark:bg-slate-800/50"></div>`;
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayEvents = events.filter(e => e.start <= dateStr && e.end >= dateStr);
+        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        
+        let dots = '';
+        if (dayEvents.length > 0) {
+            dots = `<div class="flex justify-center gap-1 mt-1">`;
+            dayEvents.slice(0, 3).forEach(e => {
+                const color = e.type === 'efolio' ? 'bg-purple-500' : e.type === 'exame' ? 'bg-red-500' : 'bg-blue-500';
+                dots += `<div class="w-1.5 h-1.5 rounded-full ${color}" title="${e.title}"></div>`;
+            });
+            dots += `</div>`;
+        }
+
+        html += `<div class="calendar-day rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 relative ${isToday ? 'ring-2 ring-blue-500' : ''}">
+            <span class="text-xs font-medium ${isToday ? 'text-blue-600 dark:text-blue-400' : ''}">${day}</span>
+            ${dots}
+        </div>`;
+    }
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+function renderCalendar(){
+    renderFullMonthCalendar();
+    const c=document.getElementById('calendar-events');
+    let f=currentEventFilter!=='all'?events.filter(e=>e.type===currentEventFilter):events;
+    f.sort((a,b)=>new Date(a.start)-new Date(b.start));
+    if(!f.length){c.innerHTML='<p class="text-center text-slate-500 py-8">Nenhum evento encontrado.</p>';return;}
+    c.innerHTML=f.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);const tc={'efolio':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400','minitest':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400','exame':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400','other':'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'};const tl={'efolio':'E-folio','minitest':'Mini-teste','exame':'Exame','other':'Outro'};let a='';if(e.status!=='done'){if(d<0)a=`<span class="text-xs text-red-500 font-medium">⚠️ Atrasado ${Math.abs(d)}d</span>`;else if(d===0)a=`<span class="text-xs text-red-500 font-medium alert-urgent">🔥 Hoje!</span>`;else if(d<=3)a=`<span class="text-xs text-amber-500 font-medium alert-urgent">⏰ ${d}d</span>`;else if(d<=7)a=`<span class="text-xs text-amber-500 font-medium">⏳ ${d}d</span>`;else a=`<span class="text-xs text-slate-400">📅 ${d}d</span>`;}else a=`<span class="text-xs text-emerald-500 font-medium">✅ Feito</span>`;return`<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-4 flex-wrap"><div class="flex-shrink-0 text-center min-w-[50px]"><div class="text-xl font-bold">${new Date(e.start).getDate()}</div><div class="text-[10px] text-slate-500 uppercase">${new Date(e.start).toLocaleDateString('pt-PT',{month:'short'})}</div></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1 flex-wrap"><span class="font-medium text-sm">${e.title}</span><span class="text-[10px] px-2 py-0.5 rounded-full ${tc[e.type]}">${tl[e.type]}</span></div><div class="flex items-center gap-3 text-xs text-slate-500 flex-wrap"><span>📚 ${s?s.name:e.code}</span><span>📅 ${formatDate(e.start)}</span></div></div><div class="flex items-center gap-2">${a}<button onclick="toggleEventDone('${e.id}')" class="text-xs px-2 py-1 rounded ${e.status==='done'?'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400':'bg-slate-100 dark:bg-slate-800'} hover:opacity-80">${e.status==='done'?'✅':'Marcar'}</button><button onclick="deleteEvent('${e.id}')" class="text-xs text-red-500 hover:text-red-700 px-2">🗑️</button></div></div>`;}).join('');
+}
 function filterEvents(t,b){currentEventFilter=t;document.querySelectorAll('.event-filter').forEach(x=>{x.classList.remove('bg-slate-900','dark:bg-white','text-white','dark:text-slate-900');x.classList.add('bg-slate-100','dark:bg-slate-800','text-slate-700','dark:text-slate-300');});b.classList.remove('bg-slate-100','dark:bg-slate-800','text-slate-700','dark:text-slate-300');b.classList.add('bg-slate-900','dark:bg-white','text-white','dark:text-slate-900');renderCalendar();}
 function toggleEventDone(id){const e=events.find(x=>x.id===id);if(e){e.status=e.status==='done'?'upcoming':'done';saveData();renderAll();}}
 function deleteEvent(id){if(confirm('Apagar?')){events=events.filter(e=>e.id!==id);saveData();renderAll();}}
@@ -639,6 +767,261 @@ function renderCertifications() {
 function updateCertStatus(idx, status) { certifications[idx].status = status; saveData(); renderCertifications(); }
 function updateCertDate(idx, date) { certifications[idx].targetDate = date; saveData(); }
 
+// MAPA MENTAL (COM MESTRADO)
+function renderMindmap() {
+    const c = document.getElementById('mindmap-content');
+    let html = '';
+    
+    // Licenciatura
+    curriculum.forEach(year => {
+        html += `<div class="flex flex-col items-center">`;
+        html += `<div class="px-4 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm mb-2 shadow-md">${year.year}º Ano - Licenciatura</div>`;
+        
+        year.semesters.forEach((sem, semIdx) => {
+            html += `<div class="w-full max-w-4xl">`;
+            html += `<div class="text-center text-sm font-semibold text-slate-500 mb-2">${sem.semester}º Semestre</div>`;
+            html += `<div class="flex flex-wrap justify-center gap-3">`;
+            
+            sem.subjects.forEach(sub => {
+                const status = getStatus(sub);
+                const colorClass = status === 'Aprovada' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : 
+                                   status === 'Em Curso' ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/20' : 
+                                   'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800';
+                
+                html += `
+                    <div class="mindmap-node flex flex-col items-center p-3 rounded-lg border-2 ${colorClass} w-32 text-center shadow-sm">
+                        <span class="text-[10px] font-mono text-slate-500">${sub.code}</span>
+                        <span class="text-xs font-medium leading-tight mt-1">${sub.name}</span>
+                        <span class="text-[10px] text-slate-400 mt-1">${sub.ects} ECTS</span>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+            if (semIdx < year.semesters.length - 1) {
+                html += `<div class="mindmap-arrow">↓</div>`;
+            }
+            html += `</div>`;
+        });
+        
+        html += `</div>`;
+        html += `<div class="mindmap-arrow text-2xl my-2">⬇</div>`;
+    });
+    
+    // Mestrado MEITW
+    html += `<div class="flex flex-col items-center">`;
+    html += `<div class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm mb-2 shadow-md">Mestrado MEITW</div>`;
+    
+    const masterSemesters = [
+        { name: "1º Ano - 1º Semestre", subjects: ["Investigação Operacional", "Arquitetura e Padrões de Software", "Programação Web Avançada", "Integração de Sistemas", "Computação de Alto Desempenho"] },
+        { name: "1º Ano - 2º Semestre", subjects: ["Planeamento e Desenv. de SI", "Metodologias de Investigação", "Segurança em Rede", "Business Intelligence", "Desenv. de Aplicações Móveis"] },
+        { name: "2º Ano - Dissertação/Projeto", subjects: ["Dissertação", "Projeto (Recomendado)", "Estágio"] }
+    ];
+    
+    masterSemesters.forEach((sem, semIdx) => {
+        html += `<div class="w-full max-w-4xl">`;
+        html += `<div class="text-center text-sm font-semibold text-purple-600 dark:text-purple-400 mb-2">${sem.name}</div>`;
+        html += `<div class="flex flex-wrap justify-center gap-3">`;
+        
+        sem.subjects.forEach(subj => {
+            html += `
+                <div class="mindmap-node flex flex-col items-center p-3 rounded-lg border-2 border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20 w-32 text-center shadow-sm">
+                    <span class="text-xs font-medium leading-tight">${subj}</span>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+        if (semIdx < masterSemesters.length - 1) {
+            html += `<div class="mindmap-arrow">↓</div>`;
+        }
+        html += `</div>`;
+    });
+    
+    html += `</div>`;
+    
+    c.innerHTML = html;
+}
+
+// RECURSOS
+function renderResources() {
+    const c = document.getElementById('resources-content');
+    const statusColors = {
+        'por_ler': 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
+        'a_ler': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+        'concluido': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+    };
+    const statusLabels = { 'por_ler': 'Por ler', 'a_ler': 'A ler', 'concluido': 'Concluído' };
+    const typeIcons = { 'Curso': '🎓', 'Livro': '📖', 'Artigo': '📄', 'Vídeo': '🎬', 'Curso Udemy': '🟣' };
+    
+    c.innerHTML = resources.map((res, idx) => `
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col h-full">
+            <div class="flex items-start justify-between mb-2">
+                <h3 class="font-semibold text-sm flex-1">${typeIcons[res.type] || '📌'} ${res.title}</h3>
+                <button onclick="deleteResource(${idx})" class="text-slate-400 hover:text-red-500 text-xs px-1">🗑️</button>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">${res.type}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full ${statusColors[res.status]}">${statusLabels[res.status]}</span>
+            </div>
+            ${res.url ? `<a href="${res.url}" target="_blank" class="text-xs text-blue-600 dark:text-blue-400 hover:underline truncate mb-2 flex items-center gap-1">🔗 Abrir Link</a>` : ''}
+            ${res.notes ? `<p class="text-xs text-slate-500 mt-auto pt-2 border-t border-slate-100 dark:border-slate-800 italic">"${res.notes}"</p>` : ''}
+            <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <select onchange="updateResourceStatus(${idx}, this.value)" class="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-transparent">
+                    <option value="por_ler" ${res.status==='por_ler'?'selected':''}>⏳ Por ler</option>
+                    <option value="a_ler" ${res.status==='a_ler'?'selected':''}>📖 A ler</option>
+                    <option value="concluido" ${res.status==='concluido'?'selected':''}>✅ Concluído</option>
+                </select>
+            </div>
+        </div>
+    `).join('');
+}
+function openResourceModal() {
+    document.getElementById('res-title').value = '';
+    document.getElementById('res-type').value = 'Curso';
+    document.getElementById('res-status').value = 'por_ler';
+    document.getElementById('res-url').value = '';
+    document.getElementById('res-notes').value = '';
+    document.getElementById('modal-resource').classList.add('active');
+}
+function saveResource() {
+    const title = document.getElementById('res-title').value.trim();
+    if (!title) { alert('Título obrigatório'); return; }
+    resources.push({
+        id: 'r' + Date.now(),
+        title: title,
+        type: document.getElementById('res-type').value,
+        status: document.getElementById('res-status').value,
+        url: document.getElementById('res-url').value.trim(),
+        notes: document.getElementById('res-notes').value.trim()
+    });
+    saveData();
+    closeModal('modal-resource');
+    renderResources();
+}
+function updateResourceStatus(idx, status) {
+    resources[idx].status = status;
+    saveData();
+    renderResources();
+}
+function deleteResource(idx) {
+    if (confirm('Eliminar este recurso?')) {
+        resources.splice(idx, 1);
+        saveData();
+        renderResources();
+    }
+}
+
+// BACKUP HISTORY
+function exportBackup() {
+    const data = { curriculum, tasks, events, efolioData, certifications, resources, exportDate: new Date().toISOString(), version: '10.0' };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `academy-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    const historyEntry = {
+        date: new Date().toLocaleString('pt-PT'),
+        size: (blob.size / 1024).toFixed(1) + ' KB',
+        data: data
+    };
+    backupHistory.unshift(historyEntry);
+    if (backupHistory.length > 5) backupHistory.pop();
+    saveData();
+    alert('Backup exportado e guardado no histórico local!');
+}
+
+function openBackupHistory() {
+    const list = document.getElementById('backup-history-list');
+    if (backupHistory.length === 0) {
+        list.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">Nenhum backup no histórico ainda.</p>';
+    } else {
+        list.innerHTML = backupHistory.map((entry, idx) => `
+            <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium truncate">📅 ${entry.date}</p>
+                    <p class="text-xs text-slate-500">Tamanho: ${entry.size} • v${entry.data.version || '?'}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="restoreBackup(${idx})" class="px-3 py-1.5 rounded text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 hover:opacity-80">Restaurar</button>
+                    <button onclick="deleteBackup(${idx})" class="px-3 py-1.5 rounded text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 hover:opacity-80">🗑️</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    document.getElementById('modal-backup-history').classList.add('active');
+}
+
+function restoreBackup(idx) {
+    if (confirm('Restaurar este backup? Os dados atuais serão substituídos.')) {
+        const entry = backupHistory[idx];
+        curriculum = entry.data.curriculum || DEFAULT_CURRICULUM;
+        tasks = entry.data.tasks || {};
+        events = entry.data.events || [];
+        efolioData = entry.data.efolioData || {};
+        certifications = entry.data.certifications || DEFAULT_CERTS;
+        resources = entry.data.resources || DEFAULT_RESOURCES;
+        saveData();
+        closeModal('modal-backup-history');
+        renderAll();
+        alert('Backup restaurado com sucesso!');
+    }
+}
+
+function deleteBackup(idx) {
+    if (confirm('Eliminar este backup do histórico?')) {
+        backupHistory.splice(idx, 1);
+        saveData();
+        openBackupHistory();
+    }
+}
+
+function importBackup(ev) {
+    const f = ev.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = e => {
+        try {
+            const d = JSON.parse(e.target.result);
+            if (d.curriculum) {
+                curriculum = d.curriculum;
+                tasks = d.tasks || {};
+                events = d.events || [];
+                efolioData = d.efolioData || {};
+                certifications = d.certifications || JSON.parse(JSON.stringify(DEFAULT_CERTS));
+                resources = d.resources || JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
+                saveData();
+                renderAll();
+                alert('Backup importado com sucesso!');
+            } else {
+                alert('Ficheiro inválido');
+            }
+        } catch (err) {
+            alert('Erro ao ler o ficheiro');
+        }
+    };
+    r.readAsText(f);
+    ev.target.value = '';
+}
+
+function resetData() {
+    if (confirm('Tens a certeza? Esta ação é irreversível.')) {
+        curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+        tasks = {};
+        events = JSON.parse(JSON.stringify(DEFAULT_EVENTS));
+        efolioData = {};
+        certifications = JSON.parse(JSON.stringify(DEFAULT_CERTS));
+        resources = JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
+        backupHistory = [];
+        calcSelections = {};
+        saveData();
+        renderAll();
+    }
+}
+
 // DASHBOARD & PREDICTION
 function renderDashboard(){
     const st=calculateStats();const pct=Math.round(st.completedEcts/st.totalEcts*100);
@@ -649,7 +1032,7 @@ function renderDashboard(){
     
     const remainingLicenca = 180 - st.completedEcts;
     const remainingMaster = 120;
-    const ectsPerSemester = 25;
+    const ectsPerSemester = 30;
     const semestersLeftLicenca = Math.ceil(remainingLicenca / ectsPerSemester);
     const monthsLeftLicenca = semestersLeftLicenca * 6;
     const predDateLicenca = new Date();
@@ -662,7 +1045,7 @@ function renderDashboard(){
 
     const options = { year: 'numeric', month: 'long' };
     document.getElementById('completion-prediction').innerHTML = `
-        <h4 class="text-sm font-semibold mb-3 flex items-center gap-2">📅 Previsão de Conclusão (Ritmo: ~${ectsPerSemester} ECTS/semestre)</h4>
+        <h4 class="text-sm font-semibold mb-3 flex items-center gap-2">📅 Previsão de Conclusão (Ritmo: 5 disciplinas de 6 ECTS = ${ectsPerSemester} ECTS/semestre)</h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">🎓</div>
@@ -681,14 +1064,14 @@ function renderDashboard(){
                 </div>
             </div>
         </div>
-        <p class="text-[10px] text-slate-400 mt-3 italic">* Cálculo baseado num ritmo médio de ${ectsPerSemester} ECTS por semestre. Ajusta o teu ritmo na secção "Planeamento" para ser mais preciso.</p>
+        <p class="text-[10px] text-slate-400 mt-3 italic">* Cálculo baseado num ritmo de 5 disciplinas (30 ECTS) por semestre.</p>
     `;
 
     document.getElementById('degree-progress').innerHTML=`<div class="flex justify-between text-sm mb-2"><span class="font-medium">Licenciatura</span><span class="text-slate-500">${pct}%</span></div><div class="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${pct}%"></div></div><div class="grid grid-cols-2 gap-4 mt-6"><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><p class="text-sm text-slate-500">Ano</p><p class="text-xl font-semibold">2º Ano</p></div><div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800"><p class="text-sm text-slate-500">Semestre</p><p class="text-xl font-semibold">2º Sem</p></div></div>`;
     const ne=events.filter(e=>e.status!=='done').sort((a,b)=>new Date(a.start)-new Date(b.start)).slice(0,5);
     document.getElementById('upcoming-events').innerHTML=ne.length?ne.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);return`<div class="flex items-start gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 last:border-0 last:pb-0"><div class="w-2 h-2 rounded-full bg-slate-900 dark:bg-white mt-2"></div><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${e.title}</p><p class="text-xs text-slate-500">${s?s.name:''}</p><p class="text-xs text-slate-400 mt-0.5">${d<=0?'🔥 Hoje!':`📅 Faltam ${d}d`}</p></div></div>`;}).join(''):'<p class="text-sm text-slate-500 text-center py-4">Sem eventos 🎉</p>';}
 
-// BUSQUEDA (COM BORDAS POR ESTADO DO PLANO - 6 cores)
+// BUSQUEDA
 function renderBusqueda(){
     const q=(document.getElementById('search-input').value||'').toLowerCase();const fe=document.getElementById('filter-estado').value;const fp=document.getElementById('filter-plan').value;const fa=document.getElementById('filter-ano').value;const fs=document.getElementById('filter-semestre').value;const fects=document.getElementById('filter-ects').value;
     let results=getAllSubjects().filter(s=>{
@@ -729,11 +1112,21 @@ function renderGraficos(){
 
 function renderStats(){const st=calculateStats();const t=st.totalSubjects;document.getElementById('subject-distribution').innerHTML=`<div class="space-y-3">${[{label:'Aprovadas',value:st.approved,color:'bg-emerald-500'},{label:'Reprovadas',value:st.failed,color:'bg-red-500'},{label:'Em Curso',value:st.inProgress,color:'bg-amber-500'},{label:'Creditadas',value:st.credited,color:'bg-blue-500'},{label:'Pendentes',value:st.pending,color:'bg-slate-400'}].map(i=>`<div><div class="flex justify-between text-sm mb-1"><span>${i.label}</span><span class="font-medium">${i.value}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full ${i.color} rounded-full" style="width:${t>0?(i.value/t*100):0}%"></div></div></div>`).join('')}</div>`;const mg=Math.max(...Object.values(st.gradeDistribution));document.getElementById('grade-distribution').innerHTML=`<div class="space-y-3">${Object.entries(st.gradeDistribution).map(([r,c])=>`<div><div class="flex justify-between text-sm mb-1"><span>${r}</span><span class="font-medium">${c}</span></div><div class="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${mg>0?(c/mg*100):0}%"></div></div></div>`).join('')}</div>`;}
 
-// UI
-function exportBackup(){const d={curriculum,tasks,events,efolioData,certifications,exportDate:new Date().toISOString(),version:'9.3'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`academy-backup-${new Date().toISOString().split('T')[0]}.json`;a.click();URL.revokeObjectURL(u);}
-function importBackup(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);if(d.curriculum){curriculum=d.curriculum;tasks=d.tasks||{};events=d.events||[];efolioData=d.efolioData||{};certifications=d.certifications||JSON.parse(JSON.stringify(DEFAULT_CERTS));saveData();renderAll();alert('Backup importado!');}else alert('Ficheiro inválido');}catch(err){alert('Erro ao ler');}};r.readAsText(f);ev.target.value='';}
-function resetData(){if(confirm('Tens a certeza?')){curriculum=JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));tasks={};events=JSON.parse(JSON.stringify(DEFAULT_EVENTS));efolioData={};certifications=JSON.parse(JSON.stringify(DEFAULT_CERTS));calcSelections={};saveData();renderAll();}}
-function renderAll(){renderCurriculum();renderPlanning();renderDashboard();renderStats();renderCalendar();renderCalculator();renderEfolios();renderCertifications();renderBusqueda();renderAlertas();renderGraficos();}
+function renderAll(){
+    renderCurriculum();
+    renderPlanning();
+    renderDashboard();
+    renderStats();
+    renderCalendar();
+    renderCalculator();
+    renderEfolios();
+    renderCertifications();
+    renderMindmap();
+    renderResources();
+    renderBusqueda();
+    renderAlertas();
+    renderGraficos();
+}
 
 const savedView=localStorage.getItem('currentView')||'dashboard';
 const savedBtn=document.querySelector(`button[onclick*="showView('${savedView}'"]`);
