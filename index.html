@@ -55,6 +55,16 @@
         
         .calendar-day { min-height: 50px; }
         .mindmap-arrow { display: flex; justify-content: center; color: #94a3b8; font-size: 1.5rem; margin: 0.25rem 0; }
+        
+        /* DRAG & DROP ESTILOS */
+        .nav-btn.dragging { opacity: 0.4; transform: scale(0.95); }
+        .nav-btn.drag-over { border-top: 2px solid #3b82f6; }
+        .nav-btn { cursor: grab; }
+        .nav-btn:active { cursor: grabbing; }
+        
+        /* CALCULADORA SIMPLES */
+        .calc-btn { transition: all 0.1s; }
+        .calc-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
@@ -75,23 +85,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
         </div>
-        <nav class="space-y-1">
-            <button onclick="showView('dashboard', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📊 Dashboard</button>
-            <button onclick="showView('journey', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🛤️ A Minha Jornada</button>
-            <button onclick="showView('curriculum', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📚 Plano Curricular</button>
-            <button onclick="showView('planning', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🗺️ Planeamento</button>
-            <button onclick="showView('master-plan', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🎓 Plano Recomendado (Mest.)</button>
-            <button onclick="showView('calendar', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📅 Calendário</button>
-            <button onclick="showView('calculator', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧮 Calculadora</button>
-            <button onclick="showView('efolios', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📝 E-folios Detalhado</button>
-            <button onclick="showView('certifications', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🏆 Certificações</button>
-            <button onclick="showView('mindmap', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🧩 Mapa Mental</button>
-            <button onclick="showView('resources', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📚 Recursos</button>
-            <button onclick="showView('strategy', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚖️ Estratégia</button>
-            <button onclick="showView('busqueda', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">🔍 Búsqueda</button>
-            <button onclick="showView('alertas', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">⚠️ Alertas</button>
-            <button onclick="showView('graficos', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📊 Gráficos</button>
-            <button onclick="showView('stats', this)" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">📈 Estatísticas</button>
+        <p class="text-[10px] text-slate-400 mb-2 px-3 italic">🔀 Arrasta para reordenar</p>
+        <nav id="nav-menu" class="space-y-1">
+            <!-- Botões serão gerados dinamicamente -->
         </nav>
         <div class="mt-8 space-y-2">
             <button onclick="exportBackup()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition">💾 Exportar Backup</button>
@@ -208,7 +204,6 @@
                     <button onclick="filterEvents('minitest', this)" class="event-filter px-3 py-1.5 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap">Mini-testes</button>
                     <button onclick="filterEvents('exame', this)" class="event-filter px-3 py-1.5 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 whitespace-nowrap">Exames</button>
                 </div>
-                <!-- CALENDÁRIO MENSAL COMPACTO COM NAVEGAÇÃO -->
                 <div id="full-month-calendar" class="mb-8 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"></div>
                 <h3 class="text-lg font-semibold mb-3">Lista de Eventos</h3>
                 <div id="calendar-events" class="space-y-3"></div>
@@ -222,7 +217,37 @@
                     <div class="lg:col-span-2 p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><h3 class="text-lg font-semibold mb-4">Disciplinas</h3><div id="calculator-subjects" class="space-y-2 max-h-[500px] overflow-y-auto"></div></div>
                     <div class="space-y-4">
                         <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-center"><h3 class="text-lg font-semibold mb-4">Resultado</h3><p class="text-sm text-slate-500">Média Ponderada</p><p id="calc-average" class="text-5xl font-bold mt-2">—</p><div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-sm"><div class="flex justify-between"><span class="text-slate-500">Disciplinas:</span><span id="calc-count" class="font-semibold">0</span></div><div class="flex justify-between"><span class="text-slate-500">ECTS:</span><span id="calc-ects" class="font-semibold">0</span></div></div></div>
-                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><div class="space-y-2"><button onclick="selectAllCalc(true)" class="w-full px-3 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">✅ Selecionar Aprovadas</button><button onclick="fillCurrentGrades()" class="w-full px-3 py-2 rounded-lg text-sm bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:opacity-80 transition">📊 Usar Notas Atuais</button></div></div>
+                        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                            <div class="space-y-2">
+                                <button onclick="selectAllCalc(true)" class="w-full px-3 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">✅ Selecionar Aprovadas</button>
+                                <button onclick="fillCurrentGrades()" class="w-full px-3 py-2 rounded-lg text-sm bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:opacity-80 transition">📊 Usar Notas Atuais</button>
+                            </div>
+                        </div>
+                        <!-- CALCULADORA SIMPLES -->
+                        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                            <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">🧮 Calculadora Simples</h3>
+                            <div id="simple-calc-display" class="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 mb-3 text-right font-mono text-xl font-bold min-h-[50px] overflow-x-auto">0</div>
+                            <div class="grid grid-cols-4 gap-2">
+                                <button onclick="calcClear()" class="calc-btn col-span-2 py-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold hover:opacity-80">C</button>
+                                <button onclick="calcBackspace()" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">⌫</button>
+                                <button onclick="calcOp('/')" class="calc-btn py-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold hover:opacity-80">÷</button>
+                                <button onclick="calcNum('7')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">7</button>
+                                <button onclick="calcNum('8')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">8</button>
+                                <button onclick="calcNum('9')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">9</button>
+                                <button onclick="calcOp('*')" class="calc-btn py-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold hover:opacity-80">×</button>
+                                <button onclick="calcNum('4')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">4</button>
+                                <button onclick="calcNum('5')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">5</button>
+                                <button onclick="calcNum('6')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">6</button>
+                                <button onclick="calcOp('-')" class="calc-btn py-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold hover:opacity-80">−</button>
+                                <button onclick="calcNum('1')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">1</button>
+                                <button onclick="calcNum('2')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">2</button>
+                                <button onclick="calcNum('3')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">3</button>
+                                <button onclick="calcOp('+')" class="calc-btn py-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-semibold hover:opacity-80">+</button>
+                                <button onclick="calcNum('0')" class="calc-btn col-span-2 py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">0</button>
+                                <button onclick="calcNum('.')" class="calc-btn py-3 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold hover:opacity-80">.</button>
+                                <button onclick="calcEquals()" class="calc-btn py-3 rounded-lg bg-emerald-500 text-white font-bold hover:opacity-90">=</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,7 +266,7 @@
                 <div id="certifications-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
 
-            <!-- MAPA MENTAL (COM MESTRADO) -->
+            <!-- MAPA MENTAL -->
             <div id="view-mindmap" class="view">
                 <h1 class="text-2xl md:text-3xl font-bold mb-2">🧩 Mapa Mental de Conhecimentos</h1>
                 <p class="text-slate-500 mb-6">Diagrama de progressão lógica das disciplinas da Licenciatura e Mestrado.</p>
@@ -333,7 +358,7 @@
 <div id="modal-backup-history" class="modal"><div class="bg-white dark:bg-slate-900 rounded-xl p-6 max-w-lg w-full mx-4 border border-slate-200 dark:border-slate-800 max-h-[80vh] overflow-y-auto"><h3 class="text-lg font-bold mb-4">📜 Histórico de Backups</h3><div id="backup-history-list" class="space-y-3"></div><div class="flex gap-2 mt-6"><button onclick="closeModal('modal-backup-history')" class="flex-1 px-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 hover:opacity-80">Fechar</button></div></div></div>
 
 <script>
-// PWA Manifest Injection
+// PWA Manifest
 const manifest = {
     name: "Edgar Pinto Matuminy Academy Hub",
     short_name: "Matuminy Hub",
@@ -349,6 +374,95 @@ const link = document.createElement('link');
 link.rel = 'manifest';
 link.href = manifestURL;
 document.head.appendChild(link);
+
+// MENU ITEMS (ordem padrão)
+const DEFAULT_MENU_ITEMS = [
+    { id: 'dashboard', icon: '📊', label: 'Dashboard' },
+    { id: 'journey', icon: '🛤️', label: 'A Minha Jornada' },
+    { id: 'curriculum', icon: '📚', label: 'Plano Curricular' },
+    { id: 'planning', icon: '🗺️', label: 'Planeamento' },
+    { id: 'master-plan', icon: '🎓', label: 'Plano Recomendado (Mest.)' },
+    { id: 'calendar', icon: '📅', label: 'Calendário' },
+    { id: 'calculator', icon: '🧮', label: 'Calculadora' },
+    { id: 'efolios', icon: '📝', label: 'E-folios Detalhado' },
+    { id: 'certifications', icon: '🏆', label: 'Certificações' },
+    { id: 'mindmap', icon: '🧩', label: 'Mapa Mental' },
+    { id: 'resources', icon: '📚', label: 'Recursos' },
+    { id: 'strategy', icon: '⚖️', label: 'Estratégia' },
+    { id: 'busqueda', icon: '🔍', label: 'Búsqueda' },
+    { id: 'alertas', icon: '⚠️', label: 'Alertas' },
+    { id: 'graficos', icon: '📊', label: 'Gráficos' },
+    { id: 'stats', icon: '📈', label: 'Estatísticas' }
+];
+
+let menuItems = JSON.parse(localStorage.getItem('menuItems')) || JSON.parse(JSON.stringify(DEFAULT_MENU_ITEMS));
+
+function renderMenu() {
+    const nav = document.getElementById('nav-menu');
+    nav.innerHTML = menuItems.map((item, idx) => `
+        <button 
+            draggable="true" 
+            data-view-id="${item.id}" 
+            data-idx="${idx}"
+            onclick="showView('${item.id}', this)" 
+            class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
+            <span class="text-slate-400 cursor-move">☰</span>
+            <span>${item.icon}</span>
+            <span>${item.label}</span>
+        </button>
+    `).join('');
+    
+    // Adicionar event listeners de drag & drop
+    nav.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('dragstart', handleDragStart);
+        btn.addEventListener('dragover', handleDragOver);
+        btn.addEventListener('dragleave', handleDragLeave);
+        btn.addEventListener('drop', handleDrop);
+        btn.addEventListener('dragend', handleDragEnd);
+    });
+    
+    // Marcar a vista ativa
+    const savedView = localStorage.getItem('currentView') || 'dashboard';
+    const activeBtn = nav.querySelector(`[data-view-id="${savedView}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+}
+
+// DRAG & DROP HANDLERS
+let draggedIdx = null;
+
+function handleDragStart(e) {
+    draggedIdx = parseInt(e.currentTarget.dataset.idx);
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    const targetIdx = parseInt(e.currentTarget.dataset.idx);
+    
+    if (draggedIdx !== null && draggedIdx !== targetIdx) {
+        const [movedItem] = menuItems.splice(draggedIdx, 1);
+        menuItems.splice(targetIdx, 0, movedItem);
+        localStorage.setItem('menuItems', JSON.stringify(menuItems));
+        renderMenu();
+    }
+}
+
+function handleDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('drag-over'));
+}
 
 const UAB_BASE_URL = "https://guiadoscursos.uab.pt/cursos/licenciatura-em-engenharia-informatica/";
 function getInitialPlan(sub) { if (sub.grade >= 10) return 'concluida'; if (sub.manualStatus === 'Creditada') return 'equivalencia'; if (sub.manualStatus === 'Em Curso') return 'foco_atual'; return 'futuro'; }
@@ -484,8 +598,8 @@ if (certifications.length < DEFAULT_CERTS.length) {
 
 let currentEventFilter = 'all';
 let calcSelections = {};
-let currentTimezone = 'Europe/Lisbon'; // PT por padrão
-let calendarDate = new Date(); // Para navegação do calendário
+let currentTimezone = 'Europe/Lisbon';
+let calendarDate = new Date();
 
 curriculum.forEach(year => { year.semesters.forEach(sem => { sem.subjects.forEach(sub => { if (sub.plan === undefined) sub.plan = getInitialPlan(sub); }); }); });
 
@@ -503,19 +617,22 @@ function findSubject(code) { for (const year of curriculum) for (const sem of ye
 function daysUntil(dateStr) { const today = new Date(); today.setHours(0,0,0,0); const target = new Date(dateStr); target.setHours(0,0,0,0); return Math.round((target - today) / (1000*60*60*24)); }
 function formatDate(dateStr) { return new Date(dateStr).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' }); }
 function toggleMobileMenu() { const s = document.getElementById('sidebar'), o = document.getElementById('mobile-overlay'); if (!s.classList.contains('-translate-x-full')) { s.classList.add('-translate-x-full'); o.classList.add('hidden'); document.body.style.overflow = ''; } else { s.classList.remove('-translate-x-full'); o.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } }
-function showView(viewId, btn) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById('view-' + viewId).classList.add('active'); if (btn) btn.classList.add('active'); localStorage.setItem('currentView', viewId); window.scrollTo(0, 0); }
+function showView(viewId, btn) { 
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); 
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); 
+    document.getElementById('view-' + viewId).classList.add('active'); 
+    if (btn) btn.classList.add('active'); 
+    localStorage.setItem('currentView', viewId); 
+    window.scrollTo(0, 0); 
+}
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 function toggleDark() { document.documentElement.classList.toggle('dark'); const isDark = document.documentElement.classList.contains('dark'); localStorage.setItem('darkMode', isDark); document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark); document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark); }
 
-// RELÓGIO COM ALTERNÂNCIA PT/ES
+// RELÓGIO
 function toggleTimezone() {
     currentTimezone = currentTimezone === 'Europe/Lisbon' ? 'Europe/Madrid' : 'Europe/Lisbon';
     const btn = document.getElementById('timezone-btn');
-    if (currentTimezone === 'Europe/Lisbon') {
-        btn.textContent = '🇵🇹 PT';
-    } else {
-        btn.textContent = '🇪🇸 ES';
-    }
+    btn.textContent = currentTimezone === 'Europe/Lisbon' ? '🇵🇹 PT' : '🇪🇸 ES';
     updateClock();
 }
 
@@ -530,6 +647,78 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+// CALCULADORA SIMPLES
+let calcDisplay = '0';
+let calcFirstOperand = null;
+let calcOperator = null;
+let calcWaitingForSecond = false;
+
+function updateCalcDisplay() {
+    document.getElementById('simple-calc-display').textContent = calcDisplay;
+}
+
+function calcNum(n) {
+    if (calcWaitingForSecond) {
+        calcDisplay = n === '.' ? '0.' : n;
+        calcWaitingForSecond = false;
+    } else {
+        if (n === '.' && calcDisplay.includes('.')) return;
+        calcDisplay = calcDisplay === '0' && n !== '.' ? n : calcDisplay + n;
+    }
+    updateCalcDisplay();
+}
+
+function calcOp(op) {
+    const current = parseFloat(calcDisplay);
+    if (calcFirstOperand !== null && calcOperator && !calcWaitingForSecond) {
+        const result = performCalc(calcFirstOperand, current, calcOperator);
+        calcDisplay = String(result);
+        calcFirstOperand = result;
+    } else {
+        calcFirstOperand = current;
+    }
+    calcOperator = op;
+    calcWaitingForSecond = true;
+    updateCalcDisplay();
+}
+
+function performCalc(a, b, op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return b !== 0 ? a / b : 'Erro';
+    }
+}
+
+function calcEquals() {
+    if (calcFirstOperand === null || !calcOperator) return;
+    const current = parseFloat(calcDisplay);
+    const result = performCalc(calcFirstOperand, current, calcOperator);
+    calcDisplay = String(result);
+    calcFirstOperand = null;
+    calcOperator = null;
+    calcWaitingForSecond = false;
+    updateCalcDisplay();
+}
+
+function calcClear() {
+    calcDisplay = '0';
+    calcFirstOperand = null;
+    calcOperator = null;
+    calcWaitingForSecond = false;
+    updateCalcDisplay();
+}
+
+function calcBackspace() {
+    if (calcDisplay.length > 1) {
+        calcDisplay = calcDisplay.slice(0, -1);
+    } else {
+        calcDisplay = '0';
+    }
+    updateCalcDisplay();
+}
 
 function calculateStats() {
     let totalEcts=0,completedEcts=0,totalGradePoints=0,gradedCount=0,approved=0,failed=0,inProgress=0,credited=0,pending=0;
@@ -551,7 +740,6 @@ function getAllSubjects() {
     return all;
 }
 
-// RENDER PLANNING
 function renderPlanning() {
     const container = document.getElementById('planning-content'), summaryContainer = document.getElementById('planning-summary');
     let html = '', stats = { concluida:{count:0,ects:0}, foco_atual:{count:0,ects:0}, proximo:{count:0,ects:0}, equivalencia:{count:0,ects:0}, acreditacao:{count:0,ects:0}, futuro:{count:0,ects:0} };
@@ -569,7 +757,6 @@ function renderPlanning() {
 }
 function updatePlan(yi,si,su,v){curriculum[yi].semesters[si].subjects[su].plan=v;if(v==='concluida'&&curriculum[yi].semesters[si].subjects[su].grade===null)curriculum[yi].semesters[si].subjects[su].manualStatus="Aprovada";else if(v==='equivalencia')curriculum[yi].semesters[si].subjects[su].manualStatus="Creditada";else if(v==='foco_atual')curriculum[yi].semesters[si].subjects[su].manualStatus="Em Curso";saveData();renderAll();}
 
-// RENDER CURRICULUM
 function renderCurriculum(){
     const c=document.getElementById('curriculum-content');
     let h='';
@@ -593,13 +780,11 @@ function renderCurriculum(){
 }
 function updateGrade(yi,si,su,v){const g=v===''?null:parseInt(v);if(g!==null&&(g<0||g>20)){alert('Nota deve ser entre 0 e 20');renderAll();return;}curriculum[yi].semesters[si].subjects[su].grade=g;curriculum[yi].semesters[si].subjects[su].manualStatus=null;if(g>=10)curriculum[yi].semesters[si].subjects[su].plan='concluida';saveData();renderAll();}
 
-// TASKS
 function openTaskModal(c){document.getElementById('task-subject-code').value=c;document.getElementById('task-title').value='';document.getElementById('task-due').value='';document.getElementById('modal-task').classList.add('active');}
 function saveTask(){const c=document.getElementById('task-subject-code').value,t=document.getElementById('task-title').value.trim(),d=document.getElementById('task-due').value;if(!t){alert('Título obrigatório');return;}if(!tasks[c])tasks[c]=[];tasks[c].push({id:'t'+Date.now(),title:t,dueDate:d||null,completed:false});saveData();closeModal('modal-task');renderAll();}
 function toggleTask(c,id){const t=tasks[c].find(t=>t.id===id);if(t)t.completed=!t.completed;saveData();renderAll();}
 function deleteTask(c,id){tasks[c]=tasks[c].filter(t=>t.id!==id);if(!tasks[c].length)delete tasks[c];saveData();renderAll();}
 
-// CALENDAR COM NAVEGAÇÃO
 function navigateCalendar(direction) {
     calendarDate.setMonth(calendarDate.getMonth() + direction);
     renderCalendar();
@@ -668,7 +853,6 @@ function openAddEventModal(){const s=document.getElementById('event-code');s.inn
 function saveEvent(){const t=document.getElementById('event-title').value.trim(),c=document.getElementById('event-code').value,ty=document.getElementById('event-type').value,s=document.getElementById('event-start').value,e=document.getElementById('event-end').value;if(!t||!s){alert('Título e data obrigatórios');return;}events.push({id:'e'+Date.now(),title:t,code:c,type:ty,start:s,end:e||s,status:'upcoming'});saveData();closeModal('modal-event');renderAll();}
 function exportICS(){let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Academy Hub//PT\n';events.forEach(e=>{ics+=`BEGIN:VEVENT\nUID:${e.id}@academyhub\nDTSTART;VALUE=DATE:${e.start.replace(/-/g,'')}\nDTEND;VALUE=DATE:${(e.end||e.start).replace(/-/g,'')}\nSUMMARY:${e.title}\nEND:VEVENT\n`;});ics+='END:VCALENDAR';const b=new Blob([ics],{type:'text/calendar'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='calendario.ics';a.click();URL.revokeObjectURL(u);}
 
-// CALCULATOR
 function renderCalculator(){const c=document.getElementById('calculator-subjects');let h='';curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{const sel=calcSelections[sub.code]||{selected:false,grade:sub.grade};h+=`<div class="flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 ${sel.selected?'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800':''}"><input type="checkbox" ${sel.selected?'checked':''} onchange="toggleCalcSubject('${sub.code}')" class="rounded"><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${sub.name}</p><p class="text-xs text-slate-500">${sub.code} • ${sub.ects} ECTS</p></div><input type="number" min="0" max="20" value="${sel.grade!==null&&sel.grade!==undefined?sel.grade:''}" onchange="updateCalcGrade('${sub.code}',this.value)" placeholder="Nota" class="w-20 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-transparent text-sm text-center" ${!sel.selected?'disabled':''}></div>`;});});});c.innerHTML=h;calculateAverage();}
 function toggleCalcSubject(c){if(!calcSelections[c])calcSelections[c]={selected:false,grade:null};calcSelections[c].selected=!calcSelections[c].selected;renderCalculator();}
 function updateCalcGrade(c,v){if(!calcSelections[c])calcSelections[c]={selected:false,grade:null};calcSelections[c].grade=v===''?null:parseInt(v);calculateAverage();}
@@ -676,7 +860,6 @@ function calculateAverage(){let tw=0,te=0,c=0;Object.entries(calcSelections).for
 function selectAllCalc(sel){curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{const st=getStatus(sub);if(st==='Aprovada'||st==='Creditada'){if(!calcSelections[sub.code])calcSelections[sub.code]={selected:false,grade:null};calcSelections[sub.code].selected=sel;if(sel&&calcSelections[sub.code].grade===null)calcSelections[sub.code].grade=sub.grade;}});});});renderCalculator();}
 function fillCurrentGrades(){curriculum.forEach(y=>{y.semesters.forEach(sem=>{sem.subjects.forEach(sub=>{if(sub.grade!==null){if(!calcSelections[sub.code])calcSelections[sub.code]={selected:false,grade:null};calcSelections[sub.code].selected=true;calcSelections[sub.code].grade=sub.grade;}});});});renderCalculator();}
 
-// E-FOLIOS DETALHADO
 function renderEfolios() {
     const c = document.getElementById('efolios-content');
     const subs = getAllSubjects().filter(s => s.manualStatus !== 'Creditada');
@@ -730,7 +913,6 @@ function updateEfolio(code, type, value) {
     renderEfolios();
 }
 
-// CERTIFICAÇÕES
 function renderCertifications() {
     const c = document.getElementById('certifications-content');
     const statusColors = {
@@ -767,12 +949,10 @@ function renderCertifications() {
 function updateCertStatus(idx, status) { certifications[idx].status = status; saveData(); renderCertifications(); }
 function updateCertDate(idx, date) { certifications[idx].targetDate = date; saveData(); }
 
-// MAPA MENTAL (COM MESTRADO)
 function renderMindmap() {
     const c = document.getElementById('mindmap-content');
     let html = '';
     
-    // Licenciatura
     curriculum.forEach(year => {
         html += `<div class="flex flex-col items-center">`;
         html += `<div class="px-4 py-2 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm mb-2 shadow-md">${year.year}º Ano - Licenciatura</div>`;
@@ -808,7 +988,6 @@ function renderMindmap() {
         html += `<div class="mindmap-arrow text-2xl my-2">⬇</div>`;
     });
     
-    // Mestrado MEITW
     html += `<div class="flex flex-col items-center">`;
     html += `<div class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm mb-2 shadow-md">Mestrado MEITW</div>`;
     
@@ -843,7 +1022,6 @@ function renderMindmap() {
     c.innerHTML = html;
 }
 
-// RECURSOS
 function renderResources() {
     const c = document.getElementById('resources-content');
     const statusColors = {
@@ -912,9 +1090,8 @@ function deleteResource(idx) {
     }
 }
 
-// BACKUP HISTORY
 function exportBackup() {
-    const data = { curriculum, tasks, events, efolioData, certifications, resources, exportDate: new Date().toISOString(), version: '10.0' };
+    const data = { curriculum, tasks, events, efolioData, certifications, resources, menuItems, exportDate: new Date().toISOString(), version: '11.0' };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -964,8 +1141,10 @@ function restoreBackup(idx) {
         efolioData = entry.data.efolioData || {};
         certifications = entry.data.certifications || DEFAULT_CERTS;
         resources = entry.data.resources || DEFAULT_RESOURCES;
+        menuItems = entry.data.menuItems || DEFAULT_MENU_ITEMS;
         saveData();
         closeModal('modal-backup-history');
+        renderMenu();
         renderAll();
         alert('Backup restaurado com sucesso!');
     }
@@ -993,7 +1172,9 @@ function importBackup(ev) {
                 efolioData = d.efolioData || {};
                 certifications = d.certifications || JSON.parse(JSON.stringify(DEFAULT_CERTS));
                 resources = d.resources || JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
+                menuItems = d.menuItems || JSON.parse(JSON.stringify(DEFAULT_MENU_ITEMS));
                 saveData();
+                renderMenu();
                 renderAll();
                 alert('Backup importado com sucesso!');
             } else {
@@ -1016,13 +1197,14 @@ function resetData() {
         certifications = JSON.parse(JSON.stringify(DEFAULT_CERTS));
         resources = JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
         backupHistory = [];
+        menuItems = JSON.parse(JSON.stringify(DEFAULT_MENU_ITEMS));
         calcSelections = {};
         saveData();
+        renderMenu();
         renderAll();
     }
 }
 
-// DASHBOARD & PREDICTION
 function renderDashboard(){
     const st=calculateStats();const pct=Math.round(st.completedEcts/st.totalEcts*100);
     const ue=events.filter(e=>e.status!=='done').map(e=>({...e,days:daysUntil(e.end||e.start)})).filter(e=>e.days>=0&&e.days<=7).sort((a,b)=>a.days-b.days);
@@ -1071,7 +1253,6 @@ function renderDashboard(){
     const ne=events.filter(e=>e.status!=='done').sort((a,b)=>new Date(a.start)-new Date(b.start)).slice(0,5);
     document.getElementById('upcoming-events').innerHTML=ne.length?ne.map(e=>{const s=findSubject(e.code),d=daysUntil(e.end||e.start);return`<div class="flex items-start gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 last:border-0 last:pb-0"><div class="w-2 h-2 rounded-full bg-slate-900 dark:bg-white mt-2"></div><div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${e.title}</p><p class="text-xs text-slate-500">${s?s.name:''}</p><p class="text-xs text-slate-400 mt-0.5">${d<=0?'🔥 Hoje!':`📅 Faltam ${d}d`}</p></div></div>`;}).join(''):'<p class="text-sm text-slate-500 text-center py-4">Sem eventos 🎉</p>';}
 
-// BUSQUEDA
 function renderBusqueda(){
     const q=(document.getElementById('search-input').value||'').toLowerCase();const fe=document.getElementById('filter-estado').value;const fp=document.getElementById('filter-plan').value;const fa=document.getElementById('filter-ano').value;const fs=document.getElementById('filter-semestre').value;const fects=document.getElementById('filter-ects').value;
     let results=getAllSubjects().filter(s=>{
@@ -1084,7 +1265,6 @@ function renderBusqueda(){
     document.getElementById('busqueda-results').innerHTML=results.length?`<p class="text-xs text-slate-500 mb-2">${results.length} resultado(s)</p>`+results.map(s=>`<div class="search-result p-3 rounded-lg plan-${s.plan} flex items-center justify-between gap-3 flex-wrap"><div class="flex items-center gap-2 flex-1 min-w-0"><span class="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">${s.code}</span><span class="font-medium text-sm truncate">${s.name}</span><span class="text-[10px] text-slate-400">${s.year}ºA ${s.semester}ºS</span></div><div class="flex items-center gap-3"><span class="text-xs">${s.ects} ECTS</span><span class="text-xs font-semibold ${s.grade!==null?'text-emerald-600':'text-slate-400'}">${s.grade!==null?s.grade:'—'}</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${sc[getStatus(s)]}">${getStatus(s)}</span></div></div>`).join(''):'<p class="text-center text-slate-500 py-8">Ingresa un término de búsqueda o usa los filtros para comenzar</p>';
 }
 
-// ALERTAS
 function renderAlertas(){
     const all=getAllSubjects();const risk=all.filter(s=>s.grade!==null&&s.grade<10);const pending=all.filter(s=>s.grade===null&&!s.manualStatus);const inProgress=all.filter(s=>s.manualStatus==='Em Curso');const st=calculateStats();
     let html='';
@@ -1095,7 +1275,6 @@ function renderAlertas(){
     document.getElementById('alertas-content').innerHTML=html;
 }
 
-// GRAFICOS
 function renderGraficos(){
     const all=getAllSubjects();const st=calculateStats();
     const sems=[];curriculum.forEach(y=>{y.semesters.forEach(sem=>{const graded=sem.subjects.filter(s=>s.grade!==null);const avg=graded.length?(graded.reduce((a,s)=>a+s.grade,0)/graded.length).toFixed(1):0;sems.push({label:`${y.year}ºS${sem.semester}`,avg:parseFloat(avg)});});});
@@ -1128,11 +1307,16 @@ function renderAll(){
     renderGraficos();
 }
 
+// INICIALIZAÇÃO
+renderMenu(); // Renderiza o menu com drag & drop
 const savedView=localStorage.getItem('currentView')||'dashboard';
-const savedBtn=document.querySelector(`button[onclick*="showView('${savedView}'"]`);
-const btnToUse=savedBtn||document.querySelector(`button[onclick*="showView('dashboard'"]`);
+const savedBtn=document.querySelector(`button[data-view-id="${savedView}"]`);
 if(localStorage.getItem('darkMode')==='true'){document.documentElement.classList.add('dark');document.getElementById('theme-icon-sun').classList.remove('hidden');document.getElementById('theme-icon-moon').classList.add('hidden');}
-showView(savedView,btnToUse);
+if(savedBtn) {
+    document.getElementById('view-' + savedView).classList.add('active');
+} else {
+    document.getElementById('view-dashboard').classList.add('active');
+}
 renderAll();
 </script>
 </body>
