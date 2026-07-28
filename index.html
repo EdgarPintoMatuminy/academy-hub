@@ -64,7 +64,6 @@
         .calc-btn { transition: all 0.1s; }
         .calc-btn:active { transform: scale(0.95); }
         
-        /* Cores do Mapa Mental por Estado */
         .mindmap-aprovada { border-color: #10b981 !important; background-color: rgba(16, 185, 129, 0.1); }
         .mindmap-em_curso { border-color: #f59e0b !important; background-color: rgba(245, 158, 11, 0.1); }
         .mindmap-creditada { border-color: #ec4899 !important; background-color: rgba(236, 72, 153, 0.1); }
@@ -78,7 +77,6 @@
         .dark .mindmap-reprovada { background-color: rgba(239, 68, 68, 0.2); }
         .dark .mindmap-pendente { background-color: rgba(148, 163, 184, 0.15); }
 
-        /* ⭐ NOVAS CORES PARA CREDITAÇÃO ASIR */
         .prob-alta { border-left: 4px solid #10b981; background-color: rgba(16, 185, 129, 0.05); }
         .prob-media { border-left: 4px solid #f59e0b; background-color: rgba(245, 158, 11, 0.05); }
         .prob-baixa { border-left: 4px solid #ef4444; background-color: rgba(239, 68, 68, 0.05); }
@@ -296,7 +294,7 @@
                 <div id="mindmap-content" class="space-y-2 overflow-x-auto pb-4"></div>
             </div>
 
-            <!-- ⭐ NOVA VISTA: CREDITAÇÃO ASIR → UAb -->
+            <!-- VISTA: CREDITAÇÃO ASIR → UAb -->
             <div id="view-creditacao" class="view">
                 <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
                     <div>
@@ -308,7 +306,6 @@
                     </button>
                 </div>
 
-                <!-- Info do ASIR -->
                 <div class="p-6 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 mb-6">
                     <h3 class="text-lg font-bold text-blue-800 dark:text-blue-400 mb-3">📋 Informações do Ciclo ASIR</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -331,10 +328,8 @@
                     </div>
                 </div>
 
-                <!-- Estatísticas -->
                 <div id="creditacao-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"></div>
 
-                <!-- Legenda -->
                 <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 mb-6">
                     <h3 class="text-sm font-semibold mb-3">Legenda:</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
@@ -358,7 +353,6 @@
                     </div>
                 </div>
 
-                <!-- Tabela de Mapeamento -->
                 <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                     <h3 class="text-lg font-semibold mb-4">📊 Tabela de Mapeamento ASIR → UAb</h3>
                     <div id="creditacao-content" class="space-y-3"></div>
@@ -638,10 +632,9 @@ const DEFAULT_RESOURCES = [
     }))
 ];
 
-// ⭐ DADOS DE CREDITAÇÃO ASIR → UAb (baseados no BOE e no guia)
 const DEFAULT_CREDITACOES = [
     { id: 'cr1', codigoASIR: '0369', nomeASIR: 'Implantación de Sistemas Operativos', horas: 140, ectsASIR: 15, probabilidade: 'alta', ucUAb: '21111', nomeUAb: 'Sistemas Operativos', ectsUAb: 6, estado: 'pendente', observacoes: '' },
-    { id: 'cr2', codigoASIR: '0374', nomeASIR: 'Administración de Sistemas Operativos', horas: 75, ectsASIR: 8, probabilidade: 'alta', ucUAb: '21111', nomeUAb: 'Sistemas Operativos', ectsUAb: 6, estado: 'pendente', observacoes: 'Complementar o 0369' },
+    { id: 'cr2', codigoASIR: '0374', nomeASIR: 'Administración de Sistemas Operativos', horas: 75, ectsASIR: 8, probabilidade: 'alta', ucUAb: '21174', nomeUAb: 'Sistemas Computacionais', ectsUAb: 4, estado: 'pendente', observacoes: 'Gestão de processos, memória, serviços do sistema' },
     { id: 'cr3', codigoASIR: '0370', nomeASIR: 'Planificación y Administración de Redes', horas: 110, ectsASIR: 12, probabilidade: 'alta', ucUAb: '21106', nomeUAb: 'Sistemas em Rede', ectsUAb: 6, estado: 'pendente', observacoes: '' },
     { id: 'cr4', codigoASIR: '0372', nomeASIR: 'Gestión de Bases de Datos', horas: 105, ectsASIR: 11, probabilidade: 'alta', ucUAb: '21053', nomeUAb: 'Fundamentos de Bases de Dados', ectsUAb: 6, estado: 'pendente', observacoes: '' },
     { id: 'cr5', codigoASIR: '0377', nomeASIR: 'Administración de SGBD', horas: 30, ectsASIR: 5, probabilidade: 'alta', ucUAb: '21103', nomeUAb: 'Sistemas de Gestão de BD', ectsUAb: 6, estado: 'pendente', observacoes: 'Complementar o 0372' },
@@ -1050,12 +1043,10 @@ function renderMindmap() {
     c.innerHTML = html;
 }
 
-// ⭐ RENDERIZAÇÃO DA VISTA DE CREDITAÇÃO
 function renderCreditacao() {
     const statsContainer = document.getElementById('creditacao-stats');
     const contentContainer = document.getElementById('creditacao-content');
     
-    // Estatísticas
     const totalECTS = creditacoes.reduce((sum, c) => sum + c.ectsASIR, 0);
     const altaProb = creditacoes.filter(c => c.probabilidade === 'alta').reduce((sum, c) => sum + c.ectsASIR, 0);
     const aprovados = creditacoes.filter(c => c.estado === 'aprovado').reduce((sum, c) => sum + c.ectsUAb, 0);
@@ -1080,11 +1071,8 @@ function renderCreditacao() {
         </div>
     `;
     
-    // Tabela
     const probClasses = { 'alta': 'prob-alta', 'media': 'prob-media', 'baixa': 'prob-baixa' };
     const probLabels = { 'alta': '🟢 Alta', 'media': '🟡 Média', 'baixa': '🔴 Baixa' };
-    const statusClasses = { 'pendente': 'status-pendente', 'aprovado': 'status-aprovado', 'rejeitado': 'status-rejeitado', 'analise': 'status-analise' };
-    const statusLabels = { 'pendente': '⏳ Pendente', 'aprovado': '✅ Aprovado', 'rejeitado': '❌ Rejeitado', 'analise': '🔄 Em análise' };
     
     contentContainer.innerHTML = creditacoes.map((c, idx) => `
         <div class="p-4 rounded-lg border border-slate-200 dark:border-slate-700 ${probClasses[c.probabilidade]}">
@@ -1128,7 +1116,6 @@ function updateCreditoesObs(idx, obs) {
     saveData();
 }
 
-// ⭐ EXPORTAR PEDIDO DE CREDITAÇÃO EM PDF
 function exportCreditoesPDF() {
     const printWindow = window.open('', '_blank');
     const hoje = new Date().toLocaleDateString('pt-PT');
