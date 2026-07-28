@@ -77,6 +77,19 @@
         .dark .mindmap-equivalencia { background-color: rgba(139, 92, 246, 0.2); }
         .dark .mindmap-reprovada { background-color: rgba(239, 68, 68, 0.2); }
         .dark .mindmap-pendente { background-color: rgba(148, 163, 184, 0.15); }
+
+        /* ⭐ NOVAS CORES PARA CREDITAÇÃO ASIR */
+        .prob-alta { border-left: 4px solid #10b981; background-color: rgba(16, 185, 129, 0.05); }
+        .prob-media { border-left: 4px solid #f59e0b; background-color: rgba(245, 158, 11, 0.05); }
+        .prob-baixa { border-left: 4px solid #ef4444; background-color: rgba(239, 68, 68, 0.05); }
+        .dark .prob-alta { background-color: rgba(16, 185, 129, 0.1); }
+        .dark .prob-media { background-color: rgba(245, 158, 11, 0.1); }
+        .dark .prob-baixa { background-color: rgba(239, 68, 68, 0.1); }
+
+        .status-pendente { background-color: #94a3b8; color: white; }
+        .status-aprovado { background-color: #10b981; color: white; }
+        .status-rejeitado { background-color: #ef4444; color: white; }
+        .status-analise { background-color: #3b82f6; color: white; }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen">
@@ -170,8 +183,8 @@
                         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500"></span><span>✅ Concluída</span></div>
                         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span>🔥 Foco Atual</span></div>
                         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500"></span><span>📅 Próximo</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-violet-500"></span><span>🔄 Equivalência (em processo)</span></div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pink-500"></span><span>🏅 Acreditação (confirmada)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-violet-500"></span><span>🔄 Equivalência</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pink-500"></span><span>🏅 Acreditação</span></div>
                         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-400"></span><span>🔮 Futuro</span></div>
                     </div>
                 </div>
@@ -283,6 +296,75 @@
                 <div id="mindmap-content" class="space-y-2 overflow-x-auto pb-4"></div>
             </div>
 
+            <!-- ⭐ NOVA VISTA: CREDITAÇÃO ASIR → UAb -->
+            <div id="view-creditacao" class="view">
+                <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold mb-2">🎓 Creditação ASIR → UAb</h1>
+                        <p class="text-slate-500">Mapeamento oficial do ciclo ASIR (Espanha) para as UCs da Licenciatura UAb</p>
+                    </div>
+                    <button onclick="exportCreditoesPDF()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:opacity-90 flex items-center gap-2">
+                        📄 Exportar Pedido (PDF)
+                    </button>
+                </div>
+
+                <!-- Info do ASIR -->
+                <div class="p-6 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 mb-6">
+                    <h3 class="text-lg font-bold text-blue-800 dark:text-blue-400 mb-3">📋 Informações do Ciclo ASIR</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <p class="text-slate-600 dark:text-slate-400">Nome Oficial</p>
+                            <p class="font-semibold">Técnico Superior en Administración de Sistemas Informáticos en Red</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-600 dark:text-slate-400">Concluído em</p>
+                            <p class="font-semibold">2023</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-600 dark:text-slate-400">Total ECTS (BOE)</p>
+                            <p class="font-semibold">120 ECTS (2000 horas)</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-blue-200 dark:border-blue-700">
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mb-2">📜 Base Legal:</p>
+                        <a href="https://www.boe.es/eli/es/rd/2009/10/30/1629" target="_blank" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Real Decreto 1629/2009, de 30 de octubre (BOE nº 278, 18/11/2009)</a>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div id="creditacao-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"></div>
+
+                <!-- Legenda -->
+                <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 mb-6">
+                    <h3 class="text-sm font-semibold mb-3">Legenda:</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                        <div>
+                            <p class="font-semibold mb-1">Probabilidade:</p>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-emerald-500"></span><span>🟢 Alta</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-amber-500"></span><span>🟡 Média</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-red-500"></span><span>🔴 Baixa/Nula</span></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-1">Estado do Pedido:</p>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-slate-400"></span><span>⏳ Pendente</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-blue-500"></span><span>🔄 Em análise</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-emerald-500"></span><span>✅ Aprovado</span></div>
+                                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-red-500"></span><span>❌ Rejeitado</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Mapeamento -->
+                <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                    <h3 class="text-lg font-semibold mb-4">📊 Tabela de Mapeamento ASIR → UAb</h3>
+                    <div id="creditacao-content" class="space-y-3"></div>
+                </div>
+            </div>
+
             <div id="view-resources" class="view">
                 <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
                     <div><h1 class="text-2xl md:text-3xl font-bold mb-2">📚 Lista de Leitura & Recursos</h1><p class="text-slate-500">Gere livros, cursos, artigos e vídeos.</p></div>
@@ -388,6 +470,7 @@ const DEFAULT_MENU_ITEMS = [
     { id: 'efolios', icon: '📝', label: 'E-folios Detalhado' },
     { id: 'certifications', icon: '🏆', label: 'Certificações' },
     { id: 'mindmap', icon: '🧩', label: 'Mapa Mental' },
+    { id: 'creditacao', icon: '🎓', label: 'Creditação ASIR → UAb' },
     { id: 'resources', icon: '📚', label: 'Recursos' },
     { id: 'strategy', icon: '⚖️', label: 'Estratégia' },
     { id: 'busqueda', icon: '🔍', label: 'Búsqueda' },
@@ -555,6 +638,24 @@ const DEFAULT_RESOURCES = [
     }))
 ];
 
+// ⭐ DADOS DE CREDITAÇÃO ASIR → UAb (baseados no BOE e no guia)
+const DEFAULT_CREDITACOES = [
+    { id: 'cr1', codigoASIR: '0369', nomeASIR: 'Implantación de Sistemas Operativos', horas: 140, ectsASIR: 15, probabilidade: 'alta', ucUAb: '21111', nomeUAb: 'Sistemas Operativos', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr2', codigoASIR: '0374', nomeASIR: 'Administración de Sistemas Operativos', horas: 75, ectsASIR: 8, probabilidade: 'alta', ucUAb: '21111', nomeUAb: 'Sistemas Operativos', ectsUAb: 6, estado: 'pendente', observacoes: 'Complementar o 0369' },
+    { id: 'cr3', codigoASIR: '0370', nomeASIR: 'Planificación y Administración de Redes', horas: 110, ectsASIR: 12, probabilidade: 'alta', ucUAb: '21106', nomeUAb: 'Sistemas em Rede', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr4', codigoASIR: '0372', nomeASIR: 'Gestión de Bases de Datos', horas: 105, ectsASIR: 11, probabilidade: 'alta', ucUAb: '21053', nomeUAb: 'Fundamentos de Bases de Dados', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr5', codigoASIR: '0377', nomeASIR: 'Administración de SGBD', horas: 30, ectsASIR: 5, probabilidade: 'alta', ucUAb: '21103', nomeUAb: 'Sistemas de Gestão de BD', ectsUAb: 6, estado: 'pendente', observacoes: 'Complementar o 0372' },
+    { id: 'cr6', codigoASIR: '0378', nomeASIR: 'Seguridad y Alta Disponibilidad', horas: 55, ectsASIR: 6, probabilidade: 'alta', ucUAb: '21181', nomeUAb: 'Segurança em Redes e Computadores', ectsUAb: 2, estado: 'pendente', observacoes: '' },
+    { id: 'cr7', codigoASIR: '0375', nomeASIR: 'Servicios de Red e Internet', horas: 75, ectsASIR: 8, probabilidade: 'alta', ucUAb: '21108', nomeUAb: 'Sistemas Distribuídos', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr8', codigoASIR: '0373', nomeASIR: 'Lenguajes de Marcas y Sistemas de Gestión de Información', horas: 70, ectsASIR: 7, probabilidade: 'media', ucUAb: '21173', nomeUAb: 'Introdução à Programação', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr9', codigoASIR: '0376', nomeASIR: 'Implantación de Aplicaciones Web', horas: 55, ectsASIR: 6, probabilidade: 'media', ucUAb: '21182', nomeUAb: 'Lab. Sistemas e Serviços Web', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr10', codigoASIR: '0371', nomeASIR: 'Fundamentos de Hardware', horas: 55, ectsASIR: 6, probabilidade: 'media', ucUAb: '21010', nomeUAb: 'Arquitectura de Computadores', ectsUAb: 6, estado: 'pendente', observacoes: '' },
+    { id: 'cr11', codigoASIR: '0380', nomeASIR: 'Formación y Orientación Laboral', horas: 50, ectsASIR: 5, probabilidade: 'media', ucUAb: '21176', nomeUAb: 'Ética e Práticas de Engenharia', ectsUAb: 2, estado: 'pendente', observacoes: 'Conteúdo parcialmente relacionado' },
+    { id: 'cr12', codigoASIR: '0379', nomeASIR: 'Proyecto de Administración de Sistemas Informáticos en Red', horas: 25, ectsASIR: 5, probabilidade: 'baixa', ucUAb: '—', nomeUAb: '—', ectsUAb: 0, estado: 'pendente', observacoes: 'Sem equivalente direto' },
+    { id: 'cr13', codigoASIR: '0381', nomeASIR: 'Empresa e Iniciativa Emprendedora', horas: 35, ectsASIR: 4, probabilidade: 'baixa', ucUAb: '—', nomeUAb: '—', ectsUAb: 0, estado: 'pendente', observacoes: 'Sem equivalente direto' },
+    { id: 'cr14', codigoASIR: '0382', nomeASIR: 'Formación en Centros de Trabajo', horas: 220, ectsASIR: 22, probabilidade: 'baixa', ucUAb: '—', nomeUAb: '—', ectsUAb: 0, estado: 'pendente', observacoes: 'Práticas profissionais - sem equivalente' }
+];
+
 let curriculum = JSON.parse(localStorage.getItem('curriculum')) || JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
 const ECTS_CORRECTIONS = { "21174": 4, "21176": 2, "21180": 4, "21181": 2 };
 let migrated = false;
@@ -566,6 +667,7 @@ let events = JSON.parse(localStorage.getItem('events')) || JSON.parse(JSON.strin
 let efolioData = JSON.parse(localStorage.getItem('efolioData')) || {};
 let resources = JSON.parse(localStorage.getItem('resources')) || JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
 let backupHistory = JSON.parse(localStorage.getItem('backupHistory')) || [];
+let creditacoes = JSON.parse(localStorage.getItem('creditacoes')) || JSON.parse(JSON.stringify(DEFAULT_CREDITACOES));
 
 let certifications = JSON.parse(localStorage.getItem('certifications')) || [];
 if (certifications.length < DEFAULT_CERTS.length) {
@@ -590,6 +692,7 @@ function saveData() {
     localStorage.setItem('certifications', JSON.stringify(certifications));
     localStorage.setItem('resources', JSON.stringify(resources));
     localStorage.setItem('backupHistory', JSON.stringify(backupHistory));
+    localStorage.setItem('creditacoes', JSON.stringify(creditacoes));
 }
 
 function getStatus(subject) { 
@@ -895,7 +998,6 @@ function renderCertifications() {
 function updateCertStatus(idx, status) { certifications[idx].status = status; saveData(); renderCertifications(); }
 function updateCertDate(idx, date) { certifications[idx].targetDate = date; saveData(); }
 
-// ⭐ MAPA MENTAL COM CORES POR ESTADO ATUAL
 function renderMindmap() {
     const c = document.getElementById('mindmap-content');
     let html = '';
@@ -908,12 +1010,11 @@ function renderMindmap() {
             html += `<div class="flex flex-wrap justify-center gap-3">`;
             sem.subjects.forEach(sub => {
                 const status = getStatus(sub);
-                // ⭐ Cores refletem o estado atual da disciplina
                 let colorClass = 'mindmap-pendente';
                 if (status === 'Aprovada') colorClass = 'mindmap-aprovada';
                 else if (status === 'Em Curso') colorClass = 'mindmap-em_curso';
-                else if (status === 'Creditada') colorClass = 'mindmap-creditada'; // 🏅 Acreditação
-                else if (status === 'Em Equivalência') colorClass = 'mindmap-equivalencia'; // 🔄 Equivalência
+                else if (status === 'Creditada') colorClass = 'mindmap-creditada';
+                else if (status === 'Em Equivalência') colorClass = 'mindmap-equivalencia';
                 else if (status === 'Reprovada') colorClass = 'mindmap-reprovada';
                 
                 html += `<div class="mindmap-node flex flex-col items-center p-3 rounded-lg border-2 ${colorClass} w-32 text-center shadow-sm">
@@ -949,6 +1050,196 @@ function renderMindmap() {
     c.innerHTML = html;
 }
 
+// ⭐ RENDERIZAÇÃO DA VISTA DE CREDITAÇÃO
+function renderCreditacao() {
+    const statsContainer = document.getElementById('creditacao-stats');
+    const contentContainer = document.getElementById('creditacao-content');
+    
+    // Estatísticas
+    const totalECTS = creditacoes.reduce((sum, c) => sum + c.ectsASIR, 0);
+    const altaProb = creditacoes.filter(c => c.probabilidade === 'alta').reduce((sum, c) => sum + c.ectsASIR, 0);
+    const aprovados = creditacoes.filter(c => c.estado === 'aprovado').reduce((sum, c) => sum + c.ectsUAb, 0);
+    const pendentes = creditacoes.filter(c => c.estado === 'pendente').length;
+    
+    statsContainer.innerHTML = `
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <p class="text-xs text-slate-500">Total ECTS ASIR</p>
+            <p class="text-2xl font-bold mt-1">${totalECTS}</p>
+        </div>
+        <div class="p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20">
+            <p class="text-xs text-emerald-600 dark:text-emerald-400">🟢 Alta Probabilidade</p>
+            <p class="text-2xl font-bold mt-1 text-emerald-700 dark:text-emerald-400">${altaProb} ECTS</p>
+        </div>
+        <div class="p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+            <p class="text-xs text-blue-600 dark:text-blue-400">✅ Aprovados (ECTS UAb)</p>
+            <p class="text-2xl font-bold mt-1 text-blue-700 dark:text-blue-400">${aprovados}</p>
+        </div>
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <p class="text-xs text-slate-500">⏳ Pendentes</p>
+            <p class="text-2xl font-bold mt-1">${pendentes}</p>
+        </div>
+    `;
+    
+    // Tabela
+    const probClasses = { 'alta': 'prob-alta', 'media': 'prob-media', 'baixa': 'prob-baixa' };
+    const probLabels = { 'alta': '🟢 Alta', 'media': '🟡 Média', 'baixa': '🔴 Baixa' };
+    const statusClasses = { 'pendente': 'status-pendente', 'aprovado': 'status-aprovado', 'rejeitado': 'status-rejeitado', 'analise': 'status-analise' };
+    const statusLabels = { 'pendente': '⏳ Pendente', 'aprovado': '✅ Aprovado', 'rejeitado': '❌ Rejeitado', 'analise': '🔄 Em análise' };
+    
+    contentContainer.innerHTML = creditacoes.map((c, idx) => `
+        <div class="p-4 rounded-lg border border-slate-200 dark:border-slate-700 ${probClasses[c.probabilidade]}">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-start">
+                <div class="md:col-span-4">
+                    <p class="text-[10px] text-slate-500 uppercase font-semibold">Módulo ASIR (BOE)</p>
+                    <p class="font-semibold text-sm">${c.codigoASIR} - ${c.nomeASIR}</p>
+                    <p class="text-xs text-slate-500 mt-1">${c.horas}h • ${c.ectsASIR} ECTS</p>
+                    <span class="inline-block mt-2 text-[10px] px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600">${probLabels[c.probabilidade]}</span>
+                </div>
+                <div class="md:col-span-4">
+                    <p class="text-[10px] text-slate-500 uppercase font-semibold">UC UAb Destino</p>
+                    ${c.ucUAb !== '—' ? `
+                        <p class="font-semibold text-sm">${c.ucUAb} - ${c.nomeUAb}</p>
+                        <p class="text-xs text-slate-500 mt-1">${c.ectsUAb} ECTS</p>
+                    ` : `<p class="text-sm text-slate-400 italic">Sem equivalente direto</p>`}
+                </div>
+                <div class="md:col-span-4">
+                    <p class="text-[10px] text-slate-500 uppercase font-semibold">Estado do Pedido</p>
+                    <select onchange="updateCreditoesStatus(${idx}, this.value)" class="w-full mt-1 px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium">
+                        <option value="pendente" ${c.estado==='pendente'?'selected':''}>⏳ Pendente</option>
+                        <option value="analise" ${c.estado==='analise'?'selected':''}>🔄 Em análise</option>
+                        <option value="aprovado" ${c.estado==='aprovado'?'selected':''}>✅ Aprovado</option>
+                        <option value="rejeitado" ${c.estado==='rejeitado'?'selected':''}>❌ Rejeitado</option>
+                    </select>
+                    <input type="text" value="${c.observacoes}" onchange="updateCreditoesObs(${idx}, this.value)" placeholder="Observações..." class="w-full mt-2 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs">
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateCreditoesStatus(idx, status) {
+    creditacoes[idx].estado = status;
+    saveData();
+    renderCreditacao();
+}
+
+function updateCreditoesObs(idx, obs) {
+    creditacoes[idx].observacoes = obs;
+    saveData();
+}
+
+// ⭐ EXPORTAR PEDIDO DE CREDITAÇÃO EM PDF
+function exportCreditoesPDF() {
+    const printWindow = window.open('', '_blank');
+    const hoje = new Date().toLocaleDateString('pt-PT');
+    
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido de Creditação ASIR → UAb</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
+        h1 { color: #1e40af; border-bottom: 2px solid #1e40af; padding-bottom: 10px; }
+        h2 { color: #374151; margin-top: 30px; }
+        .info-box { background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .info-box p { margin: 5px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
+        th { background: #1e40af; color: white; padding: 8px; text-align: left; }
+        td { padding: 8px; border-bottom: 1px solid #e5e7eb; }
+        tr:nth-child(even) { background: #f9fafb; }
+        .prob-alta { background: #d1fae5 !important; }
+        .prob-media { background: #fef3c7 !important; }
+        .prob-baixa { background: #fee2e2 !important; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 10px; color: #6b7280; }
+        .assinatura { margin-top: 60px; }
+        .linha { border-top: 1px solid #333; width: 300px; margin-top: 40px; padding-top: 5px; }
+        @media print { body { padding: 0; } }
+    </style>
+</head>
+<body>
+    <h1>🎓 Pedido de Creditação ASIR → Universidade Aberta</h1>
+    
+    <div class="info-box">
+        <p><strong>Requerente:</strong> Edgar Pinto</p>
+        <p><strong>Data do pedido:</strong> ${hoje}</p>
+        <p><strong>Título de origem:</strong> Técnico Superior en Administración de Sistemas Informáticos en Red (ASIR)</p>
+        <p><strong>Instituição:</strong> CIFP Elorrieta Erreka Mari (Espanha)</p>
+        <p><strong>Ano de conclusão:</strong> 2023</p>
+        <p><strong>Base legal:</strong> Real Decreto 1629/2009, de 30 de octubre (BOE nº 278)</p>
+        <p><strong>Total ECTS ASIR:</strong> 120 ECTS (2000 horas)</p>
+    </div>
+
+    <h2>📊 Tabela de Mapeamento ASIR → UAb</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Cód. ASIR</th>
+                <th>Módulo ASIR</th>
+                <th>Horas</th>
+                <th>ECTS ASIR</th>
+                <th>Prob.</th>
+                <th>Cód. UAb</th>
+                <th>UC UAb</th>
+                <th>ECTS UAb</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${creditacoes.map(c => `
+                <tr class="prob-${c.probabilidade}">
+                    <td>${c.codigoASIR}</td>
+                    <td>${c.nomeASIR}</td>
+                    <td>${c.horas}h</td>
+                    <td>${c.ectsASIR}</td>
+                    <td>${c.probabilidade === 'alta' ? '🟢' : c.probabilidade === 'media' ? '🟡' : '🔴'} ${c.probabilidade}</td>
+                    <td>${c.ucUAb}</td>
+                    <td>${c.nomeUAb}</td>
+                    <td>${c.ectsUAb}</td>
+                    <td>${c.estado === 'aprovado' ? '✅' : c.estado === 'rejeitado' ? '❌' : c.estado === 'analise' ? '🔄' : '⏳'} ${c.estado}</td>
+                </tr>
+            `).join('')}
+        </tbody>
+    </table>
+
+    <h2>📋 Resumo</h2>
+    <div class="info-box">
+        <p><strong>Total de módulos ASIR:</strong> ${creditacoes.length}</p>
+        <p><strong>Módulos com alta probabilidade:</strong> ${creditacoes.filter(c => c.probabilidade === 'alta').length}</p>
+        <p><strong>Módulos com média probabilidade:</strong> ${creditacoes.filter(c => c.probabilidade === 'media').length}</p>
+        <p><strong>Módulos com baixa probabilidade:</strong> ${creditacoes.filter(c => c.probabilidade === 'baixa').length}</p>
+        <p><strong>Total ECTS ASIR (BOE):</strong> ${creditacoes.reduce((sum, c) => sum + c.ectsASIR, 0)} ECTS</p>
+        <p><strong>Total ECTS UAb solicitados:</strong> ${creditacoes.reduce((sum, c) => sum + c.ectsUAb, 0)} ECTS</p>
+    </div>
+
+    <h2>📝 Observações</h2>
+    <ul>
+        ${creditacoes.filter(c => c.observacoes).map(c => `<li><strong>${c.nomeASIR}:</strong> ${c.observacoes}</li>`).join('') || '<li>Sem observações adicionais.</li>'}
+    </ul>
+
+    <div class="assinatura">
+        <div class="linha">Assinatura do Requerente</div>
+    </div>
+
+    <div class="footer">
+        <p>Documento gerado automaticamente pelo Matuminy Academy Hub em ${hoje}</p>
+        <p>Referência: Real Decreto 1629/2009 • BOE nº 278 • 18/11/2009</p>
+    </div>
+
+    <script>
+        window.onload = function() {
+            window.print();
+        }
+    <\/script>
+</body>
+</html>
+    `;
+    
+    printWindow.document.write(html);
+    printWindow.document.close();
+}
+
 function renderResources() {
     const c = document.getElementById('resources-content');
     const statusColors = { 'por_ler': 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400', 'a_ler': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', 'concluido': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' };
@@ -982,7 +1273,7 @@ function updateResourceStatus(idx, status) { resources[idx].status = status; sav
 function deleteResource(idx) { if (confirm('Eliminar este recurso?')) { resources.splice(idx, 1); saveData(); renderResources(); } }
 
 function exportBackup() {
-    const data = { curriculum, tasks, events, efolioData, certifications, resources, menuItems, exportDate: new Date().toISOString(), version: '13.0' };
+    const data = { curriculum, tasks, events, efolioData, certifications, resources, menuItems, creditacoes, exportDate: new Date().toISOString(), version: '14.0' };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1014,6 +1305,7 @@ function restoreBackup(idx) {
         certifications = entry.data.certifications || DEFAULT_CERTS;
         resources = entry.data.resources || DEFAULT_RESOURCES;
         menuItems = entry.data.menuItems || DEFAULT_MENU_ITEMS;
+        creditacoes = entry.data.creditacoes || DEFAULT_CREDITACOES;
         saveData();
         closeModal('modal-backup-history');
         renderMenu();
@@ -1039,6 +1331,7 @@ function importBackup(ev) {
                 certifications = d.certifications || JSON.parse(JSON.stringify(DEFAULT_CERTS));
                 resources = d.resources || JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
                 menuItems = d.menuItems || JSON.parse(JSON.stringify(DEFAULT_MENU_ITEMS));
+                creditacoes = d.creditacoes || JSON.parse(JSON.stringify(DEFAULT_CREDITACOES));
                 saveData();
                 renderMenu();
                 renderAll();
@@ -1060,6 +1353,7 @@ function resetData() {
         resources = JSON.parse(JSON.stringify(DEFAULT_RESOURCES));
         backupHistory = [];
         menuItems = JSON.parse(JSON.stringify(DEFAULT_MENU_ITEMS));
+        creditacoes = JSON.parse(JSON.stringify(DEFAULT_CREDITACOES));
         calcSelections = {};
         saveData();
         renderMenu();
@@ -1067,18 +1361,15 @@ function resetData() {
     }
 }
 
-// ⭐ DASHBOARD: Aprovadas = Aprovadas + Acreditações
 function renderDashboard(){
     const st=calculateStats();
     const pct=Math.round(st.completedEcts/st.totalEcts*100);
-    // ⭐ Aprovadas inclui Acreditações (🏅)
     const totalAprovadas = st.approved + st.credited;
     
     const ue=events.filter(e=>e.status!=='done').map(e=>({...e,days:daysUntil(e.end||e.start)})).filter(e=>e.days>=0&&e.days<=7).sort((a,b)=>a.days-b.days);
     let ah='';if(ue.length)ah=`<div class="space-y-2">${ue.slice(0,3).map(e=>{const s=findSubject(e.code);const u=e.days<=1?'border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800':'border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800';return`<div class="p-3 rounded-lg border ${u} flex items-center gap-3"><span class="text-xl">${e.days===0?'🔥':'⏰'}</span><div class="flex-1"><p class="text-sm font-medium">${e.title}</p><p class="text-xs text-slate-500">${s?s.name:''} • ${e.days===0?'Hoje!':`Faltam ${e.days}d`}</p></div></div>`;}).join('')}</div>`;
     document.getElementById('dashboard-alerts').innerHTML=ah;
     
-    // ⭐ ALTERAÇÃO: Aprovadas mostra totalAprovadas (Aprovadas + Acreditações)
     document.getElementById('dashboard-stats').innerHTML=`<div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Média</p><h3 class="text-3xl font-bold mt-2">${st.average}</h3></div><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">ECTS</p><h3 class="text-3xl font-bold mt-2">${st.completedEcts} <span class="text-lg text-slate-400 font-normal">/ ${st.totalEcts}</span></h3><div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden"><div class="h-full bg-slate-900 dark:bg-white rounded-full" style="width:${pct}%"></div></div></div><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Aprovadas (incl. 🏅)</p><h3 class="text-3xl font-bold mt-2">${totalAprovadas} <span class="text-lg text-slate-400 font-normal">/ ${st.totalSubjects}</span></h3></div><div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"><p class="text-sm text-slate-500">Em Curso</p><h3 class="text-3xl font-bold mt-2">${st.inProgress}</h3></div>`;
     
     const remainingLicenca = 180 - st.completedEcts;
@@ -1175,6 +1466,7 @@ function renderAll(){
     renderEfolios();
     renderCertifications();
     renderMindmap();
+    renderCreditacao();
     renderResources();
     renderBusqueda();
     renderAlertas();
